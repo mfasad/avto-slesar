@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Схема стабилизатора тока на транзисторах: сборка и расчет — АвтоСлесарь</title>
+    <meta name="description" content="Подробный гайд по созданию стабилизатора тока на биполярных и полевых транзисторах. Расчет номиналов, выбор компонентов и схема подключения для LED-схем.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/s/sk/skhema-stabilizatora-toka-na-tranzistorakh.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Схема стабилизатора тока на транзисторах: сборка и расчет">
+    <meta property="og:description" content="Подробный гайд по созданию стабилизатора тока на биполярных и полевых транзисторах. Расчет номиналов, выбор компонентов и схема подключения для LED-схем.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Схема стабилизатора тока на транзисторах: сборка и расчет</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Принципиальная схема стабилизатора тока на транзисторах: от теории к практике</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-простейшего-стабилизатора">Принцип работы простейшего стабилизатора</a></li><li><a href="#схемы-на-биполярных-транзисторах">Схемы на биполярных транзисторах</a></li><li><a href="#стабилизаторы-на-полевых-транзисторах-mosfet">Стабилизаторы на полевых транзисторах (MOSFET)</a></li><li><a href="#расчет-номиналов-компонентов">Расчет номиналов компонентов</a></li><li><a href="#проблемы-теплового-режима-и-рассеивание">Проблемы теплового режима и рассеивание</a></li><li><a href="#практические-советы-по-монтажу">Практические советы по монтажу</a></li><li><a href="#ограничения-и-области-применения">Ограничения и области применения</a></li><li><a href="#частые-вопросы-faq">Частые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Стабилизация тока является фундаментальной задачей при проектировании источников питания для светодиодов, лазеров и конденсаторов. В отличие от стабилизаторов напряжения, где главное — удержание потенциала на шине, здесь критически важно поддерживать постоянную величину потока электронов через нагрузку. Простого подключения резистора часто бывает недостаточно, особенно если напряжение питания или характеристики нагрузки подвержены колебаниям.</p>
+
+<p>Использование <strong>биполярных транзисторов</strong> или <strong>полевых МОП-транзисторов</strong> позволяет создать эффективные линейные регуляторы с минимальным количеством компонентов. Такие схемы обладают высокой скоростью срабатывания и низким уровнем шума, что делает их предпочтительными для аналоговых цепей и прецизионного освещения. Разберем, как работает классическая топология с обратной связью и как правильно рассчитать номиналы.</p>
+
+<h2 id="принцип-работы-простейшего-стабилизатора">Принцип работы простейшего стабилизатора</h2>
+
+<p>В основе большинства транзисторных стабилизаторов лежит принцип отрицательной обратной связи. Транзистор работает в активном режиме, выступая в роли переменного сопротивления, которое автоматически подстраивается под изменения напряжения. Если ток через нагрузку начинает расти, схема увеличивает падение напряжения на транзисторе, возвращая ток к заданному значению.</p>
+
+<p>Для реализации такого подхода часто используется двухтранзисторная схема, где один элемент управляет базой другого. Ключевым элементом здесь является <strong>датчик тока</strong>, обычно представляющий собой низкоомный резистор, включенный в цепь эмиттера или истока. Падение напряжения на этом резисторе сравнивается с опорным потенциалом, создаваемым биполярным транзистором или стабилитроном.</p>
+
+<p>Важно понимать, что при такой схеме транзистор рассеивает значительное количество тепла, особенно если разница между входным и выходным напряжением велика. Поэтому выбор <strong>мощного корпуса</strong> и расчет радиатора становятся обязательными этапами проектирования, иначе компонент выйдет из строя из-за теплового пробоя.</p>
+
+<h2 id="схемы-на-биполярных-транзисторах">Схемы на биполярных транзисторах</h2>
+
+<p>Классическая схема на биполярных транзисторах (BJT) отличается простотой и доступностью компонентов. Она часто строится на базе пары <em>КТ315</em> и <em>КТ815</em> или их импортных аналогов вроде <em>2N2222</em> и <em>2N3055</em>. Основной транзистор пропускает через себя весь ток нагрузки, а управляющий транзистор следит за падением напряжения на датчике.</p>
+
+<p>Работа происходит следующим образом: когда ток нагрузки достигает порога, на котором падение напряжения на датчике равно напряжению открытия базы-эмиттера управляющего транзистора (около 0,6–0,7 В), последний открывается. Это приводит к уменьшению тока базы основного транзистора, и он начинает "закрываться", ограничивая дальнейший рост тока.</p>
+
+<p>Для точной настройки уровня ограничения необходимо правильно подобрать сопротивление датчика. Формула расчета предельна проста: сопротивление равно опорному напряжению, деленному на желаемый ток стабилизации. Однако не следует забывать о коэффициенте передачи тока базы, который влияет на эффективность работы схемы при малых токах.</p>
+
+<ul>
+<li>✅ Используйте транзисторы с высоким коэффициентом усиления для повышения точности.</li>
+<li>✅ Обязательно устанавливайте <strong>теплоотвод</strong> на силовой транзистор при токах выше 100 мА.</li>
+<li>✅ Проверьте максимальное напряжение коллектор-эмиттер перед подачей питания.</li>
+</ul>
+
+<h2 id="стабилизаторы-на-полевых-транзисторах-mosfet">Стабилизаторы на полевых транзисторах (MOSFET)</h2>
+
+<p>Современные решения все чаще базируются на полевых транзисторах (MOSFET), так как они обладают значительно меньшим падением напряжения в открытом состоянии. Это позволяет снизить тепловыделение и повысить общий КПД устройства. В схемах часто применяются <strong>N-канальные</strong> или <em>P-канальные</em> транзисторы, такие как <em>IRFZ44N</em> или <em>IRF9540</em>.</p>
+
+<p>Особенностью работы полевого транзистора является управление напряжением на затворе, а не током базы, как у биполярных аналогов. Это упрощает схему управления и снижает потребление энергии на вспомогательные цепи. Для стабилизации тока часто используется специализированная схема с операционным усилителем или простая связь через биполярный транзистор на затвор.</p>
+
+<p>Важным нюансом является выбор порогового напряжения затвора. Транзисторы с низким пороговым напряжением (Logic Level) позволяют создавать схемы, которые эффективно работают даже при низковольтном питании, например, от литиевых аккумуляторов. В таких случаях падение напряжения на датчике тока должно быть минимальным, чтобы не снижать КПД.</p>
+
+<p>При конструировании схем на MOSFET следует учитывать емкость затвора. При резких перепадах нагрузки это может вызвать колебания, поэтому иногда необходимо добавлять <strong>компенсирующие конденсаторы</strong> в цепь обратной связи для обеспечения устойчивости системы.</p>
+
+<div class="poll-widget" id="poll-235eb343"><div class="poll-widget-question">📊 Какой тип транзисторов вы чаще используете в своих схемах?</div><div class="poll-widget-option" data-poll="235eb343" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Биполярные (BJT)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="235eb343" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Полевые (MOSFET)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="235eb343" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Операционные усилители (Op-Amp)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="235eb343" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Комбинированные решения</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="расчет-номиналов-компонентов">Расчет номиналов компонентов</h2>
+
+<p>Правильный расчет — залог долгой и стабильной работы устройства. Главным параметром, определяющим ток стабилизации, является сопротивление шунтирующего резистора. Для биполярных схем это значение обычно рассчитывается исходя из напряжения открывания <code>Ube ≈ 0.7 В</code>. Если вам нужен ток 1 А, сопротивление должно составлять 0.7 Ом.</p>
+
+<p>Второй критически важный параметр — мощность резистора. Поскольку через него протекает полный ток нагрузки, он будет сильно нагреваться. Рассчитывайте мощность по формуле <code>P = I² × R</code>. Для тока 1 А и сопротивления 0.7 Ом выделяется 0.7 Вт тепла, значит, нужно использовать резистор минимум на 1–2 Вт с запасом.</p>
+
+<p>Транзистор также требует тщательного подбора. Его максимальный ток должен превышать расчетный минимум в 1.5–2 раза. Кроме того, учитывайте рассеиваемую мощность: <code>P = (Uвх - Uнагр) × I</code>. Если входное напряжение 12 В, а нагрузка потребляет 3 В при токе 1 А, транзистор должен рассеять 9 Вт тепла.</p>
+
+<div class="checklist-block"><h4>☑️ Расчет компонентов стабилизатора</h4><label class="check-item"><input type="checkbox"><span>Определить требуемый ток нагрузки</span></label><label class="check-item"><input type="checkbox"><span>Подобрать сопротивление датчика (шунта)</span></label><label class="check-item"><input type="checkbox"><span>Рассчитать мощность шунта и транзистора</span></label><label class="check-item"><input type="checkbox"><span>Выбрать радиатор с учетом теплового сопротивления</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Параметр</th>
+<th>Рекомендуемое значение</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Шунт (Rшунт)</td>
+<td>Мощность</td>
+<td>2× от расчетной</td>
+<td>Лучше использовать проволочные резисторы</td>
+</tr>
+<tr>
+<td>Транзистор (Q1)</td>
+<td>Ток коллектора/стока</td>
+<td>Max I нагрузки × 1.5</td>
+<td>Запас по току обязателен</td>
+</tr>
+<tr>
+<td>Транзистор (Q1)</td>
+<td>Напряжение Vce/Vds</td>
+<td>Max Uвх + 20%</td>
+<td>Защита от скачков напряжения</td>
+</tr>
+<tr>
+<td>Радиатор</td>
+<td>Тепловое сопротивление</td>
+<td>≤ 10 °C/Вт</td>
+<td>Зависит от мощности рассеивания</td>
+</tr>
+<tr>
+<td>Стабилитрон (если есть)</td>
+<td>Напряжение стабилизации</td>
+<td>Более Uвх</td>
+<td>Для защиты затвора от пробоя</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> При расчете теплоотвода не забывайте про переходное сопротивление между корпусом транзистора и радиатором. Использование изоляционных прокладок увеличивает тепловое сопротивление, поэтому мощность радиатора должна быть выбрана с дополнительным запасом.</p>
+</blockquote>
+
+<h2 id="проблемы-теплового-режима-и-рассеивание">Проблемы теплового режима и рассеивание</h2>
+
+<p>Наиболее частой причиной выхода таких стабилизаторов из строя является перегрев. В линейных схемах избыточная энергия не накапливается, а превращается в тепло. Если вы планируете использовать схему с большим перепадом входного и выходного напряжения, без активного охлаждения (вентилятора) или массивного радиатора не обойтись.</p>
+
+<p>Термостабильность схемы зависит от коэффициента температурного дрейфа компонентов. У биполярных транзисторов напряжение <code>Ube</code> уменьшается с ростом температуры, что может привести к тепловому разгону, если схема не имеет обратной связи по температуре. Полевые транзисторы в этом плане ведут себя стабильнее, так как их сопротивление растет с нагревом, ограничивая ток автоматически.</p>
+
+<p>Для улучшения теплоотвода необходимо использовать термопасту между корпусом транзистора и радиатором. Без качественного контакта эффективность охлаждения падает в разы. Также старайтесь располагать компоненты так, чтобы нагретые элементы не находились в непосредственной близости от чувствительных полупроводниковых приборов.</p>
+
+<details class="faq-item"><summary>Что такое тепловой разгон?
+<p>Тепловой разгон — это явление, при котором рост температуры транзистора приводит к увеличению тока через него, что вызывает еще больший нагрев. Этот лавинообразный процесс может привести к мгновенному разрушению полупроводникового кристалла. В схемах с биполярными транзисторами риск разгона выше, чем у полевых.--></p>
+
+<h2 id="практические-советы-по-монтажу">Практические советы по монтажу</h2>
+
+<p>При сборке схемы на печатной плате уделяйте особое внимание дорожкам, через которые протекает основной ток. Тонкие дорожки могут сгореть или иметь значительное паразитное сопротивление, которое исказит работу стабилизатора. Используйте утолщенные дорожки или перекрывайте их припоем для снижения сопротивления.</p>
+
+<p>Компоненты обратной связи, особенно резистор датчика тока, должны располагаться как можно ближе к транзистору. Длинные провода в этой цепи вносят индуктивность, которая может вызвать самовозбуждение схемы или замедлить время реакции на скачки тока. Короткие и толстые выводы — залог стабильной работы.</p>
+
+<p>Если вы используете макетную плату для прототипирования, помните о контактном сопротивлении перемычек. Оно может быть сопоставимо с сопротивлением шунтирующего резистора, что сделает настройки неточными. Для финальных версий всегда переходите на пайку или использование профессиональных монтажных плат.</p>
+
+<!--WIDGET</summary><div class="faq-answer"><p>tip:Перед пайкой окончательной версии схемы соберите прототип на макетной плате, используя мощные резисторы. Протестируйте работу при максимальном токе в течение 10 минут, чтобы убедиться в отсутствии перегрева и влияния на точность стабилизации.</p></div></details>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> В схемах с питанием от нестабилизированных источников (например, от трансформаторов без фильтрации) входное напряжение может содержать пульсации, которые транзистор будет пытаться компенсировать. Это может привести к перегреву. Обязательно используйте входные конденсаторы с емкостью не менее 1000 мкФ на ампер тока.</p>
+</blockquote>
+
+<h2 id="ограничения-и-области-применения">Ограничения и области применения</h2>
+
+<p>Несмотря на простоту, транзисторные стабилизаторы имеют свои ограничения. Главный недостаток — низкий КПД при большом перепаде напряжений. Если вы планируете понижать с 24 В до 3 В, на транзисторе будет теряться 87,5% энергии. В таких случаях лучше использовать импульсные стабилизаторы (DC-DC).</p>
+
+<p>Однако линейные схемы незаменимы там, где требуется отсутствие электромагнитных помех. Импульсные преобразователи генерируют высокочастотные шумы, которые могут мешать работе чувствительной радиоаппаратуры или аудиосистем. В таких сценариях транзисторный стабилизатор является единственным приемлемым решением.</p>
+
+<p>Сфера применения включает питание мощных светодиодов, лазеров, зарядку аккумуляторов малыми токами и питание аналоговых каскадов усилителей. Благодаря своей предсказуемости и простоте, эти схемы остаются актуальными даже в эпоху цифровых контроллеров.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> При питании светодиодов убедитесь, что схема способна ограничивать пусковой ток. Некоторые типы светодиодов чувствительны к кратковременным перенапряжениям при включении, что может снизить их ресурс. Добавление конденсатора параллельно нагрузке может смягчить этот эффект.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Линейные стабилизаторы на транзисторах идеальны для задач, требующих чистого питания без помех, но требуют тщательного теплоотвода при больших перепадах напряжения.</p></div>
+
+<h2 id="частые-вопросы-faq">Частые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли использовать один транзистор вместо двух?</summary>
+<p>Технически можно, если использовать составной транзистор (Дарлингтона) или полевой транзистор с внутренним стабилизатором. Однако классическая схема с двумя отдельными транзисторами позволяет более гибко подбирать параметры и обеспечивает лучшую температурную стабильность за счет разделения функций управления и проходного элемента.</p>
+</details>
+
+<details>
+<summary>Как увеличить максимальный ток схемы?</summary>
+<p>Для увеличения тока нужно заменить проходной транзистор на более мощный аналог с большим максимальным током и тепловым рассеиванием. Также необходимо пропорционально уменьшить сопротивление датчика тока и увеличить его мощность. Если одного транзистора недостаточно, можно подключить несколько проходных транзисторов параллельно, добавив мелкие балансные резисторы в их эмиттерные/истоковые цепи.</p>
+</details>
+
+<details>
+<summary>Нужен ли стабилитрон в схеме?</summary>
+<p>Стабилитрон необходим, если напряжение питания превышает максимальное напряжение затвор-исток (Vgs) полевого транзистора. Для биполярных транзисторов стабилитрон часто используется для фиксации напряжения на базе управляющего элемента, но в простейших схемах его роль может выполнять напряжение смещения самого транзистора.</p>
+</details>
+
+<details>
+<summary>Почему схема не держит ток?</summary>
+<p>Причинами могут быть: неверно рассчитанное сопротивление датчика, перегрев транзистора (тепловой пробой), недостаточное входное напряжение (оно должно быть выше падения напряжения на нагрузке плюс падение на транзисторе и датчике), или плохой контакт в цепи обратной связи.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать эту схему для зарядки аккумулятора?</summary>
+<p>Да, это одно из классических применений. Схема будет поддерживать постоянный ток заряда, пока напряжение на аккумуляторе не достигнет порога отсечки. Однако для полноценной зарядки необходимо добавить схему отключения при достижении максимального напряжения, так как простой стабилизатор тока не ограничивает напряжение.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-простейшего-стабилизатора">Принцип работы простейшего стабилизатора</a></li><li><a href="#схемы-на-биполярных-транзисторах">Схемы на биполярных транзисторах</a></li><li><a href="#стабилизаторы-на-полевых-транзисторах-mosfet">Стабилизаторы на полевых транзисторах (MOSFET)</a></li><li><a href="#расчет-номиналов-компонентов">Расчет номиналов компонентов</a></li><li><a href="#проблемы-теплового-режима-и-рассеивание">Проблемы теплового режима и рассеивание</a></li><li><a href="#практические-советы-по-монтажу">Практические советы по монтажу</a></li><li><a href="#ограничения-и-области-применения">Ограничения и области применения</a></li><li><a href="#частые-вопросы-faq">Частые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/v/va/vazhno-ne-kak-golosuyut-a-kak-schitayut.html" class="related-card">Честные выборы: почему подсчет важнее голосования на авто</a></li><li><a href="/articles/s/sk/skhema-podklyucheniya-trekhfaznogo-stabilizatora-napryazheniya-v-chastnom-dome.html" class="related-card">Схема подключения трехфазного стабилизатора: монтаж в частном доме</a></li><li><a href="/articles/a/aq/aqua-vu-micro-plus-dvr.html" class="related-card">Aqua Vu Micro Plus DVR: Обзор, настройки и подключение</a></li><li><a href="/articles/s/st/stabilizator-resanta-pokazyvaet-n-chto-delat.html" class="related-card">Стабилизатор Ресанта показывает «н»: причины и полное решение</a></li><li><a href="/articles/k/ka/kak-povysit-moshchnost-pnevmaticheskoj-vintovki.html" class="related-card">Как повысить мощность пневматической винтовки: методы тюнинга и настройки</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/v/va/vazhno-ne-kak-golosuyut-a-kak-schitayut.html" class="related-bottom-card"><span class="related-bottom-title">Честные выборы: почему подсчет важнее голосования на авто</span><span class="related-bottom-desc">Разбираем, почему в автосервисе и на выборах важен контроль процедуры подсчета. Как избежать ошибок </span></a><a href="/articles/s/sk/skhema-podklyucheniya-trekhfaznogo-stabilizatora-napryazheniya-v-chastnom-dome.html" class="related-bottom-card"><span class="related-bottom-title">Схема подключения трехфазного стабилизатора: монтаж в частном доме</span><span class="related-bottom-desc">Полная инструкция по подключению трехфазного стабилизатора напряжения. Схема, выбор кабеля, заземлен</span></a><a href="/articles/a/aq/aqua-vu-micro-plus-dvr.html" class="related-bottom-card"><span class="related-bottom-title">Aqua Vu Micro Plus DVR: Обзор, настройки и подключение</span><span class="related-bottom-desc">Полный разбор системы Aqua Vu Micro Plus DVR. Инструкция по подключению, настройке записи и выбору к</span></a><a href="/articles/s/st/stabilizator-resanta-pokazyvaet-n-chto-delat.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор Ресанта показывает «н»: причины и полное решение</span><span class="related-bottom-desc">Стабилизатор напряжения Ресанта показывает «н» или «0»? Узнайте реальные причины (от перегрузки до п</span></a><a href="/articles/k/ka/kak-povysit-moshchnost-pnevmaticheskoj-vintovki.html" class="related-bottom-card"><span class="related-bottom-title">Как повысить мощность пневматической винтовки: методы тюнинга и настройки</span><span class="related-bottom-desc">Практическое руководство по увеличению дульной энергии пневматики. Разбор дросселирования, замены пр</span></a><a href="/articles/k/ka/kakuyu-katushku-stavit-na-ultralajt.html" class="related-bottom-card"><span class="related-bottom-title">Какую катушку выбрать для ультралайта: рейтинг и советы эксперта</span><span class="related-bottom-desc">Полный гайд по подбору спиннинговой катушки для ультралайта. Разбор размеров, передаточных чисел, бр</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

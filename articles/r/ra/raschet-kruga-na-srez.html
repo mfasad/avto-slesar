@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Расчет круга на срез: формулы, допуски и ошибки при резке металлов — АвтоСлесарь</title>
+    <meta name="description" content="Полный гид по расчету площади среза, прочности на срез и нагрузок. Формулы, таблицы предельных напряжений и методы исключения ошибок при проектировании.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/r/ra/raschet-kruga-na-srez.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Расчет круга на срез: формулы, допуски и ошибки при резке металлов">
+    <meta property="og:description" content="Полный гид по расчету площади среза, прочности на срез и нагрузок. Формулы, таблицы предельных напряжений и методы исключения ошибок при проектировании.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Расчет круга на срез: формулы, допуски и ошибки при резке металлов</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Расчет круга на срез: инженерные формулы и практика</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#физика-процесса-и-геометрия-сечения">Физика процесса и геометрия сечения</a></li><li><a href="#основные-формулы-и-алгоритм-расчета">Основные формулы и алгоритм расчета</a></li><li><a href="#влияние-материала-и-допусков-обработки">Влияние материала и допусков обработки</a></li><li><a href="#особенности-двустороннего-и-многостороннего-среза">Особенности двустороннего и многостороннего среза</a></li><li><a href="#типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</a></li><li><a href="#сравнительная-таблица-материалов">Сравнительная таблица материалов</a></li><li><a href="#практические-рекомендации-по-укреплению-узлов">Практические рекомендации по укреплению узлов</a></li><li><a href="#контроль-качества-и-эксплуатация">Контроль качества и эксплуатация</a></li><li><a href="#заключительные-выводы">Заключительные выводы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>В инженерной практике и машиностроении часто возникает задача определения способности круглого стержня, болта или штифта выдерживать нагрузку, направленную перпендикулярно его продольной оси. Эта ситуация называется <strong>срезом</strong>, и именно здесь критически важно правильно рассчитать <strong>площадь поперечного сечения</strong>. Ошибка в расчетах может привести к мгновенному разрушению узла, потере герметичности или катастрофическому выходу из строя всего механизма.</p>
+
+<p>Многие начинающие конструкторы путают понятия <em>срез</em> и <strong>сдвиг</strong>, хотя физическая природа деформации в этих случаях схожа. При срезе круглого элемента происходит фактическое отделение одной части от другой по плоскости действия силы. Для точного вычисления <strong>предельной нагрузки</strong> необходимо использовать специализированные формулы, учитывающие не только диаметр детали, но и механические свойства материала, из которого она изготовлена.</p>
+
+<p>В этой статье мы разберем алгоритм расчета для идеального круга, рассмотрим влияние допусков обработки и обсудим, как избежать распространенных ошибок при выборе материалов. Понимание этих принципов позволит вам проектировать узлы, которые будут работать надежно и долговечно, без непредвиденных аварийных ситуаций.</p>
+
+<h2 id="физика-процесса-и-геометрия-сечения">Физика процесса и геометрия сечения</h2>
+
+<p>Когда к круглому стержню прикладывается сила, стремящаяся срезать его, напряжение распределяется по всей площади поперечного сечения. В идеализированной модели мы считаем, что <strong>касательное напряжение</strong> распределено равномерно, хотя в реальности оно имеет сложный профиль. Для инженерных расчетов достаточно использовать среднее значение, полученное путем деления силы сдвига на площадь круга.</p>
+
+<p>Основная формула для расчета площади круга выглядит просто: $S = \pi \cdot r^2$ или $S = \frac{\pi \cdot d^2}{4}$, где <code>d</code> — диаметр изделия. Однако при расчете на срез важно учитывать, что в некоторых конструкциях срез может происходить не в одной плоскости, а в нескольких. Это явление называется <strong>двусторонним срезом</strong> и требует удвоения расчетной площади сопротивления.</p>
+
+<p>Необходимо помнить, что реальная прочность материала всегда ниже теоретической из-за наличия дефектов кристаллической решетки, микротрещин и неравномерности структуры. Поэтому при расчете <em>срезной прочности</em> всегда применяют коэффициент запаса, который зависит от типа нагрузки и условий эксплуатации узла.</p>
+
+<h2 id="основные-формулы-и-алгоритм-расчета">Основные формулы и алгоритм расчета</h2>
+
+<p>Для определения максимальной силы, которую может выдержать круглый элемент до разрушения, используется формула: $F_{max} = [\tau] \cdot S$. Здесь <code>[τ]</code> обозначает <strong>допускаемое напряжение на срез</strong> для конкретного материала, а <code>S</code> — площадь сечения. Важно не путать допускаемое напряжение с пределом текучести или пределом прочности при растяжении, так как эти величины существенно различаются.</p>
+
+<p>Обычно допускаемое напряжение на срез составляет от 0,5 до 0,8 от предела прочности при растяжении для пластичных материалов, таких как сталь или алюминий. Для хрупких материалов, например, чугуна или керамики, этот коэффициент может быть значительно ниже. Всегда сверяйтесь со справочными данными для конкретной марки стали или сплава перед началом расчетов.</p>
+
+<p>Если деталь работает в условиях динамических или ударных нагрузок, коэффициент запаса следует увеличивать, чтобы обеспечить безопасность конструкции. В таких случаях рекомендуется использовать нижние границы допустимых значений напряжений. Это правило особенно актуально для узлов, работающих в агрессивных средах или при экстремальных температурах.</p>
+
+<p>Приведем пример расчета: для стального болта диаметром <code>10 мм</code> и допускаемым напряжением на срез <code>80 МПа</code>, площадь сечения составит примерно <code>78,5 мм²</code>. Следовательно, предельная сила срыва будет равна <code>6280 Н</code> (или около <code>640 кгс</code>). Это значение является теоретическим максимумом, при достижении которого происходит срез.</p>
+
+<h2 id="влияние-материала-и-допусков-обработки">Влияние материала и допусков обработки</h2>
+
+<p>Материал, из которого изготовлен круглый элемент, играет решающую роль в его способности сопротивляться срезу. Сталь марки <em>St3</em> будет вести себя совершенно иначе, чем <em>Алюминий Д16Т</em> или <em>Титан ВТ1-0</em>. Пластичные материалы склонны к значительной деформации перед разрушением, в то время как хрупкие разрушаются практически мгновенно без предварительного удлинения.</p>
+
+<p>Важным фактором являются допуски на изготовление детали. Если диаметр стержня имеет отрицательное отклонение, реальная площадь сечения будет меньше расчетной. Это означает, что фактическая прочность на срез окажется ниже ожидаемой. При проектировании ответственных узлов необходимо учитывать нижний предел допуска по ГОСТ или ISO.</p>
+
+<p>Также стоит учитывать состояние поверхности детали. Наличие рисок, царапин или следов коррозии может стать концентратором напряжений, что резко снижает реальную прочность на срез. Для критических применений рекомендуется использовать детали с упрочненной поверхностью или защитными покрытиями.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При расчете критических узлов ALWAYS используйте минимально допустимый диаметр из поля допуска, а не номинальный. Это гарантирует, что даже самая худшая деталь из партии выдержит нагрузку.</p>
+</blockquote>
+
+<h2 id="особенности-двустороннего-и-многостороннего-среза">Особенности двустороннего и многостороннего среза</h2>
+
+<p>Во многих конструкциях, например в соединениях на заклепках или болтах с двумя шайбами, срез происходит не в одной плоскости, а в двух или более. В этом случае говорим о <strong>двустороннем срезе</strong>. Физически это означает, что сила распределяется по двум площадям сечения, что теоретически удваивает несущую способность соединения.</p>
+
+<p>Расчетная формула для такого случая выглядит так: $F_{max} = [\tau] \cdot 2 \cdot S$. Однако на практике всегда существует риск неравномерного распределения нагрузки между плоскостями среза. Из-за неточностей сборки или деформации деталей одна плоскость может принять на себя большую часть нагрузки, чем другая.</p>
+
+<p>Поэтому при проектировании соединений на двустороннем срезе рекомендуется закладывать дополнительный коэффициент запаса. Не стоит полагаться на идеальное удвоение прочности. Иногда лучше увеличить диаметр детали, чем рисковать надежностью узла из-за теоретических предположений.</p>
+
+<div class="poll-widget" id="poll-e0536647"><div class="poll-widget-question">📊 Как часто вы учитываете допуски при расчетах?</div><div class="poll-widget-option" data-poll="e0536647" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Всегда</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e0536647" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Часто</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e0536647" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Редко</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e0536647" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Никогда, считаю номинал</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</h2>
+
+<p>Одной из самых частых ошибок является использование предела прочности при растяжении вместо предела прочности на срез. Эти величины не равны, и их путаница может привести к недопустимой перегрузке узла. Для большинства металлов предел прочности на срез составляет около 60-70% от предела прочности на растяжение.</p>
+
+<p>Другая распространенная ошибка — игнорирование коэффициента безопасности для динамических нагрузок. Если узел подвергается ударам, вибрациям или циклическим нагрузкам, статический расчет будет недостаточным. В таких случаях необходимо применять коэффициенты безопасности, увеличивающие требуемую прочность в 2-4 раза.</p>
+
+<p>Также конструкторы часто забывают про влияние температуры. При высоких температурах металлы размягчаются, и их предел прочности на срез резко падает. Для работы в горячих средах необходимо использовать специальные жаропрочные сплавы или пересчитывать допустимые напряжения с учетом температурного коэффициента.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка расчета на срез</h4><label class="check-item"><input type="checkbox"><span>Определить тип нагрузки (статическая/динамическая)</span></label><label class="check-item"><input type="checkbox"><span>Выбрать правильный предел прочности на срез</span></label><label class="check-item"><input type="checkbox"><span>Учесть допуски на диаметр детали</span></label><label class="check-item"><input type="checkbox"><span>Рассчитать площадь сечения с учетом двустороннего среза</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="сравнительная-таблица-материалов">Сравнительная таблица материалов</h2>
+
+<p>Для удобства подбора материалов при расчете на срез приведем сравнительную таблицу допустимых напряжений для наиболее распространенных конструкционных материалов. Эти значения являются ориентировочными и могут варьироваться в зависимости от конкретной марки и термообработки.</p>
+
+<table>
+<thead>
+<tr>
+<th>Материал</th>
+<th>Марка</th>
+<th>Предел прочности на срез (МПа)</th>
+<th>Коэффициент запаса</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Сталь конструкционная</td>
+<td>Ст3</td>
+<td>120-140</td>
+<td>2.5</td>
+</tr>
+<tr>
+<td>Сталь легированная</td>
+<td>40Х</td>
+<td>250-300</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>Алюминиевый сплав</td>
+<td>Д16Т</td>
+<td>180-220</td>
+<td>2.5</td>
+</tr>
+<tr>
+<td>Титановый сплав</td>
+<td>ВТ6</td>
+<td>350-400</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>Чугун серый</td>
+<td>СЧ20</td>
+<td>80-100</td>
+<td>3.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>Обратите внимание, что для чугуна коэффициент запаса выше из-за его хрупкости и непредсказуемости разрушения. Сталь и титан, обладая пластичностью, позволяют использовать более низкие коэффициенты, но при этом требуют тщательного контроля качества сварных швов и термообработки.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильный выбор материала и учет его реальных свойств — это 80% успеха в расчете на срез. Никогда не полагайтесь только на теоретические формулы без проверки допусков и условий эксплуатации.</p></div>
+
+<h2 id="практические-рекомендации-по-укреплению-узлов">Практические рекомендации по укреплению узлов</h2>
+
+<p>Если расчет показывает, что текущая деталь не выдерживает предполагаемую нагрузку, есть несколько путей решения проблемы. Самый простой способ — увеличить диаметр стержня, что квадратично увеличит площадь сечения и, следовательно, прочность. Однако это может потребовать изменения конструкции узла и установки более крупных крепёжных элементов.</p>
+
+<p>Другой вариант — замена материала на более прочный сплав. Переход с обычной стали на легированную или титан может дать значительный прирост несущей способности без изменения габаритов детали. Важно убедиться, что новый материал совместим по коррозионной стойкости и технологичности.</p>
+
+<p>Также можно изменить схему нагружения, перейдя от одностороннего к двустороннему срезу. Это часто достигается установкой дополнительных шайб или изменением конструкции фланцев. Однако такая модификация требует пересчета всех сопрягаемых деталей на смятие и изгиб.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При увеличении диаметра болта или штифта обязательно проверьте отверстия в сопрягаемых деталях на прочность. Усиление одной части узла может привести к разрушению другой, более слабой части конструкции.</p>
+</blockquote>
+
+<h2 id="контроль-качества-и-эксплуатация">Контроль качества и эксплуатация</h2>
+
+<p>После изготовления детали и сборки узла необходимо провести визуальный и инструментальный контроль. Осмотрите поверхности деталей на наличие трещин, вмятин или следов коррозии. Измерьте реальные диаметры штангенциркулем или микрометром, чтобы убедиться, что они соответствуют проектным требованиям с учетом допусков.</p>
+
+<p>В процессе эксплуатации регулярно проверяйте состояние узлов, работающих на срез. Особое внимание уделяйте болтовым и заклепочным соединениям, подверженным вибрации. Ослабление затяжки может привести к появлению зазоров и неравномерному распределению нагрузки, что снизит ресурс соединения.</p>
+
+<p>Если узел работает в условиях агрессивной среды, необходимо предусмотреть периодическую замену деталей или их защитную обработку. Коррозия, даже поверхностная, значительно снижает сечение детали и её способность сопротивляться срезу. Регулярное обслуживание — залог долгой и безопасной работы механизма.</p>
+
+<details class="faq-item"><summary>Что такое усталостный срез?</summary><div class="faq-answer"><p>Усталостный срез происходит при многократном повторении нагрузок, даже если они значительно ниже предела прочности. Микротрещины нарастают со временем, и деталь может разрушиться внезапно, без видимых признаков деформации. Это особенно опасно для деталей, работающих под вибрацией.</p></div></details>
+
+<h2 id="заключительные-выводы">Заключительные выводы</h2>
+
+<p>Расчет круга на срез — это фундаментальная задача в машиностроении, требующая внимания к деталям и понимания физики процессов. Правильное использование формул, учет допусков и выбор подходящего материала позволяют создавать надежные и долговечные конструкции. Игнорирование этих факторов чревато авариями и финансовыми потерями.</p>
+
+<p>Помните, что теоретические расчеты должны всегда подтверждаться практикой и тестированием. Особенно это касается ответственных узлов, где отказ может привести к травмам или разрушению оборудования. Используйте коэффициенты запаса, учитывайте реальные условия эксплуатации и не пренебрегайте качеством материалов.</p>
+
+<p>В современном мире, где требования к надежности и безопасности постоянно растут, инжениринг на срезе остается актуальным навыком. Владение этими знаниями позволит вам проектировать эффективные механизмы и избегать ошибок, которые могут стоить слишком дорого.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При работе с чертежами всегда указывайте предельные отклонения для диаметров деталей, работающих на срез. Это поможет изготовителю понять критичность размеров и избежать брака.</p></div>
+
+<details>
+<summary>Какая разница между срезом и смятием?</summary>
+<p>Срез — это разрушение детали по плоскости, перпендикулярной силе, когда одна часть сдвигается относительно другой. Смятие — это локальная деформация поверхности в месте контакта (например, под головкой болта), приводящая к потере формы, но не обязательно к полному разрушению. Оба процесса могут происходить одновременно в одном узле.</p>
+</details>
+
+<details>
+<summary>Как учесть температурные воздействия при расчете?</summary>
+<p>При повышении температуры предел прочности большинства металлов снижается. Для точного расчета необходимо использовать температурные коэффициенты снижения прочности, которые приводятся в справочниках для конкретных марок сплавов. При низких температурах некоторые материалы становятся хрупкими, что также требует пересчета коэффициентов запаса.</p>
+</details>
+
+<details>
+<summary>Что делать, если деталь имеет некруглое сечение?</summary>
+<p>Для некруглых сечений (квадрат, шестигранник) расчет площади производится по соответствующим геометрическим формулам. Однако распределение напряжений в таких сечениях сложнее, и в углах могут возникать концентрации напряжений. В таких случаях рекомендуется увеличивать коэффициент запаса или использовать округленные формы.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать болты из мягких материалов для среза?</summary>
+<p>Мягкие материалы (медь, мягкий алюминий) имеют низкий предел прочности на срез и не рекомендуются для ответственных соединений. Они могут деформироваться при относительно небольших нагрузках. Используйте только конструкционные стали или специальные сплавы, рассчитанные на высокие нагрузки.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#физика-процесса-и-геометрия-сечения">Физика процесса и геометрия сечения</a></li><li><a href="#основные-формулы-и-алгоритм-расчета">Основные формулы и алгоритм расчета</a></li><li><a href="#влияние-материала-и-допусков-обработки">Влияние материала и допусков обработки</a></li><li><a href="#особенности-двустороннего-и-многостороннего-среза">Особенности двустороннего и многостороннего среза</a></li><li><a href="#типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</a></li><li><a href="#сравнительная-таблица-материалов">Сравнительная таблица материалов</a></li><li><a href="#практические-рекомендации-по-укреплению-узлов">Практические рекомендации по укреплению узлов</a></li><li><a href="#контроль-качества-и-эксплуатация">Контроль качества и эксплуатация</a></li><li><a href="#заключительные-выводы">Заключительные выводы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/n/na/navigator-dlya-okhoty-i-rybalki.html" class="related-card">Навигатор для охоты и рыбалки: выбор, функции и лучшие модели</a></li><li><a href="/articles/s/st/stabilizator-resanta-asn-500-1-ts-neispravnosti.html" class="related-card">Стабилизатор Ресанта АСН 500/1-Ц: Основные неисправности и ремонт</a></li><li><a href="/articles/y/yg/ygk-x-braid-upgrade-x8-otzyvy.html" class="related-card">Катушки YGK X Braid Upgrade X8: реальные отзывы и разбор характеристик</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-12v-dlya-avto-kupit.html" class="related-card">Стабилизатор напряжения 12В для авто: как выбрать и купить надежный прибор</a></li><li><a href="/articles/s/sh/shnur-dlya-ultralajta-diametr.html" class="related-card">Выбор диаметра шнура для ультралайта: гид по сечению и тесту</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/n/na/navigator-dlya-okhoty-i-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Навигатор для охоты и рыбалки: выбор, функции и лучшие модели</span><span class="related-bottom-desc">Как выбрать навигатор для охоты и рыбалки. Обзор функций, форматов карт, защита от влаги и рейтинг п</span></a><a href="/articles/s/st/stabilizator-resanta-asn-500-1-ts-neispravnosti.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор Ресанта АСН 500/1-Ц: Основные неисправности и ремонт</span><span class="related-bottom-desc">Подробный разбор поломок стабилизатора Ресанта АСН 500/1-Ц. Диагностика, частые причины отказов, инс</span></a><a href="/articles/y/yg/ygk-x-braid-upgrade-x8-otzyvy.html" class="related-bottom-card"><span class="related-bottom-title">Катушки YGK X Braid Upgrade X8: реальные отзывы и разбор характеристик</span><span class="related-bottom-desc">Честные отзывы о плетенке YGK X Braid Upgrade X8. Разбор прочности, сечения, памяти и сравнение с ко</span></a><a href="/articles/s/st/stabilizator-napryazheniya-12v-dlya-avto-kupit.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения 12В для авто: как выбрать и купить надежный прибор</span><span class="related-bottom-desc">Гайд по выбору стабилизатора 12В для автомобиля. Обзор типов, критерии покупки, защита электроники о</span></a><a href="/articles/s/sh/shnur-dlya-ultralajta-diametr.html" class="related-bottom-card"><span class="related-bottom-title">Выбор диаметра шнура для ультралайта: гид по сечению и тесту</span><span class="related-bottom-desc">Как подобрать идеальный диаметр шнура для ультралайта. Разбор влияния толщины на заброс, чувствитель</span></a><a href="/articles/k/ka/kak-rabotaet-katushka-na-spinninge.html" class="related-bottom-card"><span class="related-bottom-title">Как работает катушка на спиннинге: принцип действия и устройство</span><span class="related-bottom-desc">Разбираем устройство и принцип работы спиннинговой катушки. Типы механизмов, передаточное число, фри</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Как эхолот показывает рыбу: принцип работы и настройка — АвтоСлесарь</title>
+    <meta name="description" content="Почему эхолот видит рыбу и как интерпретировать эхо. Разбор режимов 2D, CHIRP и DownScan. Советы по настройке чувствительности и скорости для точного обнаружения.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/k/ka/kak-pokazyvaet-rybu-ekholot.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как эхолот показывает рыбу: принцип работы и настройка">
+    <meta property="og:description" content="Почему эхолот видит рыбу и как интерпретировать эхо. Разбор режимов 2D, CHIRP и DownScan. Советы по настройке чувствительности и скорости для точного обнаружения.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как эхолот показывает рыбу: принцип работы и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как эхолот показывает рыбу: полный разбор принципов работы</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#физика-акустического-луча-и-форма-дуги">Физика акустического луча и форма дуги</a></li><li><a href="#различия-между-режимами-2d-chirp-и-сканированием">Различия между режимами 2D, CHIRP и сканированием</a></li><li><a href="#настройка-чувствительности-и-скорости-прокрутки">Настройка чувствительности и скорости прокрутки</a></li><li><a href="#идентификация-рыбы-что-означают-цвета-и-формы">Идентификация рыбы: что означают цвета и формы</a></li><li><a href="#таблица-соответствия-визуальных-образов-и-целей">Таблица соответствия визуальных образов и целей</a></li><li><a href="#типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</a></li><li><a href="#спецэффекты-и-дополнительные-функции">Спецэффекты и дополнительные функции</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие начинающие рыболовы сталкиваются с парадоксальной ситуацией: они видят на экране устройства мощные дуги или яркие точки, но леска опускается в пустую воду. Понимание того, <strong>как эхолот показывает рыбу</strong>, требует не просто знания кнопок, а осознания физики процесса. Прибор не видит живые организмы в прямом смысле, а фиксирует отражённые звуковые импульсы от границ плотных сред.</p>
+
+<p>Ваша задача — научиться отличать реальные цели от помех и структур дна. Эхолот <em>Lowrance</em> или <em>Garmin</em> лишь трансформирует невидимые акустические волны в визуальную картинку, которую человек должен правильно интерпретировать. Ошибка в настройке <strong>чувствительности</strong> может превратить мелкого пескаря в гигантское существо или, наоборот, скрыть трофей на фоне дна.</p>
+
+<p>Чтобы разобраться в основах, нужно представить, что прибор работает как летучая мышь в пещере, отправляя сигнал и слушая эхо. Когда этот сигнал встречает на своем пути объект с плотностью, отличной от воды, часть энергии отражается обратно к датчику (трандючеру). Скорость, с которой сигнал возвращается, определяет глубину, а сила отражения — размер и плотность цели.</p>
+
+<h2 id="физика-акустического-луча-и-форма-дуги">Физика акустического луча и форма дуги</h2>
+
+<p>Основной элемент, формирующий картинку, — это конус звукового луча, который излучает датчик. Внутри этого конуса прибор сканирует пространство и обновляет информацию на экране с высокой скоростью. Классический режим 2D отображает историческую запись: чем дольше вы находитесь над одной точкой, тем шире будет отображение объекта.</p>
+
+<p>Почему рыба часто выглядит как дуга? Это оптическая иллюзия, возникающая из-за движения лодки. Когда судно приближается к рыбе, сигнал проходит меньшее расстояние, и отметка на экране поднимается выше. В момент прохождения рыбы под килем расстояние минимально, а при удалении луч снова проходит больший путь. Если вы идете слишком быстро, дуга не успевает сформироваться, и вы увидите лишь точку или линию.</p>
+
+<p>Ключевым параметром здесь является <strong>угол раскрытия луча</strong>. Узкий луч (например, 20 градусов) дает более четкую и детальную картинку, но требует точного наведения на цель. Широкий луч (60-90 градусов) покрывает большую площадь, но снижает разрешение и четкость изображения отдельных объектов. Выбор режима зависит от ваших задач и условий ловли.</p>
+
+<h2 id="различия-между-режимами-2d-chirp-и-сканированием">Различия между режимами 2D, CHIRP и сканированием</h2>
+
+<p>Современные устройства предлагают несколько технологий визуализации, каждая из которых имеет свои преимущества. Классический <strong>2D</strong> режим использует синусоидальные импульсы фиксированной частоты. Он отлично подходит для определения глубины и наличия рыбы, но часто страдает от наложения сигналов при сложном рельефе дна.</p>
+
+<p>Технология <em>CHIRP</em> (Compressed High-Intensity Radiated Pulse) меняет подход: прибор посылает не короткий импульс, а длинный сигнал с плавно меняющейся частотой. Это позволяет разделить близко расположенные объекты, которые в обычном режиме выглядели бы как один большой сгусток. <strong>Точность определения</strong> глубины и размеров добычи в режиме CHIRP значительно выше.</p>
+
+<p>Сканирующие технологии, такие как <em>DownScan</em> или <em>SideScan</em>, работают иначе. Они формируют изображение, напоминающее аэрофотоснимок, с высоким разрешением. В этом режиме рыба часто выглядит не как дуга, а как четкий силуэт или яркая точка. Это особенно полезно для поиска рыбы в толще воды и на удалении от лодки, где классический луч уже не может дать детальную картину.</p>
+
+<div class="poll-widget" id="poll-3cd64b2f"><div class="poll-widget-question">📊 Какой режим эхолота вы используете чаще всего?</div><div class="poll-widget-option" data-poll="3cd64b2f" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Классический 2D</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="3cd64b2f" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">CHIRP</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="3cd64b2f" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">DownScan/SideScan</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="3cd64b2f" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Смешанный режим</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="настройка-чувствительности-и-скорости-прокрутки">Настройка чувствительности и скорости прокрутки</h2>
+
+<p>Даже самый дорогой эхолот не покажет рыбу, если его параметры настроены неверно. Чувствительность — это «громкость» прибора при прослушивании эха. Если установить значение слишком низко, <strong>слабые сигналы</strong> от мелкой рыбы просто не достигнут экрана. Если переборщить, вы получите хаос из шумов, помех и шумов от винта.</p>
+
+<p>Скорость прокрутки (Scroll Speed) определяет, как быстро обновляется экран. При высокой скорости вы получаете более широкие изображения объектов, что помогает увидеть структуру, но рискуете потерять момент, если лодка движется быстро. При низкой скорости картинка становится узкой, и мелкие детали могут сливаться в сплошную линию.</p>
+
+<p>Вам необходимо подобрать баланс, зависящий от скорости движения лодки. Если вы дрейфуете, поставьте скорость прокрутки на минимум, чтобы получить максимальное разрешение изображения. При быстрой проводке увеличивайте скорость, чтобы избежать «размазывания» дна. Настройка <code>Range</code> (диапазон глубин) также критична: всегда держите диапазон чуть больше фактической глубины, чтобы видеть зону над дном.</p>
+
+<blockquote>
+<strong>⚠️ Внимание:</strong> Не оставляйте чувствительность на 100% постоянно. Высокая чувствительность на мелководье часто вызывает «масштабирование» дна, когда эхо от дна уходит за пределы экрана, скрывая рыбу, находящуюся в метре ниже поверхности.
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если на экране много шума, попробуйте уменьшить чувствительность на 10-15% или включить фильтр помех, но следите, чтобы не исчезли слабые цели.</p></div>
+
+<h2 id="идентификация-рыбы-что-означают-цвета-и-формы">Идентификация рыбы: что означают цвета и формы</h2>
+
+<p>Цветовая шкала (Color Line) — это еще один инструмент для оценки плотности цели. Обычно более яркие цвета (красный, желтый) обозначают сильные отражения, а тусклые (синий, черный) — слабые. Мелкая рыба или мягкие организмы дают слабое эхо и отображаются бледными оттенками, тогда как плотная рыба или камни — яркими пятнами.</p>
+
+<p>Иногда рыба выглядит не как дуга, а как облако точек. Это может указывать на стаю мелкого кильки или плотной мелочи. Если вы видите единичные точки, поднимающиеся от дна, это может быть рыба, кормящаяся у дна или уходящая в толщу воды. Важно обращать внимание на <strong>расположение цели</strong> относительно дна. Рыба, которая сидит на самом дне, часто сливается с ним.</p>
+
+<p>Для лучшего понимания структуры дна используйте функцию "Zoom" (масштабирование). Она позволяет разложить донный слой на составляющие: твердое дно, мягкий ил, водоросли. Рыба, скапливающаяся в иле, будет видна с трудом, но если она стоит над илом, прибор покажет четкую границу между дном и объектом.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка настроек перед ловлей</h4><label class="check-item"><input type="checkbox"><span>Убедиться, что Range корректен</span></label><label class="check-item"><input type="checkbox"><span>Проверить чувствительность</span></label><label class="check-item"><input type="checkbox"><span>Отключить ненужные фильтры</span></label><label class="check-item"><input type="checkbox"><span>Настроить скорость прокрутки</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="таблица-соответствия-визуальных-образов-и-целей">Таблица соответствия визуальных образов и целей</h2>
+
+<p>Чтобы быстрее ориентироваться на экране, полезно запомнить основные визуальные паттерны. Ниже приведена таблица, помогающая расшифровать, что именно показывает эхолот в различных ситуациях.</p>
+
+<table>
+<thead>
+<tr>
+<th>Визуальный образ на экране</th>
+<th>Вероятная цель</th>
+<th>Рекомендуемое действие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Плавная широкая дуга</td>
+<td>Крупная одиночная рыба</td>
+<td>Провести точечный заброс под дугу</td>
+</tr>
+<tr>
+<td>Горизонтальная линия, параллельная дну</td>
+<td>Термоклин или скопление планктона</td>
+<td>Проверить наличие рыбы внутри слоя</td>
+</tr>
+<tr>
+<td>Мелкие разрозненные точки над дном</td>
+<td>Мелкая стая или кормящаяся рыба</td>
+<td>Использовать насадку, имитирующую корм</td>
+</tr>
+<tr>
+<td>Резкая вертикальная линия</td>
+<td>Водоросли или коряга</td>
+<td>Избегать зацепов, искать рыбу рядом</td>
+</tr>
+<tr>
+<td>Яркое пятно, сливающееся с дном</td>
+<td>Рыба, лежащая на грунте</td>
+<td>Снизить чувствительность для разделения</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</h2>
+
+<p>Одной из самых частых проблем является неправильная установка датчика. Если <em>transducer</em> установлен слишком высоко или под неправильным углом, луч может не доходить до дна или отражаться от корпуса лодки. Это создает «мнимую рыбу» или пустоту там, где она есть. Убедитесь, что ламинарный поток воды проходит через датчик без пузырьков воздуха.</p>
+
+<p>Второй ошибочный сценарий — игнорирование помех. Ветер, волна и работа двигателя создают акустический шум, который эхолот может принять за рыбу. Используйте функцию фильтрации шума (Noise Filter), но с осторожностью. Слишком агрессивная фильтрация удалит реальную рыбу вместе с шумом.</p>
+
+<p>Если вы видите на экране странные вертикальные полосы или хаотичные линии, проверьте, не касается ли датчик дна на мелководье. Удары о грунт или водоросли искажают сигнал. Также убедитесь, что частота излучения (50 кГц или 200 кГц) выбрана правильно для вашей глубины. На больших глубинах 200 кГц может терять сигнал, а 50 кГц — нет.</p>
+
+<blockquote>
+<strong>⚠️ Внимание:</strong> Не пытайтесь очистить датчик от налета на ходу с высокой скоростью. Это может привести к повреждению пьезоэлемента или корпуса, а также создать мощные пузырьки кавитации, которые полностью заглушат сигнал.
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная установка датчика и подбор частоты (50/200 кГц) важнее, чем наличие дорогих режимов сканирования для базового обнаружения рыбы.</p></div>
+
+<h2 id="спецэффекты-и-дополнительные-функции">Спецэффекты и дополнительные функции</h2>
+
+<p>Современные эхолоты оснащены функциями, которые помогают точнее определить характер дна. Режим "Bottom Lock" (Lock Ground) позволяет растянуть изображение дна, чтобы увидеть, что происходит непосредственно в придонном слое. Это критически важно для джиговой ловли, когда рыба стоит в 10-20 см от дна.</p>
+
+<p>Также популярна функция "Structure Scan", которая использует боковые лучи для создания панорамы дна. Здесь рыба может показываться как четкие силуэты, не зависящие от движения лодки. Это позволяет искать рыбу на удалении до 60-100 метров в стороны от судна, не проходя над ней напрямую.</p>
+
+<p>Не забывайте о функции "History" или "Snapshot", которая сохраняет текущий кадр. Это позволяет позже проанализировать структуру дна и поведение рыбы, не торопясь. Если вы ловите в новых местах, сохранение скриншотов поможет составить карту перспективных точек для будущих выездов.</p>
+
+<blockquote>
+<strong>⚠️ Внимание:</strong> Функция SideScan требует спокойной воды для максимальной детализации. При сильной волне изображение бокового сканирования может стать размытым и трудночитаемым, так как датчик постоянно меняет угол наклона относительно дна.
+</blockquote>
+
+<details>
+<summary>Что делать, если эхолот показывает глубину, но не показывает рыбу?</summary>
+<p>Скорее всего, чувствительность слишком низкая или выбрана слишком высокая частота для глубины. Увеличьте чувствительность на 5-10%, проверьте, не перегружен ли диапазон (Range). Также убедитесь, что рыба находится в конусе луча, а не сбоку от него. Если дно ил, рыба может быть скрыта под слоем ила, который эхолот воспринимает как дно.</p>
+</details>
+
+<details>
+<summary>Почему рыба показывается двойным эхом?</summary>
+<p>Двойное эхо возникает из-за многократного отражения сигнала между дном и поверхностью воды. Это часто происходит на мелководье или при очень высокой чувствительности. Если вы видите два одинаковых силуэта рыбы, второй — это отражение. Снижение чувствительности уберет дубликат.</p>
+</details>
+
+<details>
+<summary>Какая частота лучше для поиска рыбы: 50 или 200 кГц?</summary>
+<p>200 кГц дает более детальное изображение на глубинах до 150-200 метров и имеет узкий луч, что хорошо для точечной ловли. 50 кГц имеет широкую диаграмму направленности и лучше проникает на большие глубины (до 1000 м), но дает менее детальную картинку. Для прибрежной рыбалки чаще используют 200 кГц.</p>
+</details>
+
+<details>
+<summary>Как понять, что рыба двигается?</summary>
+<p>В классическом режиме 2D движение рыбы сложнее отследить без опыта. Если вы стоите на якоре и видите, как дуга меняет форму или перемещается по экрану влево-вправо, рыба двигается. В режимах сканирования (DownScan) движение видно как изменение формы силуэта или его смещение по времени.</p>
+</details>
+
+<details>
+<summary>Можно ли определить размер рыбы по эхолоту?</summary>
+<p>Точно определить размер сложно, но можно сделать предположение. Чем ярче и толще дуга, тем плотнее и крупнее объект. Однако плотность рыбы зависит от вида (например, окунь и судак дают разное эхо при одинаковом размере). Лучше ориентироваться на характер дуги и поведение рыбы у дна.</p>
+</details>
+
+<details class="faq-item"><summary>Секрет про дуги</summary><div class="faq-answer"><p> Почему иногда рыба не показывает дугу?
+<p>Если лодка движется слишком быстро, экран просто не успевает нарисовать полную дугу. Рыба будет видна как короткая линия или даже одна точка. Также дуга не рисуется, если рыба находится в самом центре луча (под килем) и лодка стоит на якоре — в этом случае вы увидите просто яркую точку на одном месте.</p></div></details></p></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#физика-акустического-луча-и-форма-дуги">Физика акустического луча и форма дуги</a></li><li><a href="#различия-между-режимами-2d-chirp-и-сканированием">Различия между режимами 2D, CHIRP и сканированием</a></li><li><a href="#настройка-чувствительности-и-скорости-прокрутки">Настройка чувствительности и скорости прокрутки</a></li><li><a href="#идентификация-рыбы-что-означают-цвета-и-формы">Идентификация рыбы: что означают цвета и формы</a></li><li><a href="#таблица-соответствия-визуальных-образов-и-целей">Таблица соответствия визуальных образов и целей</a></li><li><a href="#типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</a></li><li><a href="#спецэффекты-и-дополнительные-функции">Спецэффекты и дополнительные функции</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/st/stabilizator-napryazheniya-resanta-oshibka-n.html" class="related-card">Ресанта ошибка Н: расшифровка, причины и способы устранения</a></li><li><a href="/articles/r/re/remont-stabilizatora-resanta-10000.html" class="related-card">Ремонт стабилизатора напряжения Ресанта 10000: диагностика и замена</a></li><li><a href="/articles/l/ly/lyulya-padaet-s-shampura.html" class="related-card">Люля падает с шампура: причины и способы фиксации мяса</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-dlya-garazha.html" class="related-card">Стабилизатор напряжения для гаража: выбор, расчет и защита техники</a></li><li><a href="/articles/p/po/podsvetka-pod-podokonnikom-na-balkone.html" class="related-card">Подсветка под подоконником на балконе: выбор ленты и монтаж</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/st/stabilizator-napryazheniya-resanta-oshibka-n.html" class="related-bottom-card"><span class="related-bottom-title">Ресанта ошибка Н: расшифровка, причины и способы устранения</span><span class="related-bottom-desc">Ошибка H на стабилизаторах Ресанта означает перегрузку. Узнайте, как диагностировать перегрев, прове</span></a><a href="/articles/r/re/remont-stabilizatora-resanta-10000.html" class="related-bottom-card"><span class="related-bottom-title">Ремонт стабилизатора напряжения Ресанта 10000: диагностика и замена</span><span class="related-bottom-desc">Пошаговая инструкция по ремонту стабилизатора Ресанта 10000. Диагностика тиристоров, реле и трансфор</span></a><a href="/articles/l/ly/lyulya-padaet-s-shampura.html" class="related-bottom-card"><span class="related-bottom-title">Люля падает с шампура: причины и способы фиксации мяса</span><span class="related-bottom-desc">Почему люля-кебаб падает с шампура при жарке? Разбор ошибок в фарше, выборе мяса и технике нанизыван</span></a><a href="/articles/s/st/stabilizator-napryazheniya-dlya-garazha.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения для гаража: выбор, расчет и защита техники</span><span class="related-bottom-desc">Как выбрать стабилизатор напряжения для гаража: расчет мощности, типы устройств, защита сварочника и</span></a><a href="/articles/p/po/podsvetka-pod-podokonnikom-na-balkone.html" class="related-bottom-card"><span class="related-bottom-title">Подсветка под подоконником на балконе: выбор ленты и монтаж</span><span class="related-bottom-desc">Узнайте, как установить подсветку под подоконником на балконе. Сравнение LED-лент, расчет мощности, </span></a><a href="/articles/t/tr/trekhosevoj-stabilizator-dlya-iphone.html" class="related-bottom-card"><span class="related-bottom-title">Трехосевой стабилизатор для iPhone: выбор, настройка и съемка</span><span class="related-bottom-desc">Полное руководство по выбору и использованию трехосевого стабилизатора для iPhone. Обзор моделей, на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

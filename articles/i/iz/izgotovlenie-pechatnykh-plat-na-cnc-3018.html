@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Изготовление печатных плат на CNC 3018: Полное руководство — АвтоСлесарь</title>
+    <meta name="description" content="Пошаговая инструкция по созданию печатных плат на фрезере CNC 3018. Выбор фрез, настройка G-кода, режимы резания и частые ошибки при травлении.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/i/iz/izgotovlenie-pechatnykh-plat-na-cnc-3018.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Изготовление печатных плат на CNC 3018: Полное руководство">
+    <meta property="og:description" content="Пошаговая инструкция по созданию печатных плат на фрезере CNC 3018. Выбор фрез, настройка G-кода, режимы резания и частые ошибки при травлении.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Изготовление печатных плат на CNC 3018: Полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Технология изготовления печатных плат на станках CNC 3018</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-механическое-травление-плат">Введение в механическое травление плат</a></li><li><a href="#выбор-материалов-и-подготовка-заготовки">Выбор материалов и подготовка заготовки</a></li><li><a href="#инструментарий-выбор-и-заточка-фрез">Инструментарий: выбор и заточка фрез</a></li><li><a href="#программное-обеспечение-и-генерация-g-кода">Программное обеспечение и генерация G-кода</a></li><li><a href="#процесс-фрезерования-и-настройка-станка">Процесс фрезерования и настройка станка</a></li><li><a href="#типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</a></li><li><a href="#сравнение-методов-и-таблица-параметров">Сравнение методов и таблица параметров</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-механическое-травление-плат">Введение в механическое травление плат</h2>
+<p>Современное домашнее производство электроники шагнуло далеко вперед благодаря доступности компактных ЧПУ-станков. Модель <em>CNC 3018</em> стала настоящим хитом среди энтузиастов и инженеров, позволяя создавать сложные прототипы без обращения в специализированные лаборатории. Этот процесс, называемый механическим фрезерованием, заменяет традиционное химическое травление, экономя время и уменьшая количество токсичных отходов.</p>
+<p>Вам предстоит освоить новый навык работы с <strong>фрезерованием дорожек</strong>, где точность установки глубины становится критическим фактором. От качества подготовки фольгированного текстолита зависит надежность будущего устройства. Неверно выбранная скорость подачи может привести к порче заготовки или поломке тонкого инструмента.</p>
+<p>Многие новички ошибочно полагают, что достаточно просто загрузить файл в программу и нажать кнопку старта. На практике процесс требует тщательной калибровки <strong>ось Z</strong> и понимания физики резания мягких и твердых материалов. В этой статье мы разберем все нюансы от подготовки заготовки до финальной проверки трассировки.</p>
+
+<h2 id="выбор-материалов-и-подготовка-заготовки">Выбор материалов и подготовка заготовки</h2>
+<p>Основой для вашей будущей платы служит фольгированный текстолит, но не любой подойдет для работы на <em>CNC 3018</em>. Стандартный стеклотекстолит FR-4 отлично подходит, однако важно проверить его плоскостность, так как даже небольшие искривления скажутся на глубине пропила. Если поверхность неровная, фреза может либо не прорезать дорожку до конца, либо углубиться слишком сильно и повредить основу.</p>
+<p>Для успешного результата необходимо использовать <strong>фрезерованные платы</strong> с предварительно очищенной поверхностью. Пыль, окислы или следы отпечатков пальцев могут ухудшить адгезию во время последующих этапов, если вы планируете наносить защитный лак. Очистите заготовку спиртом или ацетоном перед закреплением на рабочем столе станка.</p>
+<p>Закрепление материала — это первый и один из самых важных этапов работы. Используйте двусторонний скотч для тонких заготовок или струбцины для более массивных листов, но следите, чтобы они не мешали движению инструмента. <strong>Жесткая фиксация</strong> предотвратит вибрации, которые часто становятся причиной брака при работе на высоких скоростях.</p>
+<blockquote>⚠️ Внимание: Не используйте слишком толстый двусторонний скотч, так как это может создать зазор между заготовкой и столом, что приведет к провалу фрезы под уровнем поверхности.</blockquote>
+
+<h2 id="инструментарий-выбор-и-заточка-фрез">Инструментарий: выбор и заточка фрез</h2>
+<p>Сердцем процесса механического травления является правильный выбор фрезы. Для дорожек шириной менее 0.4 мм вам понадобятся <em>V-образные фрезы</em> с углом заточки 30 или 60 градусов. Острый угол позволяет создавать тонкие линии, но такой инструмент крайне хрупкий и требует идеальной настройки станка.</p>
+<p>Если вам нужно делать широкие дорожки или вырезать контур платы, лучше использовать <strong>концевые фрезы</strong> диаметром 0.8 мм или 1.0 мм. Они более устойчивы к боковым нагрузкам и меньше подвержены поломке при случайном касании крепления. Однако при использовании концевых фрез углы дорожек будут закругленными, что может быть критично для плотной компоновки.</p>
+<p>Состояние режущей кромки критически влияет на результат. Тупая фреза не режет медь, а плавает по поверхности, оставляя за собой грубую борозду или срывая фольгу вместе с текстолитом. Регулярно проверяйте инструмент под лупой и меняйте его при первых признаках затупления.</p>
+<p>Вот основные типы фрез, рекомендуемые для работы с платой:</p>
+<ul>
+<li>💎 <strong>V-образная 30°</strong> — для сверхтонких дорожек и паяльных площадок;</li>
+<li>🛠️ <strong>V-образная 60°</strong> — универсальный вариант для большинства стандартных плат;</li>
+<li>⚙️ <strong>Концевая 0.8 мм</strong> — для вырезания контура и широких шин питания.</li>
+</ul>
+
+<div class="poll-widget" id="poll-6621c49c"><div class="poll-widget-question">📊 Какой тип фрезы вы используете чаще всего?</div><div class="poll-widget-option" data-poll="6621c49c" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">V-образная 30°</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="6621c49c" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">V-образная 60°</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="6621c49c" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Концевая 0.8 мм</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="6621c49c" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Не использую фрезеровку</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="программное-обеспечение-и-генерация-g-кода">Программное обеспечение и генерация G-кода</h2>
+<p>Подготовка файла для станка начинается в САПР, где вы рисуете схему и разводите дорожки. После экспорта в формат Gerber вам понадобится программа для трансформации этих данных в <strong>G-код</strong>, понятный контроллеру <em>CNC 3018</em>. Популярные решения включают FlatCAM, KiCad (с плагинами) или Bantam Tools, если у вас более продвинутая версия контроллера.</p>
+<p>В настройках генерации кода критически важно указать параметры <strong>глубины реза</strong> и <em>высоту безопасного перемещения</em>. Запрограммируйте станок так, чтобы он делал проход на глубину от 0.05 до 0.15 мм в зависимости от толщины фрезеруемого слоя меди. Слишком глубокий рез приведет к вырыванию текстолита, а слишком мелкий оставит налеты меди между дорожками.</p>
+<p>Не забывайте про <strong>разрывы</strong> (isolations) — это небольшие канавки вокруг контактных площадок, которые гарантируют отсутствие замыканий. В некоторых случаях, особенно при работе с V-фрезой, программа автоматически рассчитывает ширину разрыва, но лучше проверить это визуально в симуляторе перед запуском.</p>
+<p>Важно: <mark>Для V-образной фрезы глубина реза напрямую определяет ширину дорожки, поэтому точность установки оси Z должна быть в пределах 0.01 мм.</mark></p>
+
+<details class="faq-item"><summary>Что такое офсет и зачем он нужен?</summary><div class="faq-answer"><p>Офсет (offset) — это смещение траектории фрезы от центра дорожки. При фрезеровании изоляции офсет позволяет избежать остатков меди по краям дорожек, обеспечивая чистоту изоляции между проводниками.</p></div></details>
+
+<h2 id="процесс-фрезерования-и-настройка-станка">Процесс фрезерования и настройка станка</h2>
+<p>Перед запуском программы выполните нулировку станка по всем осям. Особое внимание уделите оси Z: используйте <strong>сенсор высоты</strong> или метод бумажки для точной установки нулевой точки на поверхности меди. Любая ошибка здесь может испортить весь лист заготовки.</p>
+<p>Установите обороты шпинделя в диапазоне <code>12000–24000 об/мин</code>. Высокая скорость вращения необходима для чистого реза меди, так как она предотвращает зажевывание материала фрезой. При низких оборотах <em>CNC 3018</em> начинает вибрировать, что приводит к рваным краям дорожек.</p>
+<p>Скорость подачи (feed rate) — это второй критический параметр. Для фрезеровки меди на V-фрезе оптимальная скорость составляет <code>300–800 мм/мин</code>. Если поставить слишком быстро, фреза сломается; слишком медленно — металл нагреется и начнет плавиться, забивая режущую кромку.</p>
+<blockquote>⚠️ Внимание: Если вы слышите высокий визг или скрежет, немедленно остановите станок. Это признак того, что фреза не режет, а трется о материал, что ведет к быстрому износу и сколам.</blockquote>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед запуском фрезеровки</h4><label class="check-item"><input type="checkbox"><span>Очистить поверхность текстолита</span></label><label class="check-item"><input type="checkbox"><span>Установить V-фрезу и затянуть цангу</span></label><label class="check-item"><input type="checkbox"><span>Выставить нули по Z</span></label><label class="check-item"><input type="checkbox"><span>Проверить G-код в симуляторе</span></label><label class="check-item"><input type="checkbox"><span>Зафиксировать заготовку</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</h2>
+<p>Самая распространенная проблема — это "острова" меди, которые остаются между дорожками. Это происходит из-за того, что <strong>глубина реза</strong> была установлена недостаточной, или поверхность заготовки была неровной. В таких случаях приходится дорабатывать плату вручную или перенастраивать станок и запускать процесс заново.</p>
+<p>Другая частая ошибка — обрыв дорожек. Это случается, если фреза уткнулась в крепление платы или если вибрации были слишком сильными. Используйте <strong>успокоители шпинделя</strong> или уменьшите скорость подачи, чтобы минимизировать дребезг.</p>
+<p>Иногда на дорожках образуются заусенцы или неровности. Это может быть связано с тупой фрезой или неправильным направлением вращения (концевая фреза должна вращаться по часовой стрелке, а движение по контуру — против часовой для чистового реза). Проверьте направление <em>CW/CCW</em> в настройках контроллера.</p>
+<ul>
+<li>🔍 <strong>Недостаточная глубина</strong> — увеличьте глубину реза на 0.01–0.02 мм;</li>
+<li>📉 <strong>Слишком большая скорость</strong> — снизьте feed rate до 400 мм/мин;</li>
+<li>🔧 <strong>Тупая фреза</strong> — замените инструмент на новый острий.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед запуском полного фрезерования на всей плате, сделайте тестовый прогон на небольшом углу заготовки, чтобы проверить глубину реза и качество изоляции.</p></div>
+
+<h2 id="сравнение-методов-и-таблица-параметров">Сравнение методов и таблица параметров</h2>
+<p>Механическое фрезерование имеет свои плюсы и минусы по сравнению с химическим травлением. Главный плюс — отсутствие необходимости работать с агрессивными реагентами, что делает процесс безопасным для дома. Минусом является более низкая скорость для мелких партий и необходимость высокого качества станка.</p>
+<p>Ниже приведена таблица с рекомендуемыми параметрами для различных типов фрез при работе с медью на <em>CNC 3018</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Тип фрезы</th>
+<th>Диаметр/Угол</th>
+<th>Глубина реза (мм)</th>
+<th>Скорость подачи (мм/мин)</th>
+<th>Обороты (об/мин)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V-образная</td>
+<td>30°</td>
+<td>0.03–0.08</td>
+<td>300–500</td>
+<td>18000–24000</td>
+</tr>
+<tr>
+<td>V-образная</td>
+<td>60°</td>
+<td>0.05–0.12</td>
+<td>400–800</td>
+<td>15000–20000</td>
+</tr>
+<tr>
+<td>Концевая</td>
+<td>0.8 мм</td>
+<td>0.10–0.15</td>
+<td>800–1200</td>
+<td>12000–15000</td>
+</tr>
+<tr>
+<td>Концевая</td>
+<td>1.0 мм</td>
+<td>0.15–0.20</td>
+<td>1000–1500</td>
+<td>10000–14000</td>
+</tr>
+</tbody>
+</table>
+<p>Помните, что эти значения являются ориентировочными и зависят от конкретной модификации вашего станка, жесткости рамы и состояния подшипников шпинделя. Всегда начинайте с минимальных скоростей и постепенно увеличивайте их, наблюдая за процессом резания.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Качество механического фрезерования на CNC 3018 на 80% зависит от точности установки оси Z и остроты фрезы, и лишь на 20% от мощности самого станка.</p></div>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли использовать CNC 3018 для фрезеровки двусторонних плат?</summary>
+<p>Технически возможно, но это требует идеальной юстировки и использования специальных приспособлений для переворота платы. Ошибка в выравнивании даже на 0.1 мм приведет к рассогласованию дорожек на разных сторонах. Рекомендуется использовать специальные станки с вакуумным столом или лазерную локализацию для таких задач.</p>
+</details>
+
+<details>
+<summary>Как удалить остатки меди, которые фреза не срезала?</summary>
+<p>Если остались тонкие перемычки меди, их можно аккуратно удалить лезвием скальпеля или специальной щеткой. Однако лучше предотвратить это, правильно настроив глубину реза. В крайнем случае можно использовать легкое химическое травление только для удаления остатков, не затрагивая основные дорожки.</p>
+</details>
+
+<details>
+<summary>Какая максимальная толщина меди может быть обработана?</summary>
+<p>Стандартный текстолит имеет толщину меди 35 микрон (1 унция). Фрезерование такой меди на CNC 3018 проходит успешно. Более толстая медь (например, 70 микрон) потребует более мощного шпинделя и жесткой фрезы, стандартный 3018 может не справиться с такой нагрузкой.</p>
+</details>
+
+<details>
+<summary>Нужно ли покрывать дорожки лаком после фрезерования?</summary>
+<p>Обязательно. Открытая медь быстро окисляется, что ухудшает паяемость и увеличивает сопротивление. Используйте жидкий флюс-лак, лак для ногтей или специальные покрытия для печатных плат, чтобы защитить <strong>фрезерованные дорожки</strong> от коррозии.</p>
+</details>
+
+<blockquote>⚠️ Внимание: Характеристики станков и доступность расходных материалов могут меняться в зависимости от региона и поставщика. Всегда проверяйте актуальные спецификации у производителя перед покупкой фрез.</blockquote></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-механическое-травление-плат">Введение в механическое травление плат</a></li><li><a href="#выбор-материалов-и-подготовка-заготовки">Выбор материалов и подготовка заготовки</a></li><li><a href="#инструментарий-выбор-и-заточка-фрез">Инструментарий: выбор и заточка фрез</a></li><li><a href="#программное-обеспечение-и-генерация-g-кода">Программное обеспечение и генерация G-кода</a></li><li><a href="#процесс-фрезерования-и-настройка-станка">Процесс фрезерования и настройка станка</a></li><li><a href="#типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</a></li><li><a href="#сравнение-методов-и-таблица-параметров">Сравнение методов и таблица параметров</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/po/podvodnaya-kamera-k-smartfonu-dlya-rybalki.html" class="related-card">Подводная камера к смартфону для рыбалки: выбор и использование</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-resanta-skhema.html" class="related-card">Схема стабилизатора напряжения Ресанта: устройство, ремонт и диагностика</a></li><li><a href="/articles/r/ra/ratliny-chto-eto-takoe.html" class="related-card">Ратлины что это такое: виды, выбор и техника ловли зимой</a></li><li><a href="/articles/s/sk/skhema-stabilizatora-napryazheniya-na-lm317.html" class="related-card">Схема стабилизатора напряжения на LM317: расчет и сборка своими руками</a></li><li><a href="/articles/k/ka/kak-ponyat-chto-stabilizator-napryazheniya-vyshel-iz-stroya.html" class="related-card">Как понять, что стабилизатор напряжения вышел из строя: признаки поломки</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/po/podvodnaya-kamera-k-smartfonu-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Подводная камера к смартфону для рыбалки: выбор и использование</span><span class="related-bottom-desc">Как выбрать подводную камеру для рыбалки с подключением к смартфону. Обзор моделей, характеристики, </span></a><a href="/articles/s/st/stabilizator-napryazheniya-resanta-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Схема стабилизатора напряжения Ресанта: устройство, ремонт и диагностика</span><span class="related-bottom-desc">Подробный разбор электрической схемы стабилизатора Ресанта. Инструкция по диагностике, замене компон</span></a><a href="/articles/r/ra/ratliny-chto-eto-takoe.html" class="related-bottom-card"><span class="related-bottom-title">Ратлины что это такое: виды, выбор и техника ловли зимой</span><span class="related-bottom-desc">Разбираем, что такое ратлины для рыбалки, их конструкцию, особенности игры и выбор моделей для зимне</span></a><a href="/articles/s/sk/skhema-stabilizatora-napryazheniya-na-lm317.html" class="related-bottom-card"><span class="related-bottom-title">Схема стабилизатора напряжения на LM317: расчет и сборка своими руками</span><span class="related-bottom-desc">Подробная инструкция по сборке регулируемого стабилизатора на микросхеме LM317. Расчет резисторов, в</span></a><a href="/articles/k/ka/kak-ponyat-chto-stabilizator-napryazheniya-vyshel-iz-stroya.html" class="related-bottom-card"><span class="related-bottom-title">Как понять, что стабилизатор напряжения вышел из строя: признаки поломки</span><span class="related-bottom-desc">Узнайте, как диагностировать неисправность стабилизатора напряжения. Основные симптомы, тесты мульти</span></a><a href="/articles/s/st/stabilizator-napryazheniya-s-12-na-6-volt.html" class="related-bottom-card"><span class="related-bottom-title">Как выбрать стабилизатор 12 на 6 вольт для авто и лодки: обзор</span><span class="related-bottom-desc">Полный гид по понижению напряжения: типы преобразователей, расчет мощности, правила подключения к ак</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

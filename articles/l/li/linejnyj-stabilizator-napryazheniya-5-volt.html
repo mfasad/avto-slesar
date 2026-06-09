@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Линейный стабилизатор напряжения 5 вольт: принцип работы и выбор — АвтоСлесарь</title>
+    <meta name="description" content="Полный гид по линейным стабилизаторам 5В. Разбор микросхем LDO, расчет теплоотвода, схемы включения и подбор аналогов для питания электроники.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/l/li/linejnyj-stabilizator-napryazheniya-5-volt.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Линейный стабилизатор напряжения 5 вольт: принцип работы и выбор">
+    <meta property="og:description" content="Полный гид по линейным стабилизаторам 5В. Разбор микросхем LDO, расчет теплоотвода, схемы включения и подбор аналогов для питания электроники.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Линейный стабилизатор напряжения 5 вольт: принцип работы и выбор</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Линейный стабилизатор напряжения 5 вольт: полное руководство по выбору и применению</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-и-ключевые-особенности">Принцип работы и ключевые особенности</a></li><li><a href="#классификация-от-классических-bjt-до-современных-ldo">Классификация: от классических BJT до современных LDO</a></li><li><a href="#тепловой-режим-и-расчет-радиатора">Тепловой режим и расчет радиатора</a></li><li><a href="#популярные-модели-и-их-характеристики">Популярные модели и их характеристики</a></li><li><a href="#эксплуатация-в-автомобильной-и-промышленной-электронике">Эксплуатация в автомобильной и промышленной электронике</a></li><li><a href="#схемы-включения-и-нюансы-монтажа">Схемы включения и нюансы монтажа</a></li><li><a href="#перспективы-развития-и-альтернативы">Перспективы развития и альтернативы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>В мире современной электроники стабильное питание является фундаментом надежной работы устройств. <strong>Линейный стабилизатор напряжения 5 вольт</strong> — это один из самых распространенных компонентов, встречающихся в схемах от простых фонариков до сложных промышленных контроллеров. Несмотря на обилие импульсных решений в продаже, линейные схемы остаются незаменимыми там, где требуется минимальный уровень шума и высокая точность поддержания выходного параметра.</p>
+
+<p>Вам предстоит разобраться, как именно работает этот класс устройств и почему он до сих пор актуален. В отличие от импульсных преобразователей, которые работают за счет накопления и переноса энергии индуктивностью, линейный стабилизатор действует как регулируемое сопротивление. Он "сжигает" лишнее напряжение в виде тепла, обеспечивая на выходе идеально чистый сигнал без высокочастотных помех.</p>
+
+<p>Многие инженеры выбирают <em>L7805</em> или его современные аналоги из-за простоты интеграции в схему. Однако неосведомленность о тепловых режимах и токовых ограничениях часто приводит к выходу компонентов из строя. Чтобы избежать ошибок при проектировании и ремонте, необходимо глубоко понимать физику процесса и особенности конкретных моделей микросхем.</p>
+
+<h2 id="принцип-работы-и-ключевые-особенности">Принцип работы и ключевые особенности</h2>
+
+<p>Основная задача любого стабилизатора — поддерживать постоянное выходное напряжение независимо от колебаний входного питания или изменения потребляемого тока. В линейных устройствах для этого используется активный элемент (обычно транзистор), работающий в активном режиме. Это означает, что транзистор не просто открывается или закрывается, как ключ, а постоянно регулирует свое сопротивление, удерживая падение напряжения на себе ровно столько, сколько необходимо для получения целевых 5 В.</p>
+
+<p>Ключевым преимуществом такого подхода является отсутствие высокочастотных пульсаций. Импульсные преобразователи генерируют помехи, которые могут мешать работе чувствительных аналоговых цепей, радиоприемников или аудиотрактов. <strong>Линейный стабилизатор</strong> обеспечивает "чистоту" сигнала, что критично для прецизионных измерительных приборов. Именно поэтому в аудиоаппаратуре часто можно встретить каскады питания на базе низкошумящих LDO-стабилизаторов.</p>
+
+<p>Однако простота конструкции имеет свою цену — низкий КПД. Поскольку вся разница между входным и выходным напряжением рассеивается в виде тепла, эффективность падает по мере увеличения разницы потенциалов. Если вы подаете на вход 12 В, а получаете 5 В, то более 50% мощности теряется впустую. Это требует тщательного расчета теплоотвода.</p>
+<blockquote>⚠️ Внимание: При использовании линейных стабилизаторов с большим перепадом вход-выход необходимо учитывать максимальный допустимый ток охлаждения без дополнительных радиаторов, так как перегрев приведет к срабатыванию термозащиты.</blockquote>
+
+<h2 id="классификация-от-классических-bjt-до-современных-ldo">Классификация: от классических BJT до современных LDO</h2>
+
+<p>Исторически первые массовые стабилизаторы строились на биполярных транзисторах и требовали значительных токов управления. Классический пример — легендарная серия <em>78xx</em>, где "05" указывает на 5 вольт. Эти микросхемы надежны, но требуют минимальной разницы между входом и выходом в 2-3 В для корректной работы. Это называется падением напряжения (dropout voltage).</p>
+
+<p>С развитием технологий появились <strong>LDO-стабилизаторы</strong> (Low Dropout), которые способны работать при разнице входного и выходного напряжения всего в 100-200 мВ. Это делает их идеальными для работы от аккумуляторов, где напряжение батареи падает с 6 В до 4.5 В. В таких условиях классический <em>L7805</em> уже не сможет выдать стабильные 5 В, тогда как современный LDO-чип продолжит работать.</p>
+
+<p>Существуют также прецизионные версии с низким уровнем шума и низким собственным потреблением тока покоя. Они часто используются в портативных устройствах, работающих от батареек. Важно различать эти типы при выборе: для питания мощного процессора нужен один тип, а для датчика температуры — совсем другой.</p>
+
+<div class="poll-widget" id="poll-ae78643f"><div class="poll-widget-question">📊 Какой тип стабилизатора вы используете чаще всего?</div><div class="poll-widget-option" data-poll="ae78643f" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Классические 78xx</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="ae78643f" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Современные LDO</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="ae78643f" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Импульсные DC-DC</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="ae78643f" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Не использую</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="тепловой-режим-и-расчет-радиатора">Тепловой режим и расчет радиатора</h2>
+
+<p>Самая частая ошибка при проектировании схем с линейными стабилизаторами — игнорирование тепловых потерь. Мощность, рассеиваемая на кристалле, рассчитывается по формуле: <code>P = (V_in - V_out) × I_load</code>. Например, при токе нагрузки 1 А и падении напряжения 5 В, стабилизатор будет выделять 5 Вт тепла. Это эквивалентно работе мощной мини-грелки на крошечном корпусе.</p>
+
+<p>Без радиатора большинство корпусов могут рассеять всего 0.5-1 Вт. Превышение этого порога приведет к срабатыванию внутренней термозащиты, и устройство начнет периодически отключаться. Для корректной работы необходимо подобрать радиатор, способный отвести избыточное тепло в окружающую среду. Площадь радиатора зависит от материала, наличия оребрения и температуры окружающей среды.</p>
+
+<p>Для расчета температуры перехода используется параметр <strong>thermal resistance</strong> (тепловое сопротивление) <code>Rth</code>. Зная этот параметр в °C/Вт, можно определить, насколько нагреется кристалл при определенной нагрузке. Если температура превысит допустимый предел (обычно 125-150°C), микросхема выйдет из строя.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка теплового режима перед монтажом</h4><label class="check-item"><input type="checkbox"><span>Измерить падение напряжения на входе и выходе</span></label><label class="check-item"><input type="checkbox"><span>Рассчитать рассеиваемую мощность по формуле</span></label><label class="check-item"><input type="checkbox"><span>Определить допустимое сопротивление теплоотвода</span></label><label class="check-item"><input type="checkbox"><span>Выбрать подходящий радиатор или вентилятор</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>В некоторых случаях, когда габариты устройства не позволяют установить радиатор, единственным выходом становится снижение входного напряжения или использование импульсного преобразователя перед линейным стабилизатором. Такой гибридный подход позволяет получить высокую эффективность и чистоту питания одновременно.</p>
+
+<h2 id="популярные-модели-и-их-характеристики">Популярные модели и их характеристики</h2>
+
+<p>Рынок предлагает множество вариантов, каждый из которых имеет свои особенности применения. Ниже приведена сравнительная таблица наиболее распространенных стабилизаторов на 5 вольт, помогающая выбрать подходящую модель для вашей задачи.</p>
+
+<table>
+<thead>
+<tr>
+<th>Модель</th>
+<th>Тип</th>
+<th>Dropout (В)</th>
+<th>Макс. ток (А)</th>
+<th>Особенности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L7805</td>
+<td>Стандартный</td>
+<td>2.0 - 2.5</td>
+<td>1.5</td>
+<td>Классика, надежный, требует теплоотвода</td>
+</tr>
+<tr>
+<td>AMS1117-5.0</td>
+<td>LDO</td>
+<td>1.1 - 1.2</td>
+<td>1.0</td>
+<td>Компактный, работает от батарей, дешевый</td>
+</tr>
+<tr>
+<td>XC6206</td>
+<td>Micro LDO</td>
+<td>0.2 - 0.3</td>
+<td>0.2</td>
+<td>Корпус SOT-23, малый ток, для датчиков</td>
+</tr>
+<tr>
+<td>MCP1700</td>
+<td>Low IQ LDO</td>
+<td>0.18</td>
+<td>0.25</td>
+<td>Низкое потребление тока покоя, высокое КПД</td>
+</tr>
+<tr>
+<td>TL780</td>
+<td>Adjustable</td>
+<td>2.0</td>
+<td>0.1</td>
+<td>Регулируемый выход, малая мощность</td>
+</tr>
+</tbody>
+</table>
+
+<p>Модель <em>L7805</em> остается стандартом де-факто для обучающих наборов и мощных нагрузок, где входное напряжение гарантированно выше 7.5 В. Она обладает встроенной защитой от короткого замыкания и перегрева, что делает её очень надежной. Однако её габариты и требования к теплоотводу могут стать ограничением в компактных устройствах.</p>
+
+<p>С другой стороны, <em>AMS1117</em> занимает доминирующее положение на платах Arduino и других микроконтроллерных платформах. Его низкое падение напряжения позволяет питать систему напрямую от литиевых аккумуляторов или преобразователей с низким выходным напряжением. Обратите внимание, что версии в корпусе SOT-223 имеют ограничения по теплоотводу и требуют аккуратного монтажа.</p>
+
+<details class="faq-item"><summary>Секреты выбора аналогов</summary><div class="faq-answer"><p>При замене микросхемы всегда сверяйте цоколевку. У разных производителей (например, Texas Instruments и ON Semi) распиновка корпусов может отличаться, что приведет к короткому замыканию при перепутанных выводах.</p></div></details>
+
+<blockquote>⚠️ Внимание: При выборе LDO-стабилизаторов обращайте внимание на требования к выходным конденсаторам. Некоторые современные микросхемы нестабильны без конденсатора с определенным эквивалентным последовательным сопротивлением (ESR), что может вызвать самовозбуждение схемы.</blockquote>
+
+<h2 id="эксплуатация-в-автомобильной-и-промышленной-электронике">Эксплуатация в автомобильной и промышленной электронике</h2>
+
+<p>В автомобильной электронике использование линейных стабилизаторов на 5 В сопряжено с рядом сложностей. Бортовая сеть автомобиля подвержена резким скачкам напряжения, особенно при работе стартера или включении мощных потребителей. Выходное напряжение может кратковременно падать до 6 В или подниматься до 14-16 В. <strong>Линейный стабилизатор</strong> должен справляться с этими колебаниями, не отключая питание микроконтроллера.</p>
+
+<p>Для надежной работы в таких условиях необходим качественный входной конденсатор большой емкости. Он сглаживает высокочастотные помехи от генератора и искрения контактов. Кроме того, часто требуется защита от переполюсовки и обратных токов, так как в автомобилях возможны нестандартные режимы работы электросети.</p>
+
+<p>В промышленной автоматике требования еще строже. Здесь важна не только стабильность, но и способность работать в широком диапазоне температур. Промышленные версии микросхем имеют расширенный температурный диапазон от -40°C до +125°C. Бытовые аналоги могут просто отключиться на морозе или перегреться в шкафу управления.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для снижения уровня высокочастотных наводок в автомобильной проводке используйте дроссели или ферритовые кольца на линиях питания перед входом стабилизатора.</p></div>
+
+<h2 id="схемы-включения-и-нюансы-монтажа">Схемы включения и нюансы монтажа</h2>
+
+<p>Типовая схема включения линейного стабилизатора предельно проста: вход, выход и земля. Однако для стабильной работы без паразитных колебаний необходимо соблюдать правила монтажа. Вводной конденсатор должен располагаться как можно ближе к выводу VIN микросхемы. Это предотвращает самовозбуждение из-за индуктивности длинных проводов питания.</p>
+
+<p>Для большинства моделей рекомендуется использовать керамические конденсаторы емкостью 0.1 мкФ и электролитические на 10-100 мкФ. Керамика подавляет ВЧ-помехи, а электролит стабилизирует низкочастотные пульсации. Выходной конденсатор также важен, особенно для LDO-стабилизаторов, чувствительных к импедансу нагрузки.</p>
+
+<p>При пайке корпусов типа TO-220 (где металлическая подложка часто соединена с выходом или землей) необходимо использовать изолирующие прокладки при креплении к радиатору. Проверка мультиметром перед подачей питания обязательна, так как плохой контакт прокладки может привести к перегреву и выходу элемента из строя.</p>
+
+<pre><code>Важно: Плата печатных дорожек должна иметь достаточное сечение для пропускания максимального тока нагрузки. Для токов более 0.5 А используйте широкие дорожки или добавьте припой для увеличения сечения.</code></pre>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильный монтаж конденсаторов в непосредственной близости от выводов стабилизатора критически важен для предотвращения самовозбуждения схемы и обеспечения стабильного напряжения.</p></div>
+
+<h2 id="перспективы-развития-и-альтернативы">Перспективы развития и альтернативы</h2>
+
+<p>Несмотря на развитие импульсных технологий, линейные стабилизаторы не теряют актуальности. В эпоху миниатюризации и высоких требований к качеству сигнала они занимают свою уникальную нишу. Современные разработки направлены на снижение тока покоя и уменьшение падения напряжения, что позволяет создавать сверхэффективные решения для батарейных устройств.</p>
+
+<p>Однако для мощных нагрузок с большим перепадом напряжений импульсные преобразователи (DC-DC) остаются безальтернативным выбором. Они обеспечивают КПД до 95% и не требуют громоздких радиаторов. Часто используется каскадная схема: импульсный преобразователь понижает напряжение до 6-7 В, а линейный стабилизатор делает его идеальным 5 В.</p>
+
+<p>Выбор между этими технологиями всегда является компромиссом между эффективностью, сложностью схемы и уровнем шума. Понимание принципов работы <strong>линейного стабилизатора</strong> позволяет инженеру принимать взвешенные решения при проектировании электронных устройств, обеспечивая их долговечность и стабильность.</p>
+
+<details class="faq-item"><summary>Как проверить исправность</summary><div class="faq-answer"><p>Для быстрой проверки микросхемы используйте мультиметр. Подайте напряжение на вход (например, 9В) и измерьте напряжение на выходе. Если оно значительно отличается от 5В или равно входному напряжению, компонент неисправен.</p></div></details>
+
+<details>
+<summary>Почему линейный стабилизатор греется?</summary>
+<p>Нагрев происходит из-за рассеивания избыточной мощности в виде тепла. Чем больше разница между входным и выходным напряжением и чем выше ток нагрузки, тем сильнее нагрев. Это нормальное явление, но оно требует надлежащего теплоотвода.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать L7805 с входным напряжением 5.5 В?</summary>
+<p>Нет, для корректной работы классическому L7805 необходимо входное напряжение минимум на 2-2.5 В выше выходного. При 5.5 В на входе на выходе вы получите около 3-3.5 В. В таких случаях следует использовать LDO-стабилизаторы.</p>
+</details>
+
+<details>
+<summary>Какой конденсатор ставить на выход?</summary>
+<p>Обычно рекомендуется керамический конденсатор 0.1 мкФ параллельно с электролитическим 10-22 мкФ. Для LDO-стабилизаторов обязательно читайте даташит, так как некоторые требуют конденсаторы с определенным ESR для стабильности.</p>
+</details>
+
+<details>
+<summary>В чем разница между 7805 и 78L05?</summary>
+<p>Основное различие заключается в корпусе и максимальном токе. Серия 78xx (например, L7805) имеет корпус TO-220 и выдает до 1.5 А, а серия 78Lxx (например, L78L05) — корпус TO-92 и выдает до 0.1 А. Цоколевка у них также разная.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-и-ключевые-особенности">Принцип работы и ключевые особенности</a></li><li><a href="#классификация-от-классических-bjt-до-современных-ldo">Классификация: от классических BJT до современных LDO</a></li><li><a href="#тепловой-режим-и-расчет-радиатора">Тепловой режим и расчет радиатора</a></li><li><a href="#популярные-модели-и-их-характеристики">Популярные модели и их характеристики</a></li><li><a href="#эксплуатация-в-автомобильной-и-промышленной-электронике">Эксплуатация в автомобильной и промышленной электронике</a></li><li><a href="#схемы-включения-и-нюансы-монтажа">Схемы включения и нюансы монтажа</a></li><li><a href="#перспективы-развития-и-альтернативы">Перспективы развития и альтернативы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ka/kak-chitat-ekholot-garmin.html" class="related-card">Как читать эхолот Garmin: расшифровка экрана и настройки</a></li><li><a href="/articles/s/st/stabilizirovannyj-blok-pitaniya-12-volt.html" class="related-card">Стабилизированный блок питания 12 вольт: выбор, подключение и ремонт</a></li><li><a href="/articles/t/te/termoregulyator-dlya-tena-3-kvt.html" class="related-card">Выбор и установка терморегулятора для ТЭНа 3 кВт: схема, монтаж, советы</a></li><li><a href="/articles/l/lu/luchshaya-ratsiya-dlya-lesa.html" class="related-card">Лучшая рация для леса: как выбрать и на что обратить внимание</a></li><li><a href="/articles/k/ka/kamera-podlednaya-dlya-rybalki.html" class="related-card">Лучшая подледная камера для рыбалки: обзор, выбор и советы 2026</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ka/kak-chitat-ekholot-garmin.html" class="related-bottom-card"><span class="related-bottom-title">Как читать эхолот Garmin: расшифровка экрана и настройки</span><span class="related-bottom-desc">Полное руководство по интерпретации данных эхолотов Garmin. Учимся отличать рыбу от дна, настраивать</span></a><a href="/articles/s/st/stabilizirovannyj-blok-pitaniya-12-volt.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизированный блок питания 12 вольт: выбор, подключение и ремонт</span><span class="related-bottom-desc">Полный гид по стабилизированным БП 12В: как выбрать модель, рассчитать мощность, подключить к автоэл</span></a><a href="/articles/t/te/termoregulyator-dlya-tena-3-kvt.html" class="related-bottom-card"><span class="related-bottom-title">Выбор и установка терморегулятора для ТЭНа 3 кВт: схема, монтаж, советы</span><span class="related-bottom-desc">Как подобрать автоматический терморегулятор для ТЭНа мощностью 3 кВт. Обзор схем подключения, типов </span></a><a href="/articles/l/lu/luchshaya-ratsiya-dlya-lesa.html" class="related-bottom-card"><span class="related-bottom-title">Лучшая рация для леса: как выбрать и на что обратить внимание</span><span class="related-bottom-desc">Подборка лучших моделей раций для леса, советы по выбору частот, мощности и защиты. Обзор топовых ус</span></a><a href="/articles/k/ka/kamera-podlednaya-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Лучшая подледная камера для рыбалки: обзор, выбор и советы 2026</span><span class="related-bottom-desc">Как выбрать подледную камеру для рыбалки: обзор типов, ключевые характеристики, топовые модели Lucky</span></a><a href="/articles/v/vi/video-dlya-rybalki-nablyudeniya-pod-vodoj.html" class="related-bottom-card"><span class="related-bottom-title">Видео для рыбалки наблюдения под водой: обзор камер и советы</span><span class="related-bottom-desc">Полный гид по подводным камерам для рыбалки. Как выбрать модель, настроить видеонаблюдение под водой</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

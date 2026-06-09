@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Расчет балки на срез: формулы, примеры и проверка прочности — АвтоСлесарь</title>
+    <meta name="description" content="Полное руководство по расчету балок на срез. Формулы Журавского, определение опасных сечений и проверка прочности в строительстве.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/r/ra/raschet-balki-na-srez.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Расчет балки на срез: формулы, примеры и проверка прочности">
+    <meta property="og:description" content="Полное руководство по расчету балок на срез. Формулы Журавского, определение опасных сечений и проверка прочности в строительстве.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Расчет балки на срез: формулы, примеры и проверка прочности</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Расчет балки на срез: методы проверки прочности и формулы</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-механику-разрушения-при-поперечном-срезе">Введение в механику разрушения при поперечном срезе</a></li><li><a href="#физическая-природа-касательных-напряжений">Физическая природа касательных напряжений</a></li><li><a href="#формула-журавского-для-определения-напряжений">Формула Журавского для определения напряжений</a></li><li><a href="#методика-расчета-прочности-на-срез">Методика расчета прочности на срез</a></li><li><a href="#таблица-предельных-напряжений-для-распространенных-материалов">Таблица предельных напряжений для распространенных материалов</a></li><li><a href="#опасные-зоны-и-критические-сечения">Опасные зоны и критические сечения</a></li><li><a href="#специфика-расчета-деревянных-и-композитных-балок">Специфика расчета деревянных и композитных балок</a></li><li><a href="#современные-методы-и-программное-обеспечение">Современные методы и программное обеспечение</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-механику-разрушения-при-поперечном-срезе">Введение в механику разрушения при поперечном срезе</h2>
+
+<p>Расчет балки на срез является фундаментальной задачей в строительной механике, определяющей способность конструкции выдерживать поперечные нагрузки без хрупкого разрушения. В отличие от изгиба, где доминируют нормальные напряжения, здесь критическую роль играют <strong>касательные напряжения</strong>, возникающие в плоскости сечения балки под действием поперечной силы.</p>
+
+<p>Игнорирование этого вида напряжений в массивных или коротких балках может привести к внезапному сдвигу материала, который происходит мгновенно и часто без предварительных видимых деформаций. Вам необходимо понимать, что для длинных тонких балок срез редко является определяющим фактором, но для коротких опорных частей и балок из хрупких материалов (например, бетона или дерева вдоль волокон) этот расчет становится приоритетным.</p>
+
+<h2 id="физическая-природа-касательных-напряжений">Физическая природа касательных напряжений</h2>
+
+<p>При приложении внешней поперечной силы в любом поперечном сечении балки возникает внутренняя сила, называемая <strong>поперечной силой Q</strong>. Эта сила стремится сдвинуть одну часть балки относительно другой, вызывая деформацию сдвига. В результате этих усилий в материале возникают касательные напряжения, обозначаемые как <strong>τ (тау)</strong>.</p>
+
+<p>Распределение этих напряжений по высоте сечения неравномерно. В то время как в крайних волокнах (верхней и нижней гранях) касательные напряжения равны нулю, в нейтральной оси они достигают своего максимального значения. Это явление объясняется теоремой о сопряженных напряжениях:</p>
+
+<p>Если на гранях элемента действуют касательные напряжения, то на перпендикулярных гранях обязательно возникают равные по величине напряжения, направленные к общей ребру или от него. Именно поэтому при срезе всегда возникает риск скола вдоль нейтрального слоя или вдоль волокон в деревянных конструкциях.</p>
+
+<blockquote>
+<p>⚠️ Внимание! Пренебрежение расчетом на срез в зонах опирания балок на колонны или фундаменты часто приводит к хрупкому сколу бетона или сдвигу деревянных соединений, что может вызвать обрушение конструкции без предупреждающих трещин изгиба.</p>
+</blockquote>
+
+<h2 id="формула-журавского-для-определения-напряжений">Формула Журавского для определения напряжений</h2>
+
+<p>Основным инструментом для определения распределения касательных напряжений в балках постоянного сечения является формула Журавского. Она связывает величину поперечной силы с геометрическими характеристиками сечения. Для любого уровня, отстоящего на расстояние y от нейтральной оси, напряжение вычисляется по формуле:</p>
+
+<p>τ = (Q × S*) / (I × b), где <strong>Q</strong> — поперечная сила в рассматриваемом сечении, <strong>S*</strong> — статический момент отсеченной части площади сечения относительно нейтральной оси, <strong>I</strong> — осевой момент инерции всего сечения, а <strong>b</strong> — ширина сечения на уровне определения напряжения.</p>
+
+<p>Эта формула позволяет точно определить, где именно в поперечном сечении напряжения будут максимальными. Для прямоугольного сечения, например, максимальное значение достигается в центре и составляет 1.5 от среднего значения по сечению. Для двутавровых балок основная нагрузка приходится на <strong>стенку балки</strong>, а полки испытывают значительно меньшие напряжения сдвига.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Максимальные касательные напряжения всегда возникают в нейтральной оси сечения, а не на самых краях балки, как это происходит при изгибе.</p></div>
+
+<h2 id="методика-расчета-прочности-на-срез">Методика расчета прочности на срез</h2>
+
+<p>Проверка прочности балки на срез сводится к сравнению расчетных максимальных напряжений с допустимыми значениями для конкретного материала. Условие прочности записывается в виде неравенства, где расчетное напряжение не должно превышать предела.</p>
+
+<p>Вам нужно определить опасное сечение, где поперечная сила <strong>Q</strong> достигает максимума, и рассчитать там <strong>τ_max</strong>. Сравните полученное значение с нормативным <strong>[τ]</strong>, который зависит от материала (сталь, дерево, бетон) и коэффициента запаса прочности. Если условие τ_max ≤ [τ] нарушается, необходимо увеличить ширину сечения или выбрать материал с большей прочностью на срез.</p>
+
+<p>Особое внимание следует уделять <strong>соединительным элементам</strong> составных балок. В деревянных балках с настилом или стальных балках с приваренными листами напряжения сдвига определяют шаг болтов, гвоздей или длину сварных швов, необходимых для обеспечения монолитности сечения.</p>
+
+<details class="faq-item"><summary>Особенности расчета композитных балок</summary><div class="faq-answer"><p> В композитных материалах, где слои имеют разную прочность (например, стеклопластик), срез часто происходит по границе раздела слоев. В таких случаях формула Журавского требует учета модуля сдвига каждого слоя.</p></div></details>
+
+<h2 id="таблица-предельных-напряжений-для-распространенных-материалов">Таблица предельных напряжений для распространенных материалов</h2>
+
+<p>Ниже приведена сводная таблица с ориентировочными значениями допускаемых касательных напряжений для основных конструкционных материалов. Эти значения могут варьироваться в зависимости от марки материала и действующих нормативных документов (СНиП, ГОСТ).</p>
+
+<table>
+<thead>
+<tr>
+<th>Материал</th>
+<th>Тип нагрузки</th>
+<th>Допускаемое напряжение [τ], МПа</th>
+<th>Особенности разрушения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Углеродистая сталь (Ст3)</td>
+<td>Статическая</td>
+<td>80 – 100</td>
+<td>Пластичное течение</td>
+</tr>
+<tr>
+<td>Древесина (сосна/ель)</td>
+<td>Вдоль волокон</td>
+<td>1.5 – 2.5</td>
+<td>Сдвиг по волокнам (расслоение)</td>
+</tr>
+<tr>
+<td>Бетон (класс B25)</td>
+<td>Поперечная сила</td>
+<td>0.6 – 0.9</td>
+<td>Хрупкий косой срез</td>
+</tr>
+<tr>
+<td>Алюминиевые сплавы</td>
+<td>Статическая</td>
+<td>40 – 60</td>
+<td>Пластичное течение</td>
+</tr>
+</tbody>
+</table>
+
+<p>При работе с деревом критически Именно поэтому балки из массивной древесины часто разрушаются по косым трещинам, идущим от опор к центру пролета. В стали же разрушение на срез обычно сопровождается значительными пластическими деформациями, которые можно заметить визуально.</p>
+
+<div class="poll-widget" id="poll-e115f0d9"><div class="poll-widget-question">📊 Какой материал чаще всего используется в ваших проектах?</div><div class="poll-widget-option" data-poll="e115f0d9" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Сталь</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e115f0d9" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Дерево</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e115f0d9" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Бетон</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e115f0d9" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Композиты</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="опасные-зоны-и-критические-сечения">Опасные зоны и критические сечения</h2>
+
+<p>Определение <strong>опасного сечения</strong> является ключевым этапом расчета. Обычно это участки около опор, где поперечная сила максимальна, а изгибающий момент может быть невелик. В этих зонах нормальные напряжения от изгиба низкие, но касательные напряжения достигают своего пика.</p>
+
+<p>Также критическими являются места резкого изменения сечения, например, в зонах опирания балок на колонны или в местах анкерного крепления. Здесь возникает концентрация напряжений, которая может инициировать трещину. Для <strong>двутавровых балок</strong> часто проверяется прочность в месте сопряжения стенки с полкой, так как именно там происходит переход потока напряжений.</p>
+
+<p>В ряде случаев, особенно при наличии отверстий в балке, необходимо пересчитывать сечение с учетом ослабления. Наличие отверстия снижает ширину <strong>b</strong> в знаменателе формулы, что приводит к резкому росту напряжений в оставшейся части сечения.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка балки на срез</h4><label class="check-item"><input type="checkbox"><span>Определить максимальную поперечную силу Q на эпюре</span></label><label class="check-item"><input type="checkbox"><span>Рассчитать геометрические характеристики сечения (I, S, b)</span></label><label class="check-item"><input type="checkbox"><span>Вычислить τ_max по формуле Журавского</span></label><label class="check-item"><input type="checkbox"><span>Сравнить с допускаемым напряжением [τ] для материала</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="специфика-расчета-деревянных-и-композитных-балок">Специфика расчета деревянных и композитных балок</h2>
+
+<p>Для деревянных конструкций расчет на срез имеет уникальные особенности, связанные с анизотропией материала. Дерево обладает крайне низкой прочностью на срез вдоль волокон, что требует тщательной проверки <strong>скалывающих напряжений</strong> в зоне опор. Если эти напряжения превысят предел, балка просто "сломается" по длине, отделив опорную часть.</p>
+
+<p>В современных <strong>клееных балках</strong> (LVL, GLT) критическим фактором становится прочность клеевого шва. Ошибки при проектировании или склеивании могут привести к расслоению балки под нагрузкой. В таких случаях расчет ведется не только по формуле Журавского, но и по специальным нормативам для клеевых соединений.</p>
+
+<blockquote>
+<p>⚠️ Внимание! При расчете деревянных балок всегда используйте понижающий коэффициент для длительной нагрузки, так как ползучесть древесины при сдвиге вдоль волокон происходит быстрее, чем кажется на первый взгляд.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для деревянных балок увеличивайте высоту сечения, а не ширину, чтобы снизить риск скалывания вдоль волокон, так как высота увеличивает момент инерции и снижает Q на единицу площади.</p></div>
+
+<h2 id="современные-методы-и-программное-обеспечение">Современные методы и программное обеспечение</h2>
+
+<p>Хотя формула Журавского остается базой для понимания процессов, современные инженеры используют специализированное программное обеспечение для <strong>конечно-элементного анализа (FEA)</strong>. Программы типа <em>LIRA</em>, <em>SCAD</em> или <em>ANSYS</em> позволяют построить полную картину распределения напряжений, учитывая сложные формы сечений и нелинейные свойства материалов.</p>
+
+<p>В таких программах вы можете задать сложные граничные условия и увидеть цветовую карту напряжений, где красным цветом будут выделены зоны потенциального разрушения. Это особенно актуально для балок переменной высоты или конструкций с криволинейными очертаниями, где аналитические формулы дают значительную погрешность.</p>
+
+<p>Однако автоматизация не отменяет необходимости ручной проверки. Инженер должен уметь оценить результаты работы программы, выявить аномалии и понять физический смысл полученных данных. Слепая вера в результаты софта без понимания физики <strong>сдвига</strong> может привести к фатальным ошибкам в проектировании.</p>
+
+<details>
+<summary>Часто задаваемые вопросы (FAQ)</summary>
+
+<details>
+<summary>В чем главная разница между расчетом на изгиб и на срез?</summary>
+<p>При изгибе максимальные напряжения возникают на краях балки (растяжение/сжатие), а при срезе — в центре сечения (нейтральной оси). Изгиб вызывает прогиб, а срез — смещение слоев материала друг относительно друга.</p>
+</details>
+
+<details>
+<summary>Нужно ли всегда проверять балку на срез?</summary>
+<p>Нет. Для длинных балок (отношение длины к высоте более 5-10) напряжения изгиба обычно значительно выше напряжений сдвига, и проверка на срез может быть опущена. Но для коротких балок, консольных элементов и балок из хрупких материалов проверка обязательна.</p>
+</details>
+
+<details>
+<summary>Как влияет форма сечения на прочность на срез?</summary>
+<p>Форма сечения определяет распределение напряжений. Двутавровые балки эффективны, так как стенка принимает на себя почти всю поперечную силу. Круглые сечения имеют плавное распределение, а прямоугольные — максимальное напряжение в центре, которое в 1.5 раза выше среднего.</p>
+</details>
+
+<details>
+<summary>Что делать, если сечение балки не проходит проверку на срез?</summary>
+<p>Нужно увеличить ширину сечения (особенно для двутавров — толщину стенки) или выбрать материал с более высоким пределом прочности на сдвиг. Увеличение высоты сечения в этом случае менее эффективно, чем увеличение ширины.</p>
+</details>
+
+<details>
+<summary>Как проверить прочность клеевого шва в балке?</summary>
+<p>Расчет ведется по той же формуле Журавского, но напряжение сравнивается с допустимым напряжением для клеевого соединения, а не для самого материала балки. Это значение обычно значительно ниже прочности древесины или металла.</p>
+</details>
+</details>
+
+<blockquote>
+<p>⚠️ Внимание! Нормативные требования к коэффициентам запаса для различных материалов (ГОСТ, Eurocode, ACI) могут меняться ежегодно. Всегда сверяйте допустимые напряжения [τ] с актуальной версией нормативной документации перед утверждением проекта.</p>
+</blockquote>
+
+<p>Правильный расчет балки на срез — это гарантия безопасности и долговечности конструкции. Игнорирование этого параметра, даже при идеальном расчете на изгиб, может привести к катастрофическим последствиям. Используйте проверенные формулы, учитывайте особенности материалов и не полагайтесь исключительно на автоматизированные расчеты без глубокого понимания физики процесса.</p></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-механику-разрушения-при-поперечном-срезе">Введение в механику разрушения при поперечном срезе</a></li><li><a href="#физическая-природа-касательных-напряжений">Физическая природа касательных напряжений</a></li><li><a href="#формула-журавского-для-определения-напряжений">Формула Журавского для определения напряжений</a></li><li><a href="#методика-расчета-прочности-на-срез">Методика расчета прочности на срез</a></li><li><a href="#таблица-предельных-напряжений-для-распространенных-материалов">Таблица предельных напряжений для распространенных материалов</a></li><li><a href="#опасные-зоны-и-критические-сечения">Опасные зоны и критические сечения</a></li><li><a href="#специфика-расчета-деревянных-и-композитных-балок">Специфика расчета деревянных и композитных балок</a></li><li><a href="#современные-методы-и-программное-обеспечение">Современные методы и программное обеспечение</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/g/gd/gde-delayut-zhigulevskoe-pivo-gorod.html" class="related-card">Где варят Жигулевское: города производства и история напитка</a></li><li><a href="/articles/l/le/leska-pletyonka-dlya-spinninga-kakuyu-vybrat-na-shchuku.html" class="related-card">Лучшая плетёнка на щуку: какая леска для спиннинга – толстая или тонкая?</a></li><li><a href="/articles/s/sk/skolko-dnej-zanimaet-voskhozhdenie-na-everest.html" class="related-card">Сколько дней занимает восхождение на Эверест: полный разбор</a></li><li><a href="/articles/p/pa/palatka-dlya-voskhozhdeniya-na-elbrus.html" class="related-card">Лучшая палатка для восхождения на Эльбрус: выбор, характеристики и советы</a></li><li><a href="/articles/p/po/postavit-ruchku-na-balkonnuyu-dver-s-drugoj-storony.html" class="related-card">Установка ручки на балконную дверь с внутренней стороны: Инструкция</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/g/gd/gde-delayut-zhigulevskoe-pivo-gorod.html" class="related-bottom-card"><span class="related-bottom-title">Где варят Жигулевское: города производства и история напитка</span><span class="related-bottom-desc">Ищите, где делают Жигулевское пиво? Узнайте о заводах-производителях в Самаре, Москве и других город</span></a><a href="/articles/l/le/leska-pletyonka-dlya-spinninga-kakuyu-vybrat-na-shchuku.html" class="related-bottom-card"><span class="related-bottom-title">Лучшая плетёнка на щуку: какая леска для спиннинга – толстая или тонкая?</span><span class="related-bottom-desc">Какую плетёную леску выбрать для ловли щуки? Обзор диаметров, разрывной нагрузки, лучших брендов и с</span></a><a href="/articles/s/sk/skolko-dnej-zanimaet-voskhozhdenie-na-everest.html" class="related-bottom-card"><span class="related-bottom-title">Сколько дней занимает восхождение на Эверест: полный разбор</span><span class="related-bottom-desc">Узнайте, сколько времени занимает восхождение на Эверест. Детальный план акклиматизации, этапы подъе</span></a><a href="/articles/p/pa/palatka-dlya-voskhozhdeniya-na-elbrus.html" class="related-bottom-card"><span class="related-bottom-title">Лучшая палатка для восхождения на Эльбрус: выбор, характеристики и советы</span><span class="related-bottom-desc">Как выбрать палатку для Эльбруса? Обзор ветроустойчивых моделей, температурных режимов и особенносте</span></a><a href="/articles/p/po/postavit-ruchku-na-balkonnuyu-dver-s-drugoj-storony.html" class="related-bottom-card"><span class="related-bottom-title">Установка ручки на балконную дверь с внутренней стороны: Инструкция</span><span class="related-bottom-desc">Пошаговая замена и монтаж ручки на пластиковой двери. Как переставить ручку, снять старую, поставить</span></a><a href="/articles/p/po/povodok-dlya-spinninga-kakoj-luchshe-vybrat.html" class="related-bottom-card"><span class="related-bottom-title">Поводок для спиннинга: какой лучше выбрать и не потерять рыбу</span><span class="related-bottom-desc">Полный гид по выбору поводков: флюорокарбон, вольфрам, плетенка. Сравнение материалов, разбор Forte,</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

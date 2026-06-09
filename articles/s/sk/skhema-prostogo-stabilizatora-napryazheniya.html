@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Схема простого стабилизатора напряжения: сборка и расчет — АвтоСлесарь</title>
+    <meta name="description" content="Подробный обзор схем стабилизаторов напряжения. Принципы работы, выбор компонентов и пошаговая инструкция по сборке устройства своими руками.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/s/sk/skhema-prostogo-stabilizatora-napryazheniya.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Схема простого стабилизатора напряжения: сборка и расчет">
+    <meta property="og:description" content="Подробный обзор схем стабилизаторов напряжения. Принципы работы, выбор компонентов и пошаговая инструкция по сборке устройства своими руками.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Схема простого стабилизатора напряжения: сборка и расчет</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Схема простого стабилизатора напряжения: от теории к практике</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-мир-стабилизации-питания">Введение в мир стабилизации питания</a></li><li><a href="#принцип-работы-и-основные-типы-схем">Принцип работы и основные типы схем</a></li><li><a href="#выбор-компонентов-для-сборки">Выбор компонентов для сборки</a></li><li><a href="#схема-подключения-и-расчет-номиналов">Схема подключения и расчет номиналов</a></li><li><a href="#пошаговая-инструкция-по-сборке">Пошаговая инструкция по сборке</a></li><li><a href="#тепловыделение-и-конструкция-корпуса">Тепловыделение и конструкция корпуса</a></li><li><a href="#диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</a></li><li><a href="#заключение-и-перспективы-модернизации">Заключение и перспективы модернизации</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-мир-стабилизации-питания">Введение в мир стабилизации питания</h2>
+
+<p>Нестабильное напряжение в сети — это реальная проблема, которая может привести к выходу из строя чувствительной электроники. Многие пользователи сталкиваются с скачками, которые пагубно влияют на работу компьютеров, бытовых приборов и LED-освещения. <strong>Стабилизатор напряжения</strong> — это устройство, призванное решить эту задачу, поддерживая выходное значение на заданном уровне независимо от колебаний на входе.</p>
+
+<p>Собрать собственное устройство часто дешевле и интереснее, чем покупать готовый заводской вариант. Понимание принципов работы позволяет вам контролировать качество сборки и выбирать компоненты под конкретные задачи. В этой статье мы разберем, как работает <em>линейный стабилизатор</em>, и предоставим схему для самостоятельной сборки.</p>
+
+<h2 id="принцип-работы-и-основные-типы-схем">Принцип работы и основные типы схем</h2>
+
+<p>Существует два основных подхода к стабилизации: линейный и импульсный. <strong>Линейные стабилизаторы</strong> работают по принципу делителя напряжения, где избыточная энергия рассеивается в виде тепла. Это делает их простыми в реализации и не создающими высокочастотных помех, что критично для аудиоаппаратуры.</p>
+
+<p>Импульсные схемы, напротив, работают на принципе широтно-импульсной модуляции (ШИМ), что позволяет достигать высокого КПД, но требует более сложной наладки. Для начинающих радиолюбителей и задач с небольшим током потребления идеально подходит схема на базе <strong>интегрального стабилизатора</strong> серии <em>LM78xx</em>. Она обеспечивает предсказуемо стабильную работу без необходимости глубоких расчетов.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При использовании линейных стабилизаторов всегда учитывайте рассеиваемую мощность на радиаторе. Если разница между входным и выходным напряжением велика, а ток нагрузки высок, микросхема может перегреться даже при наличии охлаждения.</p>
+</blockquote>
+
+<h2 id="выбор-компонентов-для-сборки">Выбор компонентов для сборки</h2>
+
+<p>Для создания надежного устройства необходимо правильно подобрать <strong>ключевые элементы</strong>. Основой нашей схемы станет микросхема серии <em>LM7805</em> (для 5В), <em>LM7812</em> (для 12В) или аналог <em>KR142EN8</em> в отечественном исполнении. Эти детали доступны в любом магазине радиодеталей и имеют встроенную защиту от короткого замыкания.</p>
+
+<p>Не менее важны <strong>конденсаторы фильтрации</strong>. Входной конденсатор сглаживает пульсации от выпрямителя, а выходной предотвращает самовозбуждение микросхемы. Обычно используются керамические или электролитические конденсаторы емкостью от 0.1 мкФ до 1000 мкФ в зависимости от требований к качеству питания.</p>
+
+<p>Также вам понадобится <strong>трансформатор</strong> с необходимым вторичным напряжением. Например, для получения стабильных 12В на выходе, на входе должно быть не менее 15В постоянного тока.</p>
+
+<div class="poll-widget" id="poll-b28f9d11"><div class="poll-widget-question">📊 Какой тип стабилизатора вы чаще используете?</div><div class="poll-widget-option" data-poll="b28f9d11" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Линейный (простой)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b28f9d11" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Импульсный (эффективный)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b28f9d11" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Пружинный (автомобильный)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b28f9d11" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Пока не знаю</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="схема-подключения-и-расчет-номиналов">Схема подключения и расчет номиналов</h2>
+
+<p>Классическая схема простого стабилизатора состоит из трансформатора, диодного моста, фильтрующих конденсаторов и самой микросхемы. Диодный мост преобразует переменный ток в пульсирующий, который затем сглаживается конденсатором. Микросхема берет этот "сырой" сигнал и выдает чистое напряжение.</p>
+
+<p>В таблице ниже приведены рекомендуемые номиналы компонентов для популярных выходных напряжений. Эти значения являются оптимальными для большинства бытовых применений и обеспечивают баланс между стоимостью и надежностью.</p>
+
+<table>
+<thead>
+<tr>
+<th>Выходное напряжение</th>
+<th>Модель стабилизатора</th>
+<th>Входной конденсатор (C1)</th>
+<th>Выходной конденсатор (C2)</th>
+<th>Мин. входное напряжение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5 Вольт</td>
+<td>LM7805</td>
+<td>1000 мкФ / 25В</td>
+<td>100 мкФ / 16В</td>
+<td>7.5 В</td>
+</tr>
+<tr>
+<td>9 Вольт</td>
+<td>LM7809</td>
+<td>1000 мкФ / 25В</td>
+<td>100 мкФ / 16В</td>
+<td>11.5 В</td>
+</tr>
+<tr>
+<td>12 Вольт</td>
+<td>LM7812</td>
+<td>2200 мкФ / 35В</td>
+<td>220 мкФ / 25В</td>
+<td>14.5 В</td>
+</tr>
+<tr>
+<td>15 Вольт</td>
+<td>LM7815</td>
+<td>2200 мкФ / 35В</td>
+<td>220 мкФ / 25В</td>
+<td>17.5 В</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если вы используете <strong>трансформатор</strong> с меньшим запасом по напряжению, микросхема может "проседать" под нагрузкой. Проверьте напряжение на выходе диодного моста с помощью мультиметра перед подключением стабилизатора. Оно должно быть выше минимального порога, указанного в даташите.</p>
+
+<details class="faq-item"><summary>Расчет мощности трансформатора</summary><div class="faq-answer"><p>Для подбора трансформатора умножьте максимальный ток нагрузки на напряжение на выходе выпрямителя. Добавьте запас 20-30% для надежности. Например, для нагрузки 1А при 12В нужен трансформатор минимум на 15-16 Вт.</p></div></details>
+
+<h2 id="пошаговая-инструкция-по-сборке">Пошаговая инструкция по сборке</h2>
+
+<p>Процесс сборки не требует сложного оборудования, но от вас потребуется аккуратность и внимание к полярности компонентов. Ошибка в подключении конденсаторов или микросхемы может привести к мгновенному выходу устройства из строя. Внимательно изучите распиновку корпуса TO-220 перед пайкой.</p>
+
+<p>Вам необходимо подготовить следующие инструменты: паяльник, припой, канифоль, кусачки и мультиметр. Начните с монтажа диодного моста, затем припаяйте входной конденсатор. Убедитесь, что минус конденсатора подключен к общему проводу, а плюс — к выходу моста.</p>
+
+<p>Далее установите микросхему на печатную плату или макет. Обратите внимание на <strong>корпус элемента</strong>: втулка крепления обычно соединена с выходом, но это зависит от конкретного производителя. В финале припаяйте выходной конденсатор и кабельные выводы для подключения к нагрузке.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед включением</h4><label class="check-item"><input type="checkbox"><span>Проверить полярность конденсаторов</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в отсутствии коротких замыканий</span></label><label class="check-item"><input type="checkbox"><span>Проверить монтаж микросхемы</span></label><label class="check-item"><input type="checkbox"><span>Подготовить радиатор</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не подавайте питание без установленного радиатора, если планируете нагружать схему током более 0.5 Ампер. Тестовый запуск без охлаждения может сжечь стабилизатор за пару секунд.</p>
+</blockquote>
+
+<h2 id="тепловыделение-и-конструкция-корпуса">Тепловыделение и конструкция корпуса</h2>
+
+<p>Одной из главных проблем линейных стабилизаторов является <strong>тепловыделение</strong>. Вся энергия, которая не пошла в нагрузку, превращается в тепло. Формула проста: мощность потерь равна разности входного и выходного напряжения, умноженной на ток нагрузки.</p>
+
+<p>Для эффективного отвода тепла необходимо использовать <strong>алюминиевый радиатор</strong>. Размер радиатора зависит от тока и перепада напряжения. При токе 1А и перепаде 10В рассеивается 10 Вт тепла, что требует достаточно массивного охладителя. В противном случае сработает встроенная защита от перегрева, и устройство отключится.</p>
+
+<p>Изолируйте микросхему от радиатора с помощью слюдяной прокладки и пластиковой втулки, так как корпус часто имеет потенциал выхода. Используйте термопасту для улучшения теплопередачи между кристаллом и металлом. Это существенно продлит срок службы устройства.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Наносите термопасту тонким слоем. Избыток пасты не улучшает охлаждение, а только загрязняет контакты и уменьшает электрическую прочность изоляции.</p></div>
+
+<h2 id="диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</h2>
+
+<p>Если устройство не работает, первым делом проверьте наличие напряжения на входе и выходе диодного моста. Отсутствие напряжения на входе стабилизатора указывает на проблему с трансформатором или цепью выпрямления. Используйте мультиметр в режиме измерения постоянного напряжения.</p>
+
+<p>Если на входе есть напряжение, а на выходе его нет или оно нестабильно, возможно, перегрелась микросхема или она вышла из строя. В некоторых случаях причиной может быть <strong>короткое замыкание</strong> в нагрузке. Отключите нагрузку и проверьте напряжение на холостом ходу.</p>
+
+<p>Иногда стабилизатор может издавать свист или гудеть. Это явление характерно для электролитических конденсаторов, у которых высохла электролитическая жидкость или нарушилась герметичность. <mark>Замена конденсаторов часто решает проблему нестабильности и шума в цепи питания.</mark></p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильно подобранный радиатор — залог долгой и надежной работы линейного стабилизатора. Не экономьте на охлаждении, даже если устройство планируется использовать эпизодически.</p></div>
+
+<h2 id="заключение-и-перспективы-модернизации">Заключение и перспективы модернизации</h2>
+
+<p>Собранная схема простого стабилизатора напряжения станет отличным учебным проектом и полезным инструментом в мастерской. Вы сможете заряжать маломощные устройства, питать светодиодные ленты или использовать ее как источник питания для экспериментов с электроникой. Понимание принципов работы позволит вам легко адаптировать схему под свои нужды.</p>
+
+<p>Для более мощных применений стоит рассмотреть возможность перехода на <strong>импульсные стабилизаторы</strong>. Они сложнее в настройке, но позволяют получать высокий КПД и работать с большими токами без гигантских радиаторов. Однако для большинства бытовых задач линейная схема остается "золотым стандартом" надежности и простоты.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Технические характеристики компонентов могут меняться в зависимости от партии и производителя. Всегда сверяйтесь с актуальным даташитом перед покупкой или пайкой деталей, чтобы избежать ошибок из-за различий в распиновке.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы">Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли использовать стабилизатор для питания двигателя постоянного тока?</summary>
+<p>Да, но с оговорками. При пуске двигатель потребляет большой пусковой ток, который может быть кратковременно выше номинального. Убедитесь, что ваш стабилизатор выдерживает пиковые токи и имеет достаточный запас по мощности.</p>
+</details>
+
+<details>
+<summary>Почему стабилизатор сильно греется даже без нагрузки?</summary>
+<p>Это может указывать на дефект микросхемы, неправильную схему подключения или наличие паразитной нагрузки в цепи. Также возможно, что входное напряжение слишком велико, и разница потенциалов рассеивается на кристалле.</p>
+</details>
+
+<details>
+<summary>Как увеличить ток стабилизатора без замены микросхемы?</summary>
+<p>Для увеличения тока можно использовать внешние проходные транзисторы (например, TIP31C или TIP41C), которые подключаются параллельно выходу микросхемы. Это потребует дополнительной схемы защиты от перегрузки.</p>
+</details>
+
+<details>
+<summary>Нужен ли предохранитель в цепи питания?</summary>
+<p>Настоятельно рекомендуется установить предохранитель на входе устройства. Это защитит трансформатор и проводку от пожара в случае короткого замыкания внутри самого стабилизатора или его выхода.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать одну микросхему для получения отрицательного напряжения?</summary>
+<p>Нет, для отрицательного напряжения используются специальные серии, например, LM79xx. Обычные линейные стабилизаторы (78xx) работают только с положительным напряжением относительно общего провода.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-мир-стабилизации-питания">Введение в мир стабилизации питания</a></li><li><a href="#принцип-работы-и-основные-типы-схем">Принцип работы и основные типы схем</a></li><li><a href="#выбор-компонентов-для-сборки">Выбор компонентов для сборки</a></li><li><a href="#схема-подключения-и-расчет-номиналов">Схема подключения и расчет номиналов</a></li><li><a href="#пошаговая-инструкция-по-сборке">Пошаговая инструкция по сборке</a></li><li><a href="#тепловыделение-и-конструкция-корпуса">Тепловыделение и конструкция корпуса</a></li><li><a href="#диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</a></li><li><a href="#заключение-и-перспективы-модернизации">Заключение и перспективы модернизации</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/a/am/amortizatory-na-stiralnuyu-mashinku-bosh.html" class="related-card">Амортизаторы на стиральную машинку Bosch: замена, признаки износа и разборка</a></li><li><a href="/articles/z/ze/zerkalo-zadnego-vida-shakman-f3000.html" class="related-card">Зеркало заднего вида Шакман F3000: выбор, замена и регулировка</a></li><li><a href="/articles/s/sk/skaner-dlya-vodnykh-glubin-5-bukv.html" class="related-card">Сканер для водных глубин 5 букв: решение для рыбалки</a></li><li><a href="/articles/k/ka/kak-ustanovit-stabilizator-napryazheniya-na-ves-dom.html" class="related-card">Установка стабилизатора напряжения на весь дом: пошаговая инструкция</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-v-kvartiru-v-shchitok.html" class="related-card">Стабилизатор напряжения в квартиру в щиток: выбор и монтаж</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/a/am/amortizatory-na-stiralnuyu-mashinku-bosh.html" class="related-bottom-card"><span class="related-bottom-title">Амортизаторы на стиральную машинку Bosch: замена, признаки износа и разборка</span><span class="related-bottom-desc">Полное руководство по диагностике и замене амортизаторов в стиральных машинах Bosch. Симптомы поломк</span></a><a href="/articles/z/ze/zerkalo-zadnego-vida-shakman-f3000.html" class="related-bottom-card"><span class="related-bottom-title">Зеркало заднего вида Шакман F3000: выбор, замена и регулировка</span><span class="related-bottom-desc">Полный гайд по замене и настройке зеркал заднего вида для тягача Shacman F3000. Обзор моделей, инстр</span></a><a href="/articles/s/sk/skaner-dlya-vodnykh-glubin-5-bukv.html" class="related-bottom-card"><span class="related-bottom-title">Сканер для водных глубин 5 букв: решение для рыбалки</span><span class="related-bottom-desc">Ищете ответ на кроссворд? Узнайте, что означает «сканер для водных глубин 5 букв». Обзор эхолотов, п</span></a><a href="/articles/k/ka/kak-ustanovit-stabilizator-napryazheniya-na-ves-dom.html" class="related-bottom-card"><span class="related-bottom-title">Установка стабилизатора напряжения на весь дом: пошаговая инструкция</span><span class="related-bottom-desc">Полное руководство по выбору, расчету мощности и монтажу стабилизатора на весь дом. Инструкция, ошиб</span></a><a href="/articles/s/st/stabilizator-napryazheniya-v-kvartiru-v-shchitok.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения в квартиру в щиток: выбор и монтаж</span><span class="related-bottom-desc">Пошаговое руководство по выбору и установке стабилизатора напряжения на весь ввод в электрический щи</span></a><a href="/articles/s/st/stabilizator-xiaomi-dlya-telefona.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор Xiaomi для телефона: выбор, обзор и настройка</span><span class="related-bottom-desc">Полный гайд по выбору стабилизатора Xiaomi для смартфона. Отзывы, сравнение моделей, инструкции по м</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

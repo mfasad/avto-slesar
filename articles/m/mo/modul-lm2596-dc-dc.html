@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Модуль LM2596 DC-DC: обзор, подключение и настройка понижающего преобразователя — АвтоСлесарь</title>
+    <meta name="description" content="Полный гайд по модулю LM2596. Разбор схемы, расчет параметров, альтернативы и инструкция по безопасной сборке преобразователя напряжения для авто и электроники.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/m/mo/modul-lm2596-dc-dc.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Модуль LM2596 DC-DC: обзор, подключение и настройка понижающего преобразователя">
+    <meta property="og:description" content="Полный гайд по модулю LM2596. Разбор схемы, расчет параметров, альтернативы и инструкция по безопасной сборке преобразователя напряжения для авто и электроники.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Модуль LM2596 DC-DC: обзор, подключение и настройка понижающего преобразователя</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Модуль LM2596 DC-DC: полное руководство по применению и настройке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-мир-импульсных-преобразователей">Введение в мир импульсных преобразователей</a></li><li><a href="#технические-характеристики-и-принцип-работы">Технические характеристики и принцип работы</a></li><li><a href="#структура-модуля-и-элементы-управления">Структура модуля и элементы управления</a></li><li><a href="#инструкция-по-подключению-и-настройке">Инструкция по подключению и настройке</a></li><li><a href="#проблемы-с-перегревом-и-методы-охлаждения">Проблемы с перегревом и методы охлаждения</a></li><li><a href="#сравнение-с-аналогами-и-современные-замены">Сравнение с аналогами и современные замены</a></li><li><a href="#ограничения-и-меры-предосторожности">Ограничения и меры предосторожности</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-мир-импульсных-преобразователей">Введение в мир импульсных преобразователей</h2>
+<p>Вы наверняка сталкивались с необходимостью понизить напряжение в бортовой сети автомобиля или в лабораторном блоке питания, не теряя при этом КПД. Именно здесь на сцену выходит <strong>модуль LM2596 DC-DC</strong> — компактное решение, которое стало стандартом де-факто для быстрой стабилизации напряжения в любительской и профессиональной электронике.</p>
+<p>В отличие от линейных стабилизаторов, которые превращают излишки энергии в тепло, <em>импульсный преобразователь</em> работает по принципу широтно-импульсной модуляции, что позволяет ему выдавать высокий ток при минимальном нагреве. Это делает его незаменимым инструментом для питания светодиодных лент, автомобильных магнитол или радиомодулей от 12-вольтовой сети.</p>
+<p>Хотя на рынке появились более современные чипы, <strong>модуль LM2596</strong> остается популярным благодаря своей простоте, доступности и дешевизне. Вам не нужно разрабатывать сложную печатную плату — достаточно просто припаять провода и настроить выходное напряжение под ваши задачи.</p>
+
+<h2 id="технические-характеристики-и-принцип-работы">Технические характеристики и принцип работы</h2>
+<p>В основе данного устройства лежит микросхема <strong>LM2596</strong>, способная коммутировать ток до 3 Ампер без критического перегрева при условии организации небольшого радиатора. Основной функцией платы является понижение входного напряжения (Buck Converter) в диапазоне от 4.5 до 40 Вольт, с возможностью настройки выходного значения от 1.5 до 35 Вольт.</p>
+<p>Ключевым элементом схемы является силовой дроссель, который накапливает энергию в магнитном поле и отдает ее в нагрузку. Частота переключения составляет около 150 кГц, что позволяет использовать компактные компоненты и фильтровать пульсации выходного напряжения с помощью конденсаторов.</p>
+<p>Важно понимать, что даже несмотря на высокую эффективность, при больших перепадах между входом и выходом (например, с 24В на 5В) дроссель и транзистор будут нагреваться. Поэтому <strong>теплоотвод</strong> — это не опция, а необходимость при токах выше 1.5 Ампера.</p>
+<blockquote>⚠️ Внимание: При работе с токами, близкими к предельным (3А), выходной ток модуля может быть снижен из-за внутренних ограничений схемы. Не рассчитывайте на 3А при входном напряжении более 24В.</blockquote>
+
+<h2 id="структура-модуля-и-элементы-управления">Структура модуля и элементы управления</h2>
+<p>Типовая плата <em>LM2596</em> имеет компактные размеры, но содержит все необходимое для работы. На передней панели вы найдете потенциометр для точной настройки напряжения, который часто комбинируется с вольтметром в одном корпусе. Слева и справа расположены винтовые клеммы или площадки под пайку для подключения питания и нагрузки.</p>
+<p>Обратите внимание на маркировку контактов: входные клеммы обычно помечены как <code>IN+</code> и <code>IN-</code>, а выходные — как <code>OUT+</code> и <code>OUT-</code>. </p>
+<p>Наличие встроенного <strong>цифрового вольтметра</strong> позволяет контролировать параметры в реальном времени, что критично для зарядных устройств. Однако стоит помнить, что дисплей потребляет часть тока, и его показания могут иметь погрешность, требующую калибровки.</p>
+<ul>
+  <li>🔧 Потенциометр позволяет плавно регулировать выходное напряжение от 1.5В до 35В.</li>
+  <li>🔌 Входные и выходные разъемы выдерживают ток до 3А при правильном охлаждении.</li>
+  <li>📉 Встроенный диод защищает схему от неправильной полярности подключения на входе.</li>
+</ul>
+
+<div class="poll-widget" id="poll-b5524eb8"><div class="poll-widget-question">📊 Какой тип нагрузки вы чаще всего подключаете к LM2596?</div><div class="poll-widget-option" data-poll="b5524eb8" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Светодиоды</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b5524eb8" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Автомобильная акустика</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b5524eb8" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Зарядка гаджетов</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="b5524eb8" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Лабораторные эксперименты</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="инструкция-по-подключению-и-настройке">Инструкция по подключению и настройке</h2>
+<p>Перед началом работы необходимо убедиться, что источник питания соответствует требованиям. Подключите провода к <code>IN+</code> и <code>IN-</code>, соблюдая полярность. Если вы используете автомобильный аккумулятор, убедитесь, что напряжение не превышает 30 Вольт, чтобы не сжечь микросхему.</p>
+<p>После подачи питания на модуль загорится индикатор питания и покажет текущее напряжение на дисплее. С помощью маленькой отвертки аккуратно вращайте <strong>регулятор напряжения</strong> (потенциометр) до тех пор, пока не получите нужное значение. </p>
+<p>Для точной настройки желательно использовать внешний мультиметр, так как встроенный дисплей может иметь погрешность. Подключите нагрузку, и проверьте, не проседает ли напряжение под нагрузкой. Если напряжение падает слишком сильно, возможно, проблема в сечении проводов или перегреве компонентов.</p>
+<div class="checklist-block"><h4>☑️ Подготовка к подключению</h4><label class="check-item"><input type="checkbox"><span>Проверить напряжение источника</span></label><label class="check-item"><input type="checkbox"><span>Подключить входные провода</span></label><label class="check-item"><input type="checkbox"><span>Настроить выходное напряжение</span></label><label class="check-item"><input type="checkbox"><span>Подключить нагрузку</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<details class="faq-item"><summary>Частые ошибки при подключении</summary><div class="faq-answer"><p>Самая частая ошибка — перепутать вход и выход, что мгновенно выводит модуль из строя. Вторая проблема — использование слишком тонких проводов для тока выше 2А, что приводит к падению напряжения и нагреву.</p></div></details>
+
+<h2 id="проблемы-с-перегревом-и-методы-охлаждения">Проблемы с перегревом и методы охлаждения</h2>
+<p>Многие пользователи сталкиваются с тем, что модуль <em>LM2596</em> сильно греется при работе. Это нормальное явление для импульсных преобразователей, но чрезмерный нагрев (>80°C) говорит о перегрузке или плохой вентиляции. </p>
+<p>Для решения проблемы необходимо обеспечить активное или пассивное охлаждение. На плате часто есть место для установки небольшого радиатора. Если модуль работает в корпусе, предусмотрите вентиляционные отверстия.</p>
+<p>При токах выше 2 Ампер рекомендуется использовать <strong>вентилятор</strong> или надевать термопасту и радиатор на силовой дроссель и микросхему. Игнорирование теплоотвода приведет к срабатыванию защиты или деградации компонентов.</p>
+<blockquote>⚠️ Внимание: Если температура корпуса микросхемы превышает 100°C, необходимо немедленно отключить питание и улучшить охлаждение, иначе возможен выход из строя полупроводников.</blockquote>
+
+<h2 id="сравнение-с-аналогами-и-современные-замены">Сравнение с аналогами и современные замены</h2>
+<p>Хотя <strong>LM2596</strong> проверен временем, существуют более современные решения, такие как <em>LM2576</em> или новые чипы на базе <strong>MP2307</strong>. <em>LM2576</em> работает на более низкой частоте и требует больших дросселей, но часто дешевле. </p>
+<p>Более новые модули, например, на базе <em>XL4015</em>, могут выдерживать токи до 5А и имеют более высокий КПД, но стоят дороже. Выбор зависит от ваших задач: для простых задач <em>LM2596</em> все еще остается оптимальным балансом цены и качества.</p>
+<p>В таблице ниже приведено сравнение основных параметров популярных модулей:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Модель</th>
+      <th>Макс. ток</th>
+      <th>Частота</th>
+      <th>Особенности</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LM2596</td>
+      <td>3 А</td>
+      <td>150 кГц</td>
+      <td>Классика, доступность</td>
+    </tr>
+    <tr>
+      <td>LM2576</td>
+      <td>3 А</td>
+      <td>52 кГц</td>
+      <td>Проще схема, больше габариты</td>
+    </tr>
+    <tr>
+      <td>XL4015</td>
+      <td>5 А</td>
+      <td>180 кГц</td>
+      <td>Высокий ток, КПД</td>
+    </tr>
+    <tr>
+      <td>MP2307</td>
+      <td>3 А</td>
+      <td>340 кГц</td>
+      <td>Компактность, малый нагрев</td>
+    </tr>
+  </tbody>
+</table>
+<blockquote>⚠️ Внимание: При замене аналогов учитывайте не только максимальный ток, но и габариты печатной платы и расположение контактов, так как они могут не совпадать.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для уменьшения пульсаций выходного напряжения добавьте параллельно выходному конденсатору керамический конденсатор 0.1 мкФ. Это улучшит стабильность питания чувствительной электроники.</p></div>
+
+<h2 id="ограничения-и-меры-предосторожности">Ограничения и меры предосторожности</h2>
+<p>Несмотря на свою надежность, модуль <strong>LM2596</strong> имеет ряд ограничений. Входное напряжение не должно превышать 40 Вольт, иначе возможен пробой входного конденсатора. Также важно учитывать, что при работе с низкими напряжениями (менее 2В) стабильность работы может снижаться.</p>
+<p>При коротком замыкании на выходе модуль не всегда имеет надежную защиту, поэтому рекомендуется использовать предохранитель на входной линии. Это спасет не только сам преобразователь, но и источник питания.</p>
+<p>Не оставляйте модуль без нагрузки на длительное время, особенно если он подключен к мощному источнику, так как это может привести к нестабильной работе контура обратной связи.</p>
+<ul>
+  <li>⚡ Используйте предохранитель на входе для защиты от короткого замыкания.</li>
+  <li>🌡️ Контролируйте температуру дросселя при длительной работе.</li>
+  <li>🚫 Не подключайте нагрузку, превышающую номинальный ток модуля.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильное охлаждение и соблюдение предельных значений тока — залог долгой жизни модуля LM2596. Игнорирование тепловых режимов приводит к быстрой деградации компонентов.</p></div>
+
+<h2 id="часто-задаваемые-вопросы">Часто задаваемые вопросы</h2>
+<details>
+  <summary>Можно ли использовать LM2596 для зарядки литий-ионных аккумуляторов?</summary>
+  <p>Нет, напрямую использовать его для зарядки Li-Ion аккумуляторов нельзя, так как требуется контроль не только напряжения, но и тока (режим CC/CV). Для этого лучше использовать специализированные модули, например, TP4056 или DC-DC с функцией ограничения тока.</p>
+</details>
+<details>
+  <summary>Почему модуль гудит при работе?</summary>
+  <p>Гудение дросселя (индуктивности) вызвано магнитострикцией или вибрацией обмоток под действием высокого тока. Это нормальное явление, если звук тихий. Если гул очень громкий, возможно, дроссель некачественный или модуль перегружен.</p>
+</details>
+<details>
+  <summary>Как повысить ток модуля выше 3 Ампер?</summary>
+  <p>Один модуль LM2596 не может выдать больше 3А. Для повышения тока можно параллельно подключить два модуля, но это требует сложной балансировки токов. Проще заменить модуль на более мощный аналог, например, XL4015 или MP1584EN.</p>
+</details>
+<details>
+  <summary>Что делать, если напряжение на выходе не регулируется?</summary>
+  <p>Проверьте целостность потенциометра и наличие контакта на его выводах. Часто дешевые регуляторы имеют плохой контакт. Попробуйте почистить его спиртом или заменить на новый переменный резистор.</p>
+</details>
+<details>
+  <summary>Можно ли подключать модуль к сети 220В?</summary>
+  <p>Никогда не подключайте модуль LM2596 напрямую к сети 220В! Это приведет к мгновенному взрыву и возгоранию. Модуль предназначен только для работы с постоянным током от 4.5 до 40 Вольт.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-мир-импульсных-преобразователей">Введение в мир импульсных преобразователей</a></li><li><a href="#технические-характеристики-и-принцип-работы">Технические характеристики и принцип работы</a></li><li><a href="#структура-модуля-и-элементы-управления">Структура модуля и элементы управления</a></li><li><a href="#инструкция-по-подключению-и-настройке">Инструкция по подключению и настройке</a></li><li><a href="#проблемы-с-перегревом-и-методы-охлаждения">Проблемы с перегревом и методы охлаждения</a></li><li><a href="#сравнение-с-аналогами-и-современные-замены">Сравнение с аналогами и современные замены</a></li><li><a href="#ограничения-и-меры-предосторожности">Ограничения и меры предосторожности</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/ro/rozetki-s-pruzhinami-na-kontaktakh.html" class="related-card">Розетки с пружинами на контактах: принцип работы, плюсы и минусы</a></li><li><a href="/articles/k/ka/kakoj-ekholot-kupit-dlya-rybalki-s-berega.html" class="related-card">Лучший эхолот для береговой рыбалки: выбор, обзор и советы</a></li><li><a href="/articles/p/pr/pribor-dlya-lovli-ryby-ultrazvukovoj.html" class="related-card">Ультразвуковой эхолот для рыбалки: выбор и применение</a></li><li><a href="/articles/k/ka/kak-sdelat-bajpas-dlya-stabilizatora.html" class="related-card">Байпас для стабилизатора напряжения: схема, монтаж и подключение своими руками</a></li><li><a href="/articles/s/st/stabilizator-toka-na-tranzistore.html" class="related-card">Строим стабилизатор тока на транзисторе: схема, расчет и монтаж</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/ro/rozetki-s-pruzhinami-na-kontaktakh.html" class="related-bottom-card"><span class="related-bottom-title">Розетки с пружинами на контактах: принцип работы, плюсы и минусы</span><span class="related-bottom-desc">Разбор конструкции розеток с пружинными контактами. Почему пружина важнее винта, как подобрать модел</span></a><a href="/articles/k/ka/kakoj-ekholot-kupit-dlya-rybalki-s-berega.html" class="related-bottom-card"><span class="related-bottom-title">Лучший эхолот для береговой рыбалки: выбор, обзор и советы</span><span class="related-bottom-desc">Как выбрать эхолот для рыбалки с берега? Сравнение частот, глубин, портативных и стационарных моделе</span></a><a href="/articles/p/pr/pribor-dlya-lovli-ryby-ultrazvukovoj.html" class="related-bottom-card"><span class="related-bottom-title">Ультразвуковой эхолот для рыбалки: выбор и применение</span><span class="related-bottom-desc">Как выбрать ультразвуковой эхолот для ловли рыбы? Обзор видов, принцип работы, особенности использов</span></a><a href="/articles/k/ka/kak-sdelat-bajpas-dlya-stabilizatora.html" class="related-bottom-card"><span class="related-bottom-title">Байпас для стабилизатора напряжения: схема, монтаж и подключение своими руками</span><span class="related-bottom-desc">Подробная инструкция по самостоятельному изготовлению и установке байпаса для стабилизатора. Схема п</span></a><a href="/articles/s/st/stabilizator-toka-na-tranzistore.html" class="related-bottom-card"><span class="related-bottom-title">Строим стабилизатор тока на транзисторе: схема, расчет и монтаж</span><span class="related-bottom-desc">Подробный гайд по созданию простейшего стабилизатора тока на биполярном транзисторе. Расчет токозада</span></a><a href="/articles/k/ka/kak-podklyuchit-tri-odnofaznykh-stabilizatora-napryazheniya.html" class="related-bottom-card"><span class="related-bottom-title">Подключение трех однофазных стабилизаторов: схема и правила монтажа</span><span class="related-bottom-desc">Пошаговая инструкция по подключению трех однофазных стабилизаторов напряжения в трехфазную сеть. Рас</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

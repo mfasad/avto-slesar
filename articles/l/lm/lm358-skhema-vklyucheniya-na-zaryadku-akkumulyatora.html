@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>ЛМ358 схема включения на зарядку аккумулятора: Настройка тока и напряжения — АвтоСлесарь</title>
+    <meta name="description" content="Полное руководство по сборке зарядного устройства на микросхеме LM358. Расчет порогов, выбор резисторов и защита от перезаряда для свинцовых и литиевых АКБ.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/l/lm/lm358-skhema-vklyucheniya-na-zaryadku-akkumulyatora.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ЛМ358 схема включения на зарядку аккумулятора: Настройка тока и напряжения">
+    <meta property="og:description" content="Полное руководство по сборке зарядного устройства на микросхеме LM358. Расчет порогов, выбор резисторов и защита от перезаряда для свинцовых и литиевых АКБ.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">ЛМ358 схема включения на зарядку аккумулятора: Настройка тока и напряжения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>ЛМ358 схема включения на зарядку аккумулятора: Полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-компаратора-на-базе-lm358">Принцип работы компаратора на базе LM358</a></li><li><a href="#расчет-опорного-напряжения-и-делителя">Расчет опорного напряжения и делителя</a></li><li><a href="#схема-управления-силовым-ключом-и-индикация">Схема управления силовым ключом и индикация</a></li><li><a href="#нюансы-работы-с-литий-ионными-элементами">Нюансы работы с литий-ионными элементами</a></li><li><a href="#выбор-компонентов-и-температурная-стабильность">Выбор компонентов и температурная стабильность</a></li><li><a href="#таблица-типовых-номиналов-для-12в-акб">Таблица типовых номиналов для 12В АКБ</a></li><li><a href="#меры-предосторожности-и-защита">Меры предосторожности и защита</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Микросхема <em>LM358</em> остается одним из самых доступных и надежных инструментов в арсенале радиолюбителя, особенно когда речь заходит о создании простых, но эффективных устройств для обслуживания источников питания. В отличие от специализированных микросхем с ограниченным функционалом, этот <strong>двойной операционный усилитель</strong> позволяет реализовывать как простое пороговое отключение, так и сложные схемы стабилизации тока и напряжения в одном компактном корпусе.</p>
+
+<p>При сборке <strong>зарядного устройства</strong> важно понимать, что <em>LM358</em> идеально подходит для работы в режиме компаратора, отслеживая напряжение на клеммах аккумулятора и управляя силовым ключом. Вам потребуется лишь минимальный набор компонентов: пара резисторов, светодиод индикатора и сам транзистор-ключ. Однако, чтобы устройство работало безопасно, необходимо точно рассчитать <strong>порог срабатывания</strong> и правильно подобрать <strong>токоограничивающие элементы</strong>.</p>
+
+<h2 id="принцип-работы-компаратора-на-базе-lm358">Принцип работы компаратора на базе LM358</h2>
+
+<p>В основе схемы лежит использование одного из двух усилителей микросхемы в режиме компаратора. На один вход подается опорное напряжение, создаваемое делителем, а на второй — напряжение с аккумулятора, которое может изменяться в процессе заряда. Когда потенциал на входе аккумулятора превышает заданный порог, выходной сигнал меняет свое состояние.</p>
+
+<p>Этот скачок напряжения используется для отключения силового транзистора или реле, прекращая подачу тока. <strong>Операционный усилитель</strong> в LM358 работает без обратной связи в данном сценарии, что обеспечивает чёткое переключение без «дребезга» на границе срабатывания. Важно учитывать, что выходной транзистор микросхемы является <strong>транзистором с открытым коллектором</strong>, поэтому для корректной работы на выходе обязательно нужен <em>подтягивающий резистор</em>.</p>
+
+<p>Без этой подтяжки выходное напряжение не сможет подняться до логической единицы, и схема не сможет корректно управлять индикацией или силовым ключом. Выбор номинала этого резистора зависит от напряжения питания всей схемы и типа используемого индикатора.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Не забывайте, что LM358 не имеет внутреннего ограничения выходного тока. При использовании схемы в качестве ключа убедитесь, что ток, протекающий через выходной транзистор, не превышает 20-30 мА, иначе микросхема перегреется.</p>
+</blockquote>
+
+<h2 id="расчет-опорного-напряжения-и-делителя">Расчет опорного напряжения и делителя</h2>
+
+<p>Ключевым моментом настройки схемы является правильный расчет <strong>делителя напряжения</strong>. Для создания стабильного опорного уровня часто используют стабилитрон или простую цепочку резисторов, если допустима погрешность. Если вы планируете заряжать 12-вольтовые аккумуляторы, порог отключения обычно устанавливается в районе 14,4 В.</p>
+
+<p>Для точной настройки можно использовать переменный резистор, включенный в плечо делителя. Это позволит вам калибровать устройство под конкретный тип <em>аккумуляторной батареи</em>, учитывая её износ или специфические требования производителя. <strong>Опорное напряжение</strong> должно быть стабильным, поэтому питание для делителя лучше брать через отдельный стабилитрон.</p>
+
+<p>При расчете номиналов используйте формулу делителя, помня, что напряжение на входе сравнения должно быть строго ниже напряжения на аккумуляторном входе в момент полного заряда. Ошибка в 1-2% может привести к тому, что батарея не дозарядится или, наоборот, перезарядится.</p>
+
+<div class="poll-widget" id="poll-be218498"><div class="poll-widget-question">📊 Какой тип аккумуляторов вы планируете заряжать?</div><div class="poll-widget-option" data-poll="be218498" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Свинцово-кислотные (12В)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="be218498" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Литий-ионные (Li-Ion)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="be218498" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Ni-MH аккумуляторы</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="be218498" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Много разных типов</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="схема-управления-силовым-ключом-и-индикация">Схема управления силовым ключом и индикация</h2>
+
+<p>Сигнал с выхода компаратора используется для управления силовым транзистором, который размыкает цепь заряда. Обычно используется <strong>N-P-N транзистор</strong>, подключенный к базе через токоограничивающий резистор. Когда напряжение на аккумуляторе ниже порога, транзистор открыт, и ток идет на зарядку.</p>
+
+<p>Как только напряжение достигает предела, выход LM358 заземляется, закрывая транзистор и обесточивая батарею. Одновременно с этим загорается светодиод, сигнализирующий о завершении процесса. Для визуального контроля часто используют два светодиода: зеленый для режима заряда и красный для режима «полная». <strong>Светодиодная индикация</strong> помогает пользователю понять текущий статус без подключения мультиметра.</p>
+
+<p>Важно правильно подобрать резистор базы транзистора, чтобы обеспечить полное открытие при низком уровне сигнала и надежное закрытие при высоком. Слишком высокое сопротивление может привести к тому, что транзистор останется в линейном режиме и будет сильно греться.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед подачей питания</h4><label class="check-item"><input type="checkbox"><span>Проверить полярность подключения LM358</span></label><label class="check-item"><input type="checkbox"><span>Измерить сопротивление делителя</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии подтягивающего резистора</span></label><label class="check-item"><input type="checkbox"><span>Проверить цепи питания</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="нюансы-работы-с-литий-ионными-элементами">Нюансы работы с литий-ионными элементами</h2>
+
+<p>При зарядке литий-ионных аккумуляторов требования к точности <strong>напряжения отсечки</strong> значительно выше, чем для свинцовых батарей. Превышение напряжения всего на 0,1 В может привести к деградации ячейки или даже её возгоранию. Поэтому в схемах на <em>LM358</em> для Li-Ion обязательно используйте прецизионные резисторы и качественный опорный источник.</p>
+
+<p>В отличие от свинцовых АКБ, литиевые элементы требуют не только отсечки по напряжению, но и контроля по току. Простая схема на компараторе может обеспечить только отсечку по напряжению, что недостаточно для безопасной зарядки. Вам потребуется добавить дополнительный канал усиления для контроля <strong>тока заряда</strong>.</p>
+
+<p>Также стоит учитывать, что <strong>саморазряд</strong> литиевых батарей крайне мал, поэтому схема может сработать и отключить нагрузку сразу после отключения зарядного устройства, если нет развязки. Это не является ошибкой, а особенностью работы компаратора при малых токах утечки.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При работе с литий-ионными аккумуляторами категорически не рекомендуется использовать простые схемы на LM358 без защиты от перегрева и короткого замыкания. Всегда используйте BMS-платы для ячеек.</p>
+</blockquote>
+
+<h2 id="выбор-компонентов-и-температурная-стабильность">Выбор компонентов и температурная стабильность</h2>
+
+<p>Микросхема <em>LM358</em> обладает достаточным температурным коэффициентом для большинства бытовых применений, но в условиях высоких температур её параметры могут «плыть». Если устройство будет работать в неотапливаемом помещении, выберите <strong>прецизионные резисторы</strong> с допуском 1% или лучше.</p>
+
+<p>Конденсаторы в цепи питания должны быть расположены максимально близко к выводам микросхемы, чтобы исключить влияние наводок. Используйте керамический конденсатор на 0,1 мкФ и электролитический на 10-22 мкФ. <strong>Фильтрация питания</strong> критически важна для предотвращения ложных срабатываний компаратора.</p>
+
+<p>Силовые транзисторы и резисторы в цепи сбора тока также должны быть подобраны с запасом по мощности. При больших токах заряда (более 1 А) резисторы могут сильно нагреваться, что изменит их сопротивление и, следовательно, порог срабатывания схемы.</p>
+
+<details class="faq-item"><summary>Что делать, если схема не отключается?</summary><div class="faq-answer"><p>Если схема не отключается, проверьте исправность транзистора и правильность подключения базы. Часто проблема кроется в коротком замыкании между коллектором и эмиттером силового ключа или в сгоревшем резисторе базы.</p></div></details>
+
+<h2 id="таблица-типовых-номиналов-для-12в-акб">Таблица типовых номиналов для 12В АКБ</h2>
+
+<p>Для удобства сборки приведем типовые значения компонентов, которые обеспечивают стабильную работу схемы для свинцово-кислотных аккумуляторов 12В. Эти значения являются отправной точкой и могут потребовать небольшой подстройки под конкретные детали.</p>
+
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Тип</th>
+<th>Значение</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Стабилитрон (опорное)</td>
+<td>1N4733A</td>
+<td>5.1 В</td>
+<td>Создает базовый опорный уровень</td>
+</tr>
+<tr>
+<td>Делитель (верхнее плечо)</td>
+<td>Переменный резистор</td>
+<td>10 кОм</td>
+<td>Для точной подстройки порога</td>
+</tr>
+<tr>
+<td>Делитель (нижнее плечо)</td>
+<td>Резистор</td>
+<td>5.1 кОм</td>
+<td>Формирует коэффициент деления</td>
+</tr>
+<tr>
+<td>Подтягивающий резистор</td>
+<td>Резистор</td>
+<td>4.7 кОм</td>
+<td>На выходе компаратора</td>
+</tr>
+<tr>
+<td>Силовой транзистор</td>
+<td>MJE3055 / 2N3055</td>
+<td>N-P-N</td>
+<td>Для токов до 5-10 А</td>
+</tr>
+</tbody>
+</table>
+
+<p>Помните, что <strong>точность резисторов</strong> влияет на точность отсечки. Если вы используете обычные резисторы с допуском 5%, реальное напряжение отключения может отличаться от расчетного на 0,2-0,3 В. Для ответственных применений лучше заменить их на прецизионные.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Все указанные выше номиналы и параметры могут варьироваться в зависимости от конкретной партии компонентов и условий эксплуатации. Всегда проверяйте работу схемы на нагрузке перед подключением дорогой аккумуляторной батареи.</p>
+</blockquote>
+
+<h2 id="меры-предосторожности-и-защита">Меры предосторожности и защита</h2>
+
+<p>При сборке любого зарядного устройства необходимо предусмотреть защиту от случайного короткого замыкания на выходе. Встроенная защита <em>LM358</em> не рассчитана на работу с большими токами нагрузки, поэтому она не спасет силовые компоненты. Добавьте в схему <strong>предохранитель</strong> или самовосстанавливающийся предохранитель.</p>
+
+<p>Также важно правильно рассчитать теплоотвод для силового транзистора. Даже при отключенном заряде, если схема работает в режиме линейной стабилизации (что нежелательно для простого компаратора), транзистор может нагреваться. Используйте <strong>радиаторы</strong> достаточной площади.</p>
+
+<p>Не подключайте нагрузку к выходу зарядного устройства до тех пор, пока схема полностью не собрана и не проверена на соответствие <strong>полярности</strong>. Ошибка в подключении может мгновенно вывести из строя как микросхему, так и аккумулятор.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед началом пайки обязательно протестируйте схему на макетной плате, чтобы убедиться в правильности расчетов без риска сжечь основные компоненты.</p></div>
+
+<details>
+<summary>Как проверить правильность работы схемы?</summary>
+<p>Для проверки используйте регулируемый источник питания вместо аккумулятора. Плавно повышайте напряжение от 12 В до 15 В и наблюдайте за поведением светодиодов и выходного транзистора. В момент достижения порога (например, 14,4 В) схема должна четко переключиться.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать LM358 для зарядки 24В АКБ?</summary>
+<p>Да, микросхема LM358 поддерживает питание до 32 В, но для зарядки 24В аккумуляторов потребуется изменить номиналы делителя и опорного напряжения, а также использовать более высоковольтные транзисторы.</p>
+</details>
+
+<details>
+<summary>Почему схема срабатывает преждевременно?</summary>
+<p>Преждевременное срабатывание может быть вызвано плохой фильтрацией питания, использованием резисторов с большим допуском или перегревом микросхемы, что меняет её внутренние параметры.</p>
+</details>
+
+<p>Создание устройства на базе <em>LM358</em> — отличный способ понять принципы работы аналоговой электроники и получить надежный инструмент для обслуживания аккумуляторов. Главное — проявить внимательность при расчетах и сборке.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильный расчет делителя напряжения и использование прецизионных компонентов — залог стабильной работы схемы отсечки заряда.</p></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-компаратора-на-базе-lm358">Принцип работы компаратора на базе LM358</a></li><li><a href="#расчет-опорного-напряжения-и-делителя">Расчет опорного напряжения и делителя</a></li><li><a href="#схема-управления-силовым-ключом-и-индикация">Схема управления силовым ключом и индикация</a></li><li><a href="#нюансы-работы-с-литий-ионными-элементами">Нюансы работы с литий-ионными элементами</a></li><li><a href="#выбор-компонентов-и-температурная-стабильность">Выбор компонентов и температурная стабильность</a></li><li><a href="#таблица-типовых-номиналов-для-12в-акб">Таблица типовых номиналов для 12В АКБ</a></li><li><a href="#меры-предосторожности-и-защита">Меры предосторожности и защита</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sk/skhema-podklyucheniya-led-balki-cherez-rele-i-knopku.html" class="related-card">Схема подключения LED балки: инструкция с реле и кнопкой</a></li><li><a href="/articles/s/st/stabilizator-12-volt-dlya-svetodiodov.html" class="related-card">Стабилизатор 12 вольт для светодиодов: выбор и подключение</a></li><li><a href="/articles/e/el/elektronnaya-nagruzka-na-lm358.html" class="related-card">Электронная нагрузка на базе LM358: схема, расчет и особенности сборки</a></li><li><a href="/articles/r/ro/rozetki-s-pruzhinami-na-kontaktakh.html" class="related-card">Розетки с пружинами на контактах: принцип работы, плюсы и минусы</a></li><li><a href="/articles/p/pr/proverka-uuk-avtomobilya-chto.html" class="related-card">Проверка УУК автомобиля: что это и зачем нужно</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sk/skhema-podklyucheniya-led-balki-cherez-rele-i-knopku.html" class="related-bottom-card"><span class="related-bottom-title">Схема подключения LED балки: инструкция с реле и кнопкой</span><span class="related-bottom-desc">Пошаговое руководство по установке светодиодной балки через реле. Схема подключения к аккумулятору, </span></a><a href="/articles/s/st/stabilizator-12-volt-dlya-svetodiodov.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор 12 вольт для светодиодов: выбор и подключение</span><span class="related-bottom-desc">Как выбрать и подключить стабилизатор тока 12В для LED-лент и ламп. Обзор типов драйверов, схемы под</span></a><a href="/articles/e/el/elektronnaya-nagruzka-na-lm358.html" class="related-bottom-card"><span class="related-bottom-title">Электронная нагрузка на базе LM358: схема, расчет и особенности сборки</span><span class="related-bottom-desc">Подробное руководство по созданию электронной нагрузки на микросхеме LM358. Расчет токов, выбор рези</span></a><a href="/articles/r/ro/rozetki-s-pruzhinami-na-kontaktakh.html" class="related-bottom-card"><span class="related-bottom-title">Розетки с пружинами на контактах: принцип работы, плюсы и минусы</span><span class="related-bottom-desc">Разбор конструкции розеток с пружинными контактами. Почему пружина важнее винта, как подобрать модел</span></a><a href="/articles/p/pr/proverka-uuk-avtomobilya-chto.html" class="related-bottom-card"><span class="related-bottom-title">Проверка УУК автомобиля: что это и зачем нужно</span><span class="related-bottom-desc">Разбираем, что такое УУК автомобиля и как проводится диагностика этой системы. Узнайте о причинах сб</span></a><a href="/articles/k/ka/kakoj-byvaet-stroj-u-spinninga.html" class="related-bottom-card"><span class="related-bottom-title">Как выбрать строй спиннинга: полный гид по классам и характеристикам</span><span class="related-bottom-desc">Подробный разбор строй спиннинга: от сверхмедленных до сверхбыстрых. Учимся подбирать тест и жесткос</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

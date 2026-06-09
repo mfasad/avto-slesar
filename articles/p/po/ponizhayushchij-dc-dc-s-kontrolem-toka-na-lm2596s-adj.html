@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Понижающий DC-DC с контролем тока на LM2596S Adj: Инструкция — АвтоСлесарь</title>
+    <meta name="description" content="Подробный гид по сборке ограничителя тока на базе LM2596S. Расчет шунта, схема подключения, настройка защиты и тонкости регулировки напряжения.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/p/po/ponizhayushchij-dc-dc-s-kontrolem-toka-na-lm2596s-adj.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Понижающий DC-DC с контролем тока на LM2596S Adj: Инструкция">
+    <meta property="og:description" content="Подробный гид по сборке ограничителя тока на базе LM2596S. Расчет шунта, схема подключения, настройка защиты и тонкости регулировки напряжения.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Понижающий DC-DC с контролем тока на LM2596S Adj: Инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Создание понижающего преобразователя с контролем тока на базе LM2596S Adj</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-модификацию-импульсных-стабилизаторов">Введение в модификацию импульсных стабилизаторов</a></li><li><a href="#принцип-работы-схемы-и-роль-контроллера">Принцип работы схемы и роль контроллера</a></li><li><a href="#выбор-компонентов-и-расчет-шунта">Выбор компонентов и расчет шунта</a></li><li><a href="#схема-подключения-и-модификация-платы">Схема подключения и модификация платы</a></li><li><a href="#технические-нюансы-и-проблемы-теплоотвода">Технические нюансы и проблемы теплоотвода</a></li><li><a href="#настройка-и-калибровка-параметров">Настройка и калибровка параметров</a></li><li><a href="#практическое-применение-и-безопасность">Практическое применение и безопасность</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-модификацию-импульсных-стабилизаторов">Введение в модификацию импульсных стабилизаторов</h2>
+<p>Модули на базе <strong>LM2596S</strong> давно стали стандартом де-факто для любительской и полупрофессиональной электроники, обеспечивая надежное преобразование высокого напряжения в низкое. Стандартные заводские версии этих устройств отлично справляются с задачей стабилизации напряжения, но в них полностью отсутствует функция ограничения тока, что критично при зарядке аккумуляторов или питании светодиодных матриц. </p>
+<p>Для решения этой проблемы энтузиасты и инженеры создают самодельные варианты, внедряя в цепь обратной связи узел <em>контроля тока</em>, который позволяет превратить обычный понижающий преобразователь в источник тока с регулируемым пределом. Это устройство становится незаменимым помощником, когда требуется <strong>защита от короткого замыкания</strong> или необходимость плавного запуска нагрузки с высоким пусковым током. </p>
+<p>Вам предстоит разобраться, как модифицировать печатную плату, рассчитав номиналы <em>шунтирующих резисторов</em>, чтобы точно контролировать мощность, отдаваемую в нагрузку. Такой подход позволяет использовать дешевые и доступные компоненты для создания профессионального лабораторного источника питания с функцией <strong>CV/CC</strong> (Constant Voltage / Constant Current). </p>
+
+<h2 id="принцип-работы-схемы-и-роль-контроллера">Принцип работы схемы и роль контроллера</h2>
+<p>Сердцем всей системы является микросхема <em>LM2596S-Adj</em>, которая функционирует как импульсный стабилизатор с широтно-импульсной модуляцией (ШИМ). В стандартном режиме она удерживает выходное напряжение на заданном уровне, изменяя скважность импульсов на ключевом транзисторе. </p>
+<p>Для реализации контроля тока необходимо вмешаться в цепь обратной связи, заставив микросхему снижать выходное напряжение при достижении определенного порога падения напряжения на шунте. Ключевым элементом здесь становится <strong>низкоомный резистор</strong>, включенный последовательно с нагрузкой на выходе преобразователя. </p>
+<p>Когда ток, протекающий через этот резистор, создает падение напряжения, превышающее внутреннее опорное напряжение микросхемы (обычно около 1.23 В), <em>срабатывает защита</em>, и выходное напряжение начинает падать, ограничивая ток. Важно понимать, что LM2596S не имеет встроенного входа для внешнего сигнала ограничения тока, поэтому вся магия происходит за счет правильной разводки печатной платы и подбора <strong>сопротивления шунта</strong>. </p>
+<blockquote>⚠️ Внимание: При увеличении тока до максимума на шунте выделяется значительное тепло. Использование резисторов стандартной мощности 0.25 Вт приведет к их мгновенному выходу из строя, поэтому обязательно применяйте шунты мощностью не менее 5-10 Вт. </blockquote>
+
+<h2 id="выбор-компонентов-и-расчет-шунта">Выбор компонентов и расчет шунта</h2>
+<p>Основной сложностью при сборке является правильный подбор <em>низкоомного резистора</em>, который будет служить датчиком тока. Сопротивление этого элемента напрямую определяет максимальный ток, который вы сможете пропустить через устройство до начала ограничения. </p>
+<p>Формула расчета предельно проста: <code>I_limit = V_ref / R_shunt</code>, где <em>V_ref</em> — опорное напряжение входа обратного сигнала (для LM2596S это обычно 1.23В, но для точности лучше измерить мультиметром конкретный экземпляр). Если вам нужен ограничитель на 3 Ампера, сопротивление шунта должно составлять примерно 0.4 Ома. </p>
+<p>Однако, на практике часто используют значение опорного напряжения, при котором происходит переключение режима, которое может варьироваться в зависимости от топологии. Более распространенный подход для LM2596S предполагает использование внутреннего компаратора, который срабатывает при падении напряжения на выводе Feedback (FB). В реальности для создания качественного ограничителя часто приходится вносить изменения в схему, добавляя внешний <strong>операционный усилитель</strong> или используя транзисторный ключ, который будет "стягивать" линию обратной связи. </p>
+<p>В простейшей реализации без ОУ, вы можете использовать резисторы типа <em>MELF</em> или проволочные шунты, рассчитанные на большие токи. Для токов до 3А подойдут массивные резисторы в корпусе, способные рассеять до 10 Вт тепла. </p>
+
+<p>Ниже приведена таблица рекомендуемых номиналов шунтов для различных токов ограничения:</p>
+<table>
+<thead>
+<tr>
+<th>Целевой ток (А)</th>
+<th>Сопротивление (Ом)</th>
+<th>Мощность шунта (Вт)</th>
+<th>Тип корпуса</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>1.2</td>
+<td>3</td>
+<td>2512</td>
+</tr>
+<tr>
+<td>2.0</td>
+<td>0.6</td>
+<td>5</td>
+<td>Два параллельно 2512</td>
+</tr>
+<tr>
+<td>3.0</td>
+<td>0.4</td>
+<td>10</td>
+<td>Проволочный</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>0.25</td>
+<td>15</td>
+<td>Мостовой шунт</td>
+</tr>
+</tbody>
+</table>
+
+<div class="poll-widget" id="poll-e990b1d6"><div class="poll-widget-question">📊 Какой максимальный ток вам чаще всего требуется?</div><div class="poll-widget-option" data-poll="e990b1d6" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">1-2 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e990b1d6" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">3-5 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e990b1d6" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">5-10 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="e990b1d6" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Более 10 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="схема-подключения-и-модификация-платы">Схема подключения и модификация платы</h2>
+<p>Самый надежный способ внедрить контроль тока — это подключение внешнего транзистора, который будет управлять линией обратной связи <code>Feedback</code> микросхемы. В стандартной плате LM2596-Adj резисторы делителя напряжения подключены между выходом, землей и выводом микросхемы. </p>
+<p>Вам необходимо разорвать цепь делителя и вставить в нее транзистор или полевой ключ, затвор которого управляется падением напряжения на вашем шунте. Когда ток превышает норму, транзистор открывается и "притягивает" линию обратной связи к земле, заставляя микросхему снижать выходное напряжение. </p>
+<p>Для реализации используйте N-канальный полевой транзистор с низким пороговым напряжением (<em>Logic Level</em>). Его сток подключается к выводу <code>FB</code>, а исток — к земле. Затвор подключается через резистор к точке измерения падения напряжения на шунте. Такой подход обеспечивает <strong>мягкое ограничение тока</strong> без резких скачков. </p>
+<p>При пайке будьте предельно внимательны: перегрев пайки может повредить тонкие дорожки на плате. Используйте паяльник с регулировкой температуры и олово с низким температурным плавлением. </p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед тем как припаять шунт, обязательно измерьте его реальное сопротивление мультиметром, так как номиналы "на глаз" могут отличаться на 10-20%.</p></div>
+
+<blockquote>⚠️ Внимание: Неправильная полярность подключения шунта или транзистора приведет к тому, что схема начнет работать в режиме генератора, что вызовет сильный нагрев дросселя и выход ключа LM2596S из строя. </blockquote>
+
+<h2 id="технические-нюансы-и-проблемы-теплоотвода">Технические нюансы и проблемы теплоотвода</h2>
+<p>Работа на пределе возможностей всегда сопровождается тепловыделением. В режиме ограничения тока (<strong>Constant Current</strong>) разница между входным и выходным напряжением рассеивается на выходном транзисторе микросхемы и на дросселе. Это самая критичная точка отказа всего преобразователя. </p>
+<p>Микросхема <em>LM2596S</em> в корпусе TO-263 имеет ограниченную способность рассеивать тепло без активного охлаждения. Если вы планируете работать с токами выше 3 Ампер, установка <strong>дополнительного радиатора</strong> на корпус микросхемы является обязательным условием. </p>
+<p>Дроссель также должен быть рассчитан на насыщение при токах, превышающих ваш лимит. Если индуктивность "насытится", схема потеряет стабильность, и ток начнет скакать, а напряжение на выходе просядет до нуля. </p>
+<p>Для проверки работоспособности сборки используйте электронную нагрузку или мощный резистор, подключенный к выходу. Мониторьте температуру радиатора в первые минуты работы. </p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Теплоотвод — это не просто рекомендация, а критическое требование для долгой жизни LM2596S в режиме ограничения тока, так как эффективность преобразования в этом режиме падает до 50-60%.</p></div>
+
+<div class="checklist-block"><h4>☑️ Проверка перед запуском</h4><label class="check-item"><input type="checkbox"><span>Проверить пайку шунта и транзистора</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии радиатора</span></label><label class="check-item"><input type="checkbox"><span>Измерить реальное сопротивление шунта</span></label><label class="check-item"><input type="checkbox"><span>Проверить полярность входного напряжения</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="настройка-и-калибровка-параметров">Настройка и калибровка параметров</h2>
+<p>После сборки устройства необходимо провести точную настройку. Сначала настройте максимальное выходное напряжение, используя стандартный подстроечный резистор цепи обратной связи. Это делается в режиме отсутствия нагрузки или при токе ниже порога ограничения. </p>
+<p>Затем подключите переменную нагрузку и начните увеличивать ток. В момент, когда напряжение на выходе начнет падать, хотя вы пытаетесь сохранить его на прежнем уровне, значит, сработал <em>ограничитель тока</em>. </p>
+<p>Если порог срабатывания не совпадает с расчетным, измените номинал шунта или добавьте потенциометр в цепь управления затвором транзистора. Это позволит вам плавно регулировать <strong>предел ограничения</strong> без перепайки компонентов. </p>
+<blockquote>⚠️ Внимание: Никогда не замыкайте выход преобразователя накоротко при высоком входном напряжении, так как в момент переключения из режима напряжения в режим тока может возникнуть кратковременный скачок, способный повредить нагрузку. </blockquote>
+<p>Для удобства можно установить цифровой вольт-амперметр на выходе, который будет показывать реальное потребление тока в режиме реального времени, позволяя вам точно контролировать процесс. </p>
+
+<details class="faq-item"><summary>Скрытая информация о стабильности</summary><div class="faq-answer"><p>Если схема начинает "звенеть" или издавать неприятные звуки на высоких токах, значит, слишком велика индуктивность шунта или неправильно подобраны конденсаторы в цепи обратной связи, что вызывает самовозбуждение системы.</p></div></details>
+
+<h2 id="практическое-применение-и-безопасность">Практическое применение и безопасность</h2>
+<p>Собранный вами преобразователь найдет широкое применение в зарядных устройствах для литий-ионных аккумуляторов, где контроль тока является обязательным этапом зарядки. Также он идеален для питания мощных светодиодов, требующих стабильного тока для предотвращения деградации кристалла. </p>
+<p> Если входное напряжение слишком высокое, а выходной ток ограничен, вся разница в мощности будет рассеиваться на ключевом элементе. </p>
+<p>Используйте плавкие предохранители на входе цепи для защиты от внешних коротких замыканий, так как внутренний ключ может не успеть среагировать на мгновенный пробой. </p>
+<p>Качественная сборка и соблюдение правил монтажа позволяют создать надежный инструмент, который прослужит годами. </p>
+
+<details>
+<summary>Как рассчитать мощность шунта?</summary>
+<p>Мощность, выделяемая на шунте, рассчитывается по формуле <code>P = I² <em> R</code>. Например, при токе 3 А и сопротивлении 0.4 Ом, мощность составит 9 </em> 0.4 = 3.6 Вт. Выбирайте резистор с запасом минимум в 2 раза, то есть не менее 7-8 Вт.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать LM2596 для зарядки автомобильного аккумулятора?</summary>
+<p>Да, но только при условии, что входное напряжение на порядок выше выходного (например, 24В вход для зарядки 12В АКБ), и вы настроили максимальный ток заряда. Помните, что LM2596 не умеет автоматически переходить в режим "плавающей" зарядки, поэтому вручную нужно следить за напряжением.</p>
+</details>
+
+<details>
+<summary>Что делать, если модуль сильно греется?</summary>
+<p>Срочно установите вентилятор или увеличьте площадь радиатора. Если нагрев продолжается, проверьте, не слишком ли велика разница между входным и выходным напряжением. При большом перепаде КПД падает, и почти вся энергия превращается в тепло.</p>
+</details>
+
+<details>
+<summary>Нужен ли диод Шоттки на выходе?</summary>
+<p>В стандартной схеме LM2596 диод уже встроен или используется в обратной связи, но при работе с индуктивной нагрузкой (например, двигатели) рекомендуется добавить внешний диод Шоттки параллельно нагрузке для защиты от ЭДС самоиндукции.</p>
+</details>
+
+<details>
+<summary>Можно ли повысить ток до 5 Ампер на этой схеме?</summary>
+<p>Теоретически можно, но стандартный дроссель и ключ микросхемы LM2596 рассчитаны на 3А. Для 5А потребуется замена дросселя на более мощный и, возможно, использование параллельного включения нескольких модулей, что крайне сложно в реализации.</p>
+</details>
+<blockquote>⚠️ Внимание: Схемы с внешним контролем тока не являются сертифицированными промышленными решениями. Перед подключением дорогостоящей нагрузки убедитесь в стабильности работы вашего изделия, протестировав его на балластной нагрузке. </blockquote></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-модификацию-импульсных-стабилизаторов">Введение в модификацию импульсных стабилизаторов</a></li><li><a href="#принцип-работы-схемы-и-роль-контроллера">Принцип работы схемы и роль контроллера</a></li><li><a href="#выбор-компонентов-и-расчет-шунта">Выбор компонентов и расчет шунта</a></li><li><a href="#схема-подключения-и-модификация-платы">Схема подключения и модификация платы</a></li><li><a href="#технические-нюансы-и-проблемы-теплоотвода">Технические нюансы и проблемы теплоотвода</a></li><li><a href="#настройка-и-калибровка-параметров">Настройка и калибровка параметров</a></li><li><a href="#практическое-применение-и-безопасность">Практическое применение и безопасность</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/o/oc/ochki-polyarizatsionnye-dlya-rybalki-kupit.html" class="related-card">Купить поляризационные очки для рыбалки: выбор, обзор и защита глаз</a></li><li><a href="/articles/7/78/7812a-kharakteristiki-skhema-podklyucheniya.html" class="related-card">Микросхема 7812A: Полные характеристики, схема подключения и расчет радиатора</a></li><li><a href="/articles/s/sh/shim-stabilizator-napryazheniya-skhema.html" class="related-card">Схема ШИМ стабилизатора напряжения: устройство, принцип и ремонт</a></li><li><a href="/articles/k/kh/khomut-3-4-razmer-v-mm.html" class="related-card">Хомут 3/4 дюйма: размер в мм, характеристики и выбор</a></li><li><a href="/articles/l/lm/lm-317-stabilizator-parametry.html" class="related-card">LM317 стабилизатор: технические параметры, схема и расчет</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/o/oc/ochki-polyarizatsionnye-dlya-rybalki-kupit.html" class="related-bottom-card"><span class="related-bottom-title">Купить поляризационные очки для рыбалки: выбор, обзор и защита глаз</span><span class="related-bottom-desc">Узнайте, как выбрать и купить лучшие поляризационные очки для рыбалки. Обзор линз, брендов и советы </span></a><a href="/articles/7/78/7812a-kharakteristiki-skhema-podklyucheniya.html" class="related-bottom-card"><span class="related-bottom-title">Микросхема 7812A: Полные характеристики, схема подключения и расчет радиатора</span><span class="related-bottom-desc">Подробный обзор стабилизатора напряжения 7812A. Технические параметры, расчет теплоотвода, типовые с</span></a><a href="/articles/s/sh/shim-stabilizator-napryazheniya-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Схема ШИМ стабилизатора напряжения: устройство, принцип и ремонт</span><span class="related-bottom-desc">Подробный обзор схемы ШИМ стабилизатора напряжения. Разбор принципа работы, выбор компонентов, типов</span></a><a href="/articles/k/kh/khomut-3-4-razmer-v-mm.html" class="related-bottom-card"><span class="related-bottom-title">Хомут 3/4 дюйма: размер в мм, характеристики и выбор</span><span class="related-bottom-desc">Точный размер хомута 3/4 дюйма в миллиметрах. Таблица соответствий, нюансы резьбы, типы затяжки и со</span></a><a href="/articles/l/lm/lm-317-stabilizator-parametry.html" class="related-bottom-card"><span class="related-bottom-title">LM317 стабилизатор: технические параметры, схема и расчет</span><span class="related-bottom-desc">Полный обзор параметров микросхемы LM317. Таблица характеристик, расчет резисторов, схемы включения </span></a><a href="/articles/p/pe/pervyj-blin-medvedyam-komam.html" class="related-bottom-card"><span class="related-bottom-title">«Первый блин комом»: миф о медведях и реальность ремонта авто</span><span class="related-bottom-desc">Разбираем происхождение фразы «первый блин медведям комам». Узнайте, как этот принцип помогает при р</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

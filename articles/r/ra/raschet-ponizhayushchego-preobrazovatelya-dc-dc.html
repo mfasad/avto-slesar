@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Расчет понижающего преобразователя DC-DC: формулы и параметры — АвтоСлесарь</title>
+    <meta name="description" content="Полное руководство по расчету понижающего преобразователя (Buck Converter). Формулы тока, напряжения, выбор дросселя, конденсаторов и практические советы.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/r/ra/raschet-ponizhayushchego-preobrazovatelya-dc-dc.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Расчет понижающего преобразователя DC-DC: формулы и параметры">
+    <meta property="og:description" content="Полное руководство по расчету понижающего преобразователя (Buck Converter). Формулы тока, напряжения, выбор дросселя, конденсаторов и практические советы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Расчет понижающего преобразователя DC-DC: формулы и параметры</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Расчет понижающего преобразователя DC-DC: от теории к практике</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#основы-работы-и-выбор-топологии">Основы работы и выбор топологии</a></li><li><a href="#расчет-коэффициента-заполнения-и-выходного-напряжения">Расчет коэффициента заполнения и выходного напряжения</a></li><li><a href="#подбор-индуктивности-и-расчет-пульсаций-тока">Подбор индуктивности и расчет пульсаций тока</a></li><li><a href="#выбор-силовых-ключей-и-диода">Выбор силовых ключей и диода</a></li><li><a href="#расчет-входных-и-выходных-конденсаторов">Расчет входных и выходных конденсаторов</a></li><li><a href="#компенсация-контура-обратной-связи">Компенсация контура обратной связи</a></li><li><a href="#моделирование-и-практическая-проверка">Моделирование и практическая проверка</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Современная электроника требует стабильного напряжения, которое часто отличается от напряжения источников питания. Понижающий преобразователь, или <strong>Buck Converter</strong>, является ключевым элементом в цепях питания микроконтроллеров, светодиодов и мощных процессоров. Правильный расчет этого устройства гарантирует не только эффективность работы схемы, но и её долговечность.</p>
+
+<p>Многие инженеры и радиолюбители совершают ошибку, выбирая компоненты "на глаз" или используя готовые модули без понимания внутренних процессов. Такой подход часто приводит к перегреву, нестабильной работе или полному выходу из строя системы. Чтобы избежать этих проблем, необходимо досконально изучить <strong>коэффициент заполнения</strong> и параметры <strong>импульсного режима</strong>.</p>
+
+<p>В этой статье мы разберем пошаговый алгоритм расчета всех критических узлов понижающего преобразователя. Вы научитесь определять номиналы индуктивности, емкостей и выбирать подходящий <strong>силовой ключ</strong> для ваших задач. Это фундаментальные знания, которые пригодятся при проектировании любого импульсного источника питания.</p>
+
+<h2 id="основы-работы-и-выбор-топологии">Основы работы и выбор топологии</h2>
+
+<p>Принцип действия понижающего преобразователя основан на накоплении энергии в индуктивности в момент открытия силового ключа и её передаче в нагрузку при его закрытии. Этот процесс происходит на высокой частоте переключения, что позволяет использовать компактные компоненты. Ключевым параметром здесь является <strong>скважность</strong>, которая определяет отношение времени включения к полному периоду.</p>
+
+<p>Вам нужно понимать, что эффективность схемы напрямую зависит от быстродействия <strong>силовых транзисторов</strong> и потерь на переключение. Если частота слишком низкая, размеры дросселя вырастут до неприемлемых значений, а если слишком высокая — увеличатся потери на переключение ключа. Идеальный баланс достигается подбором оптимальной частоты работы для конкретного применения.</p>
+
+<p>Различают два основных режима работы: с непрерывным током (CCM) и с прерывистым током (DCM). Для мощных нагрузок почти всегда выбирают режим <strong>непрерывного тока</strong>, так как он обеспечивает меньшие пульсации выходного напряжения и более предсказуемую работу. Режим DCM чаще используется в маломощных устройствах с переменной нагрузкой.</p>
+
+<blockquote>⚠️ Внимание: При проектировании обязательно учитывайте падение напряжения на <strong>силовом диоде</strong> или синхронном выпрямителе, так как это напрямую влияет на КПД и расчетный ток.</blockquote>
+
+<h2 id="расчет-коэффициента-заполнения-и-выходного-напряжения">Расчет коэффициента заполнения и выходного напряжения</h2>
+
+<p>Первым шагом в расчете является определение коэффициента заполнения <code>D</code>. Для идеального преобразователя он равен отношению выходного напряжения к входному. Однако в реальности необходимо учитывать падения напряжения на ключах, что делает формулу более сложной. Вам нужно скорректировать входное напряжение, вычтя потери на <strong>силовом ключе</strong>.</p>
+
+<p>Формула выглядит следующим образом: <code>D = (Vout + Vf) / (Vin - Vsw + Vf)</code>, где <code>Vf</code> — падение на диоде, а <code>Vsw</code> — падение на транзисторе. Пренебрежение этими величинами может привести к тому, что преобразователь не сможет обеспечить требуемое напряжение под нагрузкой. Особенно это критично при низком входном напряжении.</p>
+
+<p>Рассмотрим пример: если вам нужно получить 5 В при входе 12 В, идеальный коэффициент будет 0.416. С учетом потерь в реальной схеме он может увеличиться до 0.45-0.5. Проверьте, чтобы рассчитанное значение не превышало возможности контроллера, так как у большинства микросхем есть <strong>максимальный предел скважности</strong>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Обозначение</th>
+<th>Типичное значение</th>
+<th>Влияние на расчет</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Входное напряжение</td>
+<td>Vin</td>
+<td>12 В - 48 В</td>
+<td>Определяет максимальную скважность</td>
+</tr>
+<tr>
+<td>Выходное напряжение</td>
+<td>Vout</td>
+<td>1.2 В - 24 В</td>
+<td>Целевой параметр системы</td>
+</tr>
+<tr>
+<td>Ток нагрузки</td>
+<td>Iout</td>
+<td>0.5 А - 10 А</td>
+<td>Влияет на выбор индуктивности и ключей</td>
+</tr>
+<tr>
+<td>Частота переключения</td>
+<td>Fsw</td>
+<td>100 кГц - 2 МГц</td>
+<td>Влияет на размер компонентов</td>
+</tr>
+</tbody>
+</table>
+
+<div class="poll-widget" id="poll-69b91f89"><div class="poll-widget-question">📊 Какой диапазон входного напряжения у вашей задачи?</div><div class="poll-widget-option" data-poll="69b91f89" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">5-12В</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="69b91f89" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">12-24В</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="69b91f89" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">24-48В</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="69b91f89" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Выше 48В</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="подбор-индуктивности-и-расчет-пульсаций-тока">Подбор индуктивности и расчет пульсаций тока</h2>
+
+<p>Индуктивность является сердцем преобразователя, и её правильный выбор критически важен. Слишком малая индуктивность приведет к большим пульсациям тока, что может вызвать магнитное насыщение сердечника и выход из строя <strong>силового ключа</strong>. Слишком большая индуктивность увеличит габариты и снизит быстродействие системы.</p>
+
+<p>Для расчета номинала индуктивности используется формула: <code>L = (Vin - Vout) <em> D / (ΔIL </em> Fsw)</code>. Здесь <code>ΔIL</code> — это желаемый размах пульсаций тока дросселя. Обычно его выбирают равным 20-40% от номинального тока нагрузки. Такой подход обеспечивает компромисс между размером дросселя и эффективностью работы.</p>
+
+<p> Именно по этому значению нужно выбирать дроссель, чтобы он не насытился. Используйте компоненты с запасом по току насыщения не менее 20-30% от расчетного пикового значения.</p>
+
+<details class="faq-item"><summary>Что будет при насыщении дросселя?</summary><div class="faq-answer"><p>При насыщении сердечника индуктивность резко падает, ток через силовой ключ растет лавинообразно, что приводит к перегреву и вероятному выходу из строя транзистора или предохранителя.</p></div></details>
+
+<h2 id="выбор-силовых-ключей-и-диода">Выбор силовых ключей и диода</h2>
+
+<p>Силовой транзистор (обычно MOSFET) должен выдерживать максимальное входное напряжение и пиковый ток, протекающий через него. Вам нужно обратить внимание на параметр <strong>Rds(on)</strong>, так как он определяет потери мощности в открытом состоянии. Чем ниже сопротивление канала, тем меньше нагрев при высоких токах.</p>
+
+<p>Для диода (или нижнего ключа в синхронном режиме) критично время восстановления и падение напряжения в прямом направлении. В классической схеме с диодом Шоттки важно выбрать модель с запасом по обратному напряжению не менее 20% от <code>Vin</code>. В синхронных схемах эти функции выполняет второй MOSFET, что повышает КПД.</p>
+
+<p>Расчет тепловой нагрузки требует анализа потерь. Потери в открытом состоянии рассчитываются как <code>I² * Rds(on)</code>, а потери на переключение зависят от частоты и времени перехода. Не забудьте учесть нагрев от соседних компонентов, особенно если преобразователь размещен в замкнутом корпусе без активного охлаждения.</p>
+
+<blockquote>⚠️ Внимание: При выборе <strong>MOSFET</strong> обязательно проверяйте максимальный ток стока в импульсном режиме, а не только постоянный ток, указанный в даташите без условий охлаждения.</blockquote>
+
+<div class="checklist-block"><h4>☑️ Проверка параметров ключей</h4><label class="check-item"><input type="checkbox"><span>Проверить напряжение пробоя Vds</span></label><label class="check-item"><input type="checkbox"><span>Оценить сопротивление Rds(on)</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии теплоотвода</span></label><label class="check-item"><input type="checkbox"><span>Проверить время переключения Qg</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="расчет-входных-и-выходных-конденсаторов">Расчет входных и выходных конденсаторов</h2>
+
+<p>Конденсаторы играют решающую роль в фильтрации пульсаций и стабилизации напряжения. Входной конденсатор должен быть способен выдерживать большие импульсные токи, так как именно в нем протекает ток переключения. Вам нужно использовать керамические конденсаторы с низким <strong>ESR</strong> (эквивалентным последовательным сопротивлением).</p>
+
+<p>Для выходной цепи емкость рассчитывается исходя из допустимого уровня пульсаций напряжения. Формула связывает емкость с током пульсаций и частотой переключения. Чем выше требования к качеству напряжения на нагрузке, тем больше емкость потребуется. Часто используют комбинацию керамических и танталовых конденсаторов.</p>
+
+<p>Особое внимание уделите температурным характеристикам. Вблизи силовых компонентов температура может значительно превышать комнатную, что сокращает срок службы электролитических конденсаторов. Выбирайте детали с номиналом по температуре не менее 105°C для надежной работы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Идеальная входная цепь содержит несколько параллельных керамических конденсаторов малой емкости для компенсации высокочастотных помех и один электролитический большой емкости для сглаживания низкочастотных пульсаций.</p></div>
+
+<h2 id="компенсация-контура-обратной-связи">Компенсация контура обратной связи</h2>
+
+<p>Стабильность работы преобразователя зависит от корректной настройки петли обратной связи. Если коэффициент усиления слишком высок, система может начать генерировать колебания на частоте переключения или её гармониках. Вам нужно подобрать значения резисторов и конденсаторов в цепи <strong>частотной коррекции</strong>.</p>
+
+<p>Большинство современных контроллеров имеют внутренние цепи компенсации, но для нестандартных условий работы может потребоваться внешний подбор. Неправильная настройка приводит к "гулу" дросселя или медленной реакции на скачки нагрузки. Проверьте переходный процесс с помощью осциллографа.</p>
+
+<p>Используйте метод расчета полюсов и нулей передаточной функции системы. Это сложный математический аппарат, но упрощенные методы позволяют подобрать компоненты, обеспечивающие запас по фазе не менее 45-60 градусов. Это гарантирует, что система не уйдет в самовозбуждение при изменении температуры или напряжения.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если схема работает неустойчиво, попробуйте увеличить емкость выходного конденсатора или изменить частоту переключения, так как это сдвигает полюса системы в более стабильную область.</p></div>
+
+<h2 id="моделирование-и-практическая-проверка">Моделирование и практическая проверка</h2>
+
+<p>Перед пайкой компонентов на плату настоятельно рекомендуется провести математическое моделирование или симуляцию в специализированном ПО. Программы типа LTspice или SIMetrix позволяют увидеть формы токов и напряжений без риска сжечь детали. Вы сможете увидеть, как <strong>индуктивность</strong> ведет себя при пусковых токах.</p>
+
+<p>При сборке макета используйте макетную плату с толстыми дорожками или сразу печатную плату с хорошей разводкой земли. Длинные провода в цепях силового тока создают паразитную индуктивность, которая вызывает выбросы напряжения и электромагнитные помехи. Минимизируйте площадь контура переключения.</p>
+
+<p>После включения первым делом проверьте температуру всех компонентов. Если какой-то элемент греется сильнее других, это сигнал о неправильном расчете или монтаже. Используйте тепловизор или бесконтактный термометр для детального анализа распределения тепла на плате.</p>
+
+<blockquote>⚠️ Внимание: Избегайте использования длинных проводов питания при тестировании макета, так как паразитная индуктивность может вызвать пробои <strong>силовых ключей</strong> из-за высоковольтных выбросов.</blockquote>
+
+<h2 id="частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</h2>
+
+<p>Одной из самых частых ошибок является игнорирование паразитных параметров печатной платы. Трассы большой длины имеют индуктивность, которая добавляется к индуктивности дросселя, меняя режим работы. Вам нужно тщательно планировать топологию платы, размещая компоненты максимально близко друг к другу.</p>
+
+<p>Другая проблема — недостаточный запас по току. Многие выбирают компоненты ровно по расчетным значениям, не учитывая перегрузки и пусковые токи. Это приводит к деградации характеристик со временем. Всегда закладывайте запас минимум 20% по току и напряжению для всех силовых элементов.</p>
+
+<p>Также стоит обратить внимание на качество компонентов. Дешевые дроссели часто имеют завышенные характеристики индуктивности и заниженные по току насыщения. Покупайте детали у проверенных поставщиков и внимательно читайте технические описания, особенно разделы с графиками зависимости индуктивности от тока.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Качество печатной платы и правильная разводка силовых цепей часто важнее точности номиналов компонентов для обеспечения стабильной работы импульсного преобразователя.</p></div>
+
+<details>
+<summary>Как рассчитать значение резисторов делителя напряжения для настройки выходного напряжения?</summary>
+<p>Для настройки выходного напряжения используется резистивный делитель, подключенный к выводу обратной связи контроллера. Формула обычно приводится в даташите контроллера: <code>R1 = R2 * (Vout / Vref - 1)</code>. Выберите стандартное номинальное значение для резистора R2 (например, 10 кОм) и рассчитайте R1. Используйте резисторы с точностью 1% для минимизации погрешности.</p>
+</details>
+
+<details>
+<summary>Что делать, если преобразователь гудит под нагрузкой?</summary>
+<p>Гул обычно свидетельствует о работе в прерывистом режиме или о некорректной работе контура обратной связи. Проверьте, не слишком ли велика индуктивность и находится ли ток нагрузки в зоне непрерывного режима. Также попробуйте изменить частоту переключения или проверить качество пайки компонентов.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать синхронный выпрямитель вместо диода Шоттки?</summary>
+<p>Да, использование синхронного выпрямителя (второго MOSFET вместо диода) значительно повышает КПД, особенно при низких выходных напряжениях. Однако это усложняет схему управления и требует контроллера, поддерживающего синхронизацию. Для мощных преобразователей это оправданный шаг.</p>
+</details>
+
+<details>
+<summary>Как правильно рассчитать радиатор для силовых ключей?</summary>
+<p>Рассчитайте общие потери мощности в ключах (потери на проводимость + потери на переключение). Разделите это значение на допустимый перепад температур (Тмакс - Токр) и получите требуемое тепловое сопротивление радиатора. Не забывайте учитывать тепловое сопротивление перехода "кристалл-корпус" из даташита.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#основы-работы-и-выбор-топологии">Основы работы и выбор топологии</a></li><li><a href="#расчет-коэффициента-заполнения-и-выходного-напряжения">Расчет коэффициента заполнения и выходного напряжения</a></li><li><a href="#подбор-индуктивности-и-расчет-пульсаций-тока">Подбор индуктивности и расчет пульсаций тока</a></li><li><a href="#выбор-силовых-ключей-и-диода">Выбор силовых ключей и диода</a></li><li><a href="#расчет-входных-и-выходных-конденсаторов">Расчет входных и выходных конденсаторов</a></li><li><a href="#компенсация-контура-обратной-связи">Компенсация контура обратной связи</a></li><li><a href="#моделирование-и-практическая-проверка">Моделирование и практическая проверка</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ka/kak-pravilno-nastroit-ekholot.html" class="related-card">Как правильно настроить эхолот: полное руководство от выбора частоты до калибровки</a></li><li><a href="/articles/p/po/pochemu-proiskhodyat-skachki-napryazheniya.html" class="related-card">Почему происходят скачки напряжения: причины, риски и защита</a></li><li><a href="/articles/s/si/silikagel-dlya-filtra-kompressora.html" class="related-card">Силикагель для фильтра компрессора: выбор, замена и регенерация</a></li><li><a href="/articles/s/sk/skhema-podklyucheniya-stabilizatora-resanta-10-kilovatt.html" class="related-card">Схема подключения стабилизатора Ресанта 10 кВт: пошаговая инструкция</a></li><li><a href="/articles/e/ek/ekshn-kamera-dlya-rybalki.html" class="related-card">Экшн-камера для рыбалки: выбор, крепление и подводная съемка</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ka/kak-pravilno-nastroit-ekholot.html" class="related-bottom-card"><span class="related-bottom-title">Как правильно настроить эхолот: полное руководство от выбора частоты до калибровки</span><span class="related-bottom-desc">Пошаговая инструкция по настройке эхолота для рыбалки. Разбор частот, чувствительности, скорости про</span></a><a href="/articles/p/po/pochemu-proiskhodyat-skachki-napryazheniya.html" class="related-bottom-card"><span class="related-bottom-title">Почему происходят скачки напряжения: причины, риски и защита</span><span class="related-bottom-desc">Узнайте, почему случаются скачки напряжения в сети. Разбор внешних и внутренних причин, влияние на т</span></a><a href="/articles/s/si/silikagel-dlya-filtra-kompressora.html" class="related-bottom-card"><span class="related-bottom-title">Силикагель для фильтра компрессора: выбор, замена и регенерация</span><span class="related-bottom-desc">Узнайте, как правильно использовать силикагель в адсорбционных фильтрах компрессора. Инструкция по з</span></a><a href="/articles/s/sk/skhema-podklyucheniya-stabilizatora-resanta-10-kilovatt.html" class="related-bottom-card"><span class="related-bottom-title">Схема подключения стабилизатора Ресанта 10 кВт: пошаговая инструкция</span><span class="related-bottom-desc">Подробная схема и инструкция по подключению стабилизатора напряжения Ресанта 10000 ВА. Правила зазем</span></a><a href="/articles/e/ek/ekshn-kamera-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Экшн-камера для рыбалки: выбор, крепление и подводная съемка</span><span class="related-bottom-desc">Как выбрать лучшую экшн-камеру для рыбалки. Обзор подводных режимов, водонепроницаемости и креплений</span></a><a href="/articles/e/ek/ekholot-dlya-rybalki-cherez-smartfon.html" class="related-bottom-card"><span class="related-bottom-title">Эхолот для рыбалки через смартфон: выбор, подключение и настройка</span><span class="related-bottom-desc">Полный гид по беспроводным эхолотам для рыбалки. Как подключить датчик к смартфону, выбрать модель и</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

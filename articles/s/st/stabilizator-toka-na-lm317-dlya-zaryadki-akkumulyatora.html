@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Стабилизатор тока на LM317 для зарядки аккумулятора: схема и расчет — АвтоСлесарь</title>
+    <meta name="description" content="Пошаговое руководство по сборке самодельного зарядного устройства на микросхеме LM317. Расчет резистора, схема подключения и инструкции по зарядке АКБ.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/s/st/stabilizator-toka-na-lm317-dlya-zaryadki-akkumulyatora.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Стабилизатор тока на LM317 для зарядки аккумулятора: схема и расчет">
+    <meta property="og:description" content="Пошаговое руководство по сборке самодельного зарядного устройства на микросхеме LM317. Расчет резистора, схема подключения и инструкции по зарядке АКБ.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Стабилизатор тока на LM317 для зарядки аккумулятора: схема и расчет</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Создаем надежный стабилизатор тока на LM317 для зарядки аккумулятора</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-самодельные-зарядные-устройства">Введение в самодельные зарядные устройства</a></li><li><a href="#принцип-работы-схемы-стабилизации-тока">Принцип работы схемы стабилизации тока</a></li><li><a href="#расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</a></li><li><a href="#необходимые-компоненты-и-инструменты">Необходимые компоненты и инструменты</a></li><li><a href="#схема-подключения-и-монтаж">Схема подключения и монтаж</a></li><li><a href="#таблица-зависимости-тока-от-сопротивления-резистора">Таблица зависимости тока от сопротивления резистора</a></li><li><a href="#особенности-зарядки-разных-типов-аккумуляторов">Особенности зарядки разных типов аккумуляторов</a></li><li><a href="#расширенные-возможности-и-модификации">Расширенные возможности и модификации</a></li><li><a href="#faq-вопросы-и-ответы">FAQ: Вопросы и ответы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-самодельные-зарядные-устройства">Введение в самодельные зарядные устройства</h2>
+<p>Зарядка автомобильных или гелевых аккумуляторов требует строгого контроля параметров тока, чтобы избежать перегрева и выкипания электролита. Промышленные решения часто дороги или не подходят для специфических задач ремонта, поэтому энтузиасты обращаются к проверенным аналоговым схемам.</p>
+<p>Одной из самых надежных и простых схем является использование линейного <strong>стабилизатора напряжения</strong> серии <em>LM317</em> в режиме стабилизации тока. Этот компонент позволяет создать устройство, которое автоматически поддерживает заданный уровень <strong>зарядного тока</strong> независимо от разряда батареи.</p>
+
+<h2 id="принцип-работы-схемы-стабилизации-тока">Принцип работы схемы стабилизации тока</h2>
+<p>Микросхема <em>LM317</em> обычно используется для стабилизации напряжения, но её внутренняя архитектура позволяет легко перенастроить её на поддержание постоянного тока. Секрет кроется в использовании внешнего резистора между выходом и подстройкой.</p>
+<p>Внутренняя схема микросхемы стремится поддерживать падение напряжения на этом резисторе на уровне 1,25 В. Таким образом, ток через нагрузку (аккумулятор) определяется простой формулой: <code>I = 1.25 / R</code>. Это означает, что <strong>стабилизатор тока</strong> работает по принципу источника постоянного тока, подстраивая выходное напряжение под сопротивление батареи.</p>
+<p>Когда аккумулятор разряжен, его внутреннее сопротивление мало, и стабилизатор подает максимальное напряжение, обеспечивая заданный ток. По мере заряда напряжение на выходе растет, но сила тока остается неизменной, пока не достигнет предела отсечки.</p>
+<p>Важно понимать, что <em>LM317</em> является линейным стабилизатором, поэтому вся разница между входным и выходным напряжением выделяется в виде тепла. При больших токах (например, 3-5 А) без мощного охлаждения микросхема может сгореть.</p>
+
+<h2 id="расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</h2>
+<p>Для корректной работы схемы необходимо точно подобрать сопротивление токозадающего резистора. Если вы планируете заряжать стандартный автомобильный аккумулятор емкостью 60 А·ч, оптимальным зарядным током считается 10% от емкости, то есть 6 А.</p>
+<p>Однако для микросхемы <em>LM317</em> в стандартном корпусе TO-220 максимальный ток ограничен 1,5 А. Чтобы не перегреть чип, лучше рассчитывать схему на ток до 1 А или использовать мощный радиатор и микросхему в корпусе TO-3. Для тока 1 А расчет выглядит так: <code>R = 1.25 / 1 = 1.25 Ом</code>.</p>
+<p>Для более слабых аккумуляторов (мотоциклетных) или предзарядки глубокого разряда удобно использовать ток 0,5 А. В этом случае сопротивление должно быть равно <code>2.5 Ом</code>. Мощность резистора рассчитывается по формуле <code>P = I² * R</code>, для 1 А это 1.25 Вт, поэтому рекомендуется брать резистор минимум на 2 Вт.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> При использовании токозадающего резистора с низким сопротивлением (менее 1 Ом) критически важно правильно рассчитать его мощность. Обычные резисторы на 0.25 Вт мгновенно сгорят, превратившись в обрыв цепи или источник дыма. Используйте проволочные или керамические резисторы достаточной мощности!</p>
+</blockquote>
+
+<div class="poll-widget" id="poll-1752c2cf"><div class="poll-widget-question">📊 Какой ток вы планируете использовать для зарядки?</div><div class="poll-widget-option" data-poll="1752c2cf" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">0.5 А (для мотоциклов)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="1752c2cf" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">1 А (универсальный)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="1752c2cf" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">3 А (нужен усилитель)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="1752c2cf" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">5 А и выше</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="необходимые-компоненты-и-инструменты">Необходимые компоненты и инструменты</h2>
+<p>Для сборки устройства вам понадобится не только сама микросхема, но и ряд вспомогательных элементов для обеспечения стабильности и безопасности. Базовый набор включает в себя конденсаторы для фильтрации пульсаций и диоды для защиты.</p>
+<p>Список необходимых деталей:</p>
+<ul>
+<li>💡 Микросхема <em>LM317T</em> (желательно в металлическом корпусе TO-3 для лучшей теплоотдачи)</li>
+<li>💡 Резистор токозадающий (рассчитанный по формуле выше, мощность от 2 Вт)</li>
+<li>💡 Радиатор охлаждения (площадь зависит от разницы напряжений и тока)</li>
+<li>💡 Диоды (например, 1N4007) для защиты от обратного тока при отключении</li>
+<li>💡 Вольтамперметр (опционально, для визуального контроля процесса)</li>
+</ul>
+<p>Также не забудьте про корпус, клеммы для подключения аккумулятора и провод сечением не менее 2.5 мм², если ток нагрузки велик. Неправильный подбор сечения проводов приведет к их нагреву и падению напряжения.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка комплектующих перед пайкой</h4><label class="check-item"><input type="checkbox"><span>Проверить целостность LM317</span></label><label class="check-item"><input type="checkbox"><span>Измерить сопротивление резистора</span></label><label class="check-item"><input type="checkbox"><span>Подобрать радиатор нужного размера</span></label><label class="check-item"><input type="checkbox"><span>Подготовить мощный трансформатор</span></label><label class="check-item"><input type="checkbox"><span>Проверить полярность диодов</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="схема-подключения-и-монтаж">Схема подключения и монтаж</h2>
+<p>Сборка схемы начинается с крепления микросхемы на радиатор. В случае с корпусом TO-220 корпус микросхемы является общим выводом (Vin), поэтому необходимо использовать изолирующие прокладки из слюды или термопасты, если радиатор будет контактировать с корпусом устройства. В корпусе TO-3 изоляция часто не требуется, но контакт должен быть идеальным.</p>
+<p>Входное напряжение подается на трансформатор, который должен выдавать переменное напряжение на 3-4 Вольта выше, чем максимальное напряжение заряжаемого аккумулятора. Для 12-вольтовой АКБ (макс. 14.4 В) нужен трансформатор на 16-18 В переменного тока. После выпрямления диодным мостом напряжение должно быть стабильным.</p>
+<p>Цепь подключения выглядит так: плюс трансформатора идет на вход (Vin) микросхемы, минус трансформатора — на общую шину. Выход (Vout) соединяется с одним выводом резистора, второй вывод резистора идет к клемме «+» аккумулятора. Клемма «-» аккумулятора соединяется с общей шиной (минусом трансформатора).</p>
+<p>Для защиты микросхемы от разряда аккумулятора через неё при отключении питания, параллельно резистору или в цепи входа/выхода часто ставят защитные диоды. Это предотвращает пробой внутренних транзисторов при индуктивных выбросах.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Перед подачей питания обязательно проверьте монтаж мультиметром в режиме прозвонки. Короткое замыкание между выводами LM317 приведет к немедленному выходу из строя микросхемы и возможному возгоранию печатной платы.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Как правильно прикрутить LM317 к радиатору?</summary><div class="faq-answer"><p>Используйте термопасту серого цвета для улучшения теплопередачи. Затягивайте винты равномерно, чтобы не повредить корпус. Если корпус микросхемы электрически соединен с радиатором, убедитесь, что радиатор не замкнет на минус питания, если он не должен этого делать (зависит от схемы заземления).</p></div></details>
+
+<h2 id="таблица-зависимости-тока-от-сопротивления-резистора">Таблица зависимости тока от сопротивления резистора</h2>
+<p>Для удобства подбора компонентов приводим таблицу, которая поможет быстро определить номинал резистора для различных токов заряда. Помните, что это теоретические значения, фактический ток может немного отличаться из-за допусков резисторов.</p>
+<table>
+<thead>
+<tr>
+<th>Желаемый ток (А)</th>
+<th>Сопротивление (Ом)</th>
+<th>Мощность резистора (Вт)</th>
+<th>Тип резистора</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1</td>
+<td>12.5</td>
+<td>0.125</td>
+<td>Металлопленочный</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>2.5</td>
+<td>0.625</td>
+<td>Керамический</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>1.25</td>
+<td>1.25</td>
+<td>Проволочный</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>0.83</td>
+<td>1.875</td>
+<td>Проволочный мощ</td>
+</tr>
+</tbody>
+</table>
+
+<p>Обратите внимание, что при токах выше 1.5 А микросхема <em>LM317</em> потребует колоссального радиатора, и эффективность схемы резко упадет из-за тепловых потерь. В таких случаях лучше использовать импульсные стабилизаторы или параллельное включение нескольких микросхем с выравнивающими резисторами.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Всегда измеряйте реальный ток мультиметром сразу после включения. Значение на мультиметре может отличаться от расчетного из-за разброса параметров микросхемы и точности резистора.</p></div>
+
+<h2 id="особенности-зарядки-разных-типов-аккумуляторов">Особенности зарядки разных типов аккумуляторов</h2>
+<p>Схема на <em>LM317</em> универсальна, но требования к зарядке кислотных (WET), гелевых (GEL) и AGM аккумуляторов различаются. Для обычных свинцово-кислотных аккумуляторов допустим начальный ток до 10-20% емкости, но для гелевых батарей он должен быть строго ограничен, обычно не более 5%.</p>
+<p>Если вы используете <strong>стабилизатор тока</strong> для зарядки гелевого аккумулятора, убедитесь, что резистор подобран так, чтобы ток не превышал 0.5 А для аккумулятора емкостью 12 А·ч. Превышение этого порога может привести к необратимой деградации гелевого слоя.</p>
+<p>Также важно следить за конечным напряжением. Линейный стабилизатор тока не отключит аккумулятор автоматически. Вы должны контролировать процесс и отключать устройство, когда напряжение на клеммах достигнет 13.8–14.4 В (в зависимости от типа АКБ). </p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный недостаток линейного стабилизатора на LM317 — это низкий КПД при большой разнице входного и выходного напряжения, что требует обязательного мощного охлаждения.</p></div>
+
+<h2 id="расширенные-возможности-и-модификации">Расширенные возможности и модификации</h2>
+<p>Чтобы сделать устройство более удобным, можно добавить в схему переменный резистор (потенциометр) вместо фиксированного. Это позволит плавно регулировать ток заряда без перепайки компонентов. Однако помните, что при изменении сопротивления вы меняете и режим работы микросхемы.</p>
+<p>Для защиты от переполюсовки (если вы случайно перепутаете плюс и минус аккумулятора) в цепь можно добавить мощный диод Шоттки или реле с защитной логикой. Простое включение диода в цепь приведет к падению напряжения около 0.3-0.5 В, что снизит эффективность, но спасет устройство.</p>
+<p>Если вам нужна автоматическая отсечка, схему на <em>LM317</em> можно дополнить схемой на компараторах или использовать готовые модули отсечки напряжения. Но для базовой задачи поддержания тока <strong>стабилизатор</strong> на LM317 остается "золотым стандартом" надежности.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> При использовании переменного резистора убедитесь, что его номинал и мощность соответствуют расчетным данным. Шаровой контакт дешевого потенциометра может пропасть при вибрации, что приведет к скачку тока и выходу из строя аккумулятора.</p>
+</blockquote>
+
+<h2 id="faq-вопросы-и-ответы">FAQ: Вопросы и ответы</h2>
+<details>
+<summary>Можно ли заряжать литиевые аккумуляторы через LM317?</summary>
+<p>Прямое подключение литиевых (Li-Ion, Li-Po) аккумуляторов к этой схеме опасно. Lithium требует строгого контроля напряжения на каждом этапе (CC/CV), и простая схема стабилизации тока без ограничения максимального напряжения может привести к возгоранию батареи.</p>
+</details>
+<details>
+<summary>Почему микросхема LM317 сильно греется?</summary>
+<p>Нагрев является нормальным явлением для линейных стабилизаторов. Тепловыделение рассчитывается как разница между входным и выходным напряжением, умноженная на ток. Если разница велика, необходим большой радиатор или принудительное охлаждение.</p>
+</details>
+<details>
+<summary>Что делать, если мультиметр показывает ток, отличный от расчетного?</summary>
+<p>Это может быть вызвано допуском резистора (обычно 5-10%) или неточностью микросхемы. Для точной подстройки можно использовать составной резистор (параллельное или последовательное соединение) или добавить подстроечный резистор для калибровки.</p>
+</details>
+<details>
+<summary>Можно ли использовать эту схему для зарядки телефона?</summary>
+<p>Теоретически можно, но напряжение на выходе схемы нестабилизировано и будет расти вместе с зарядом телефона, что может превысить 5 В. Для телефонов лучше использовать специализированные модули с контролем напряжения USB.</p>
+</details>
+<details>
+<summary>Нужен ли диодный мост перед LM317?</summary>
+<p>Да, если вы используете трансформатор, то обязательно нужен диодный мост для преобразования переменного тока в постоянный. Также рекомендуется добавить конденсатор для сглаживания пульсаций, иначе микросхема может работать нестабильно.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-самодельные-зарядные-устройства">Введение в самодельные зарядные устройства</a></li><li><a href="#принцип-работы-схемы-стабилизации-тока">Принцип работы схемы стабилизации тока</a></li><li><a href="#расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</a></li><li><a href="#необходимые-компоненты-и-инструменты">Необходимые компоненты и инструменты</a></li><li><a href="#схема-подключения-и-монтаж">Схема подключения и монтаж</a></li><li><a href="#таблица-зависимости-тока-от-сопротивления-резистора">Таблица зависимости тока от сопротивления резистора</a></li><li><a href="#особенности-зарядки-разных-типов-аккумуляторов">Особенности зарядки разных типов аккумуляторов</a></li><li><a href="#расширенные-возможности-и-модификации">Расширенные возможности и модификации</a></li><li><a href="#faq-вопросы-и-ответы">FAQ: Вопросы и ответы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/re/rejting-byudzhetnykh-podvodnykh-kamer-dlya-rybalki.html" class="related-card">Топ бюджетных подводных камер для рыбалки: обзор и рейтинг 2026</a></li><li><a href="/articles/s/sk/skhema-bajpasa-dlya-stabilizatora-napryazheniya.html" class="related-card">Схема байпаса стабилизатора: монтаж, расчет и ошибки подключения</a></li><li><a href="/articles/e/ek/ekholot-praktik-6m-otzyvy-rybakov.html" class="related-card">Эхолот Практик 6М: честные отзывы рыбаков и разбор нюансов</a></li><li><a href="/articles/i/il/il317-kharakteristiki-skhema-podklyucheniya.html" class="related-card">Микросхема IL317: характеристики, схема подключения и применение</a></li><li><a href="/articles/r/re/rejting-katushek-dlya-ultralajta.html" class="related-card">Топ 10 катушек для ультралайта: Рейтинг лучших моделей 2026</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/re/rejting-byudzhetnykh-podvodnykh-kamer-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Топ бюджетных подводных камер для рыбалки: обзор и рейтинг 2026</span><span class="related-bottom-desc">Рейтинг лучших недорогих подводных камер для зимней и летней рыбалки. Сравнение моделей, обзор харак</span></a><a href="/articles/s/sk/skhema-bajpasa-dlya-stabilizatora-napryazheniya.html" class="related-bottom-card"><span class="related-bottom-title">Схема байпаса стабилизатора: монтаж, расчет и ошибки подключения</span><span class="related-bottom-desc">Полное руководство по схеме байпаса для стабилизатора напряжения. Разбор вариантов обходных цепей, в</span></a><a href="/articles/e/ek/ekholot-praktik-6m-otzyvy-rybakov.html" class="related-bottom-card"><span class="related-bottom-title">Эхолот Практик 6М: честные отзывы рыбаков и разбор нюансов</span><span class="related-bottom-desc">Полный обзор эхолота Практик 6М на основе реальных отзывов. Плюсы, минусы, особенности работы в холо</span></a><a href="/articles/i/il/il317-kharakteristiki-skhema-podklyucheniya.html" class="related-bottom-card"><span class="related-bottom-title">Микросхема IL317: характеристики, схема подключения и применение</span><span class="related-bottom-desc">Подробный обзор микросхемы IL317: технические характеристики, распиновка, типовая схема подключения </span></a><a href="/articles/r/re/rejting-katushek-dlya-ultralajta.html" class="related-bottom-card"><span class="related-bottom-title">Топ 10 катушек для ультралайта: Рейтинг лучших моделей 2026</span><span class="related-bottom-desc">Обзор лучших катушек для ультралайтовой ловли. Сравнение характеристик, надежность, вес и цена. Рейт</span></a><a href="/articles/e/el/elektromagnitnaya-podveska-kak-rabotaet.html" class="related-bottom-card"><span class="related-bottom-title">Как работает электромагнитная подвеска: принцип и устройство</span><span class="related-bottom-desc">Подробный разбор принципа работы электромагнитной подвески. Устройство, плюсы и минусы, обслуживание</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

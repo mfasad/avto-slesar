@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Схема электронной нагрузки с плавной регулировкой тока: сборка и настройка — АвтоСлесарь</title>
+    <meta name="description" content="Подробное руководство по самостоятельной сборке электронной нагрузки. Разбор схем, выбор компонентов, расчет теплоотвода и методы плавной регулировки тока.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/s/sk/skhema-elektronnoj-nagruzki-s-plavnoj-regulirovkoj-toka.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Схема электронной нагрузки с плавной регулировкой тока: сборка и настройка">
+    <meta property="og:description" content="Подробное руководство по самостоятельной сборке электронной нагрузки. Разбор схем, выбор компонентов, расчет теплоотвода и методы плавной регулировки тока.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Схема электронной нагрузки с плавной регулировкой тока: сборка и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Схема электронной нагрузки с плавной регулировкой тока</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-мир-электронных-нагрузок">Введение в мир электронных нагрузок</a></li><li><a href="#принцип-работы-и-выбор-топологии">Принцип работы и выбор топологии</a></li><li><a href="#силовая-часть-и-тепловые-режимы">Силовая часть и тепловые режимы</a></li><li><a href="#схема-управления-и-датчики">Схема управления и датчики</a></li><li><a href="#сборка-и-компоновка-узлов">Сборка и компоновка узлов</a></li><li><a href="#технические-характеристики-и-расчеты">Технические характеристики и расчеты</a></li><li><a href="#диагностика-и-настройка">Диагностика и настройка</a></li><li><a href="#безопасность-и-эксплуатация">Безопасность и эксплуатация</a></li><li><a href="#вопросы-и-ответы-faq">Вопросы и ответы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-мир-электронных-нагрузок">Введение в мир электронных нагрузок</h2>
+<p>Создание собственного испытательного стенда для проверки источников питания — это классическая задача для любого электронщика-энтузиаста. <strong>Электронная нагрузка</strong> позволяет моделировать реальное потребление энергии, снижая напряжение батареи или проверяя стабильность блока питания при различных условиях. В отличие от простых резисторов, устройство с <strong>плавной регулировкой тока</strong> дает возможность точно настраивать нагрузку в широком диапазоне, что критически важно для тестирования динамических характеристик.</p>
+<p>Часто новички пытаются использовать лампочку накаливания или набор мощных резисторов, но такой подход лишает вас гибкости управления. Вам необходимо устройство, которое не просто потребляет энергию, а имитирует поведение реальной схемы с заданными параметрами. Именно поэтому схема с управлением на базе операционных усилителей и силовых полевых транзисторов остается золотым стандартом в любительском и полупрофессиональном оборудовании.</p>
+
+<h2 id="принцип-работы-и-выбор-топологии">Принцип работы и выбор топологии</h2>
+<p>В основе работы лежит концепция отрицательной обратной связи. Операционный усилитель сравнивает напряжение на датчике тока с опорным напряжением, которое задает желаемый уровень потребления. Если ток пытается вырасти, усилитель снижает напряжение затвора силового транзистора, возвращая ток к заданному значению. Это обеспечивает <strong>линейную регулировку</strong> независимо от колебаний входного напряжения.</p>
+<p>Существует два основных режима работы: режим постоянного тока (CC) и режим постоянного сопротивления (CR). Для большинства задач тестирования аккумуляторов и блоков питания достаточно режима CC, где ток поддерживается на уровне, заданном потенциометром. Однако для проверки стабильности напряжения холостого хода может потребоваться переключение в режим высокого импеданса.</p>
+<blockquote>⚠️ Внимание: При работе с мощными транзисторами даже при небольших токах выделяется огромное количество тепла. Необходимо сразу предусмотреть активное охлаждение, иначе <strong>тепловой пробой</strong> приведет к выходу устройства из строя за считанные секунды.</blockquote>
+<p>Особое внимание следует уделить выбору <strong>датчика тока</strong>. Это низкоомный резистор с высокой точностью и низким температурным коэффициентом. Ошибки в расчете его сопротивления могут привести к некорректным показаниям амперметра или нестабильной работе контура обратной связи.</p>
+
+<h2 id="силовая-часть-и-тепловые-режимы">Силовая часть и тепловые режимы</h2>
+<p>Сердцем схемы является мощный полевой транзистор (MOSFET). Для схем с плавной регулировкой в линейном режиме критически важно выбирать транзисторы с высоким значением SOA (Safe Operating Area) — областью безопасной работы. Обычные импульсные транзисторы, используемые в блоках питания, часто не предназначены для длительной работы в линейном режиме и могут выйти из строя из-за эффекта вторичного пробоя.</p>
+<p>Рекомендуется использовать транзисторы типа IRFP250, IRFP3206 или специализированные линейные MOSFET. Их нужно устанавливать на массивный <strong>радиатор</strong> с хорошей теплопроводностью. Часто одного радиатора недостаточно, и требуется использование нескольких транзисторов параллельно для распределения тепла.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Выбор транзисторов с расширенной областью SOA критичен для линейных электронных нагрузок, так как они работают в режиме рассеивания мощности, а не коммутации.</p></div>
+<p>Система охлаждения должна быть спроектирована с запасом. Рассчитайте максимально допустимую мощность рассеивания по формуле P = U * I. Если вы планируете тестировать блоки питания до 20 Вольт при токе 5 Ампер, ваша нагрузка должна рассеивать 100 Ватт. Это требует серьезного кулера или даже жидкостного охлаждения.</p>
+
+<h2 id="схема-управления-и-датчики">Схема управления и датчики</h2>
+<p>Для управления затвором транзистора используется операционный усилитель или компаратор. Классическая схема включает в себя усилитель ошибки, который усиливает разницу между опорным сигналом и сигналом с токового шунта. Важно обеспечить низкий уровень шумов в цепях обратной связи, чтобы избежать генерации и колебаний тока.</p>
+<p>Для плавной регулировки используется многооборотный потенциометр. Обычные подстроечные резисторы имеют слишком большой люфт и не позволяют точно выставить нужный ток. Многооборотный элемент позволяет изменять сопротивление с высокой точностью, что дает плавное управление нагрузкой от нуля до максимума.</p>
+<details class="faq-item"><summary>Параллельное включение транзисторов</summary><div class="faq-answer"><p> Когда вы используете несколько транзисторов, обязательно добавляйте небольшие балластные резисторы в цепи истоков (0.1-0.2 Ом) для выравнивания токов между ними.</p></div></details>
+<p>Датчик тока должен быть изготовлен из манганиновой проволоки или использовать готовые прецизионные шунты. Обычные резистивные спирали могут нагреваться и изменять свое сопротивление, что приведет к дрейфу настроек. Стабильность сопротивления шунта напрямую влияет на точность измерения.</p>
+
+<h2 id="сборка-и-компоновка-узлов">Сборка и компоновка узлов</h2>
+<p>Монтаж следует производить на печатной плате или макетной плате с учетом токовых нагрузок. Ширину дорожек для силовых цепей необходимо рассчитывать по таблицам, учитывая допустимое падение напряжения и нагрев. Для токов более 3 Ампер рекомендуется использовать утолщенные дорожки или обклеивать их медной лентой.</p>
+<p>Важно минимизировать длину цепей обратной связи, чтобы избежать наводок и паразитной индуктивности. Длинный провод от шунта к операционному усилителю может "поймать" шум и вызвать нестабильность. Используйте экранированные провода или правильную разводку земли.</p>
+<div class="checklist-block"><h4>☑️ Проверка сборки перед подачей напряжения</h4><label class="check-item"><input type="checkbox"><span>Осмотрите дорожки на предмет замыканий</span></label><label class="check-item"><input type="checkbox"><span>Проверьте пайку силовых выводов</span></label><label class="check-item"><input type="checkbox"><span>Убедитесь в наличии изоляции транзисторов</span></label><label class="check-item"><input type="checkbox"><span>Проверьте вращение потенциометра</span></label><label class="check-item"><input type="checkbox"><span>Подготовьте систему охлаждения</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+<p>Компоновка корпуса также играет роль. Воздух должен свободно циркулировать от входа к выходу кулера. Входные и выходные клеммы должны быть надежно закреплены и располагаться так, чтобы исключаю случайное замыкание проводов под нагрузкой. Не забывайте про предохранители в цепи питания нагрузки.</p>
+
+<h2 id="технические-характеристики-и-расчеты">Технические характеристики и расчеты</h2>
+<p>Ниже приведена таблица с примерными характеристиками для различных конфигураций схемы. Эти данные помогут вам спланировать компоненты перед началом сборки.</p>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Параметр</th>
+<th>Рекомендация</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Транзистор</td>
+<td>Тип</td>
+<td>IRFP250 / IRFP3206</td>
+<td>Для линейного режима</td>
+</tr>
+<tr>
+<td>Шунт</td>
+<td>Сопротивление</td>
+<td>0.01 - 0.1 Ома</td>
+<td>Манганин, 5 Вт+</td>
+</tr>
+<tr>
+<td>ОУ</td>
+<td>Модель</td>
+<td>LM358 / TL072</td>
+<td>Двойной, низкий шум</td>
+</tr>
+<tr>
+<td>Радиатор</td>
+<td>Тепловое сопротивление</td>
+<td>&lt; 0.5 °C/Вт</td>
+<td>Для мощностей &gt;50 Вт</td>
+</tr>
+<tr>
+<td>Потенциометр</td>
+<td>Тип</td>
+<td>Многооборотный</td>
+<td>Точность регулировки</td>
+</tr>
+</tbody>
+</table>
+<p>Расчет требуемой мощности рассеивания — это самый важный этап проектирования. Если вы планируете тестировать автомобильные аккумуляторы (12-14 В) при токе 10 А, вам потребуется нагрузка мощностью 140 Ватт. Это уже уровень промышленного оборудования.</p>
+<blockquote>⚠️ Внимание: Не превышайте предельно допустимые значения напряжения сток-исток (Vds) транзисторов. Если тестируемый источник питания выдает скачок напряжения, транзистор может мгновенно пробить.</blockquote>
+<p>Помните, что <strong>плавная регулировка тока</strong> требует стабильного питания самого операционного усилителя. Если питание ОУ проседает под нагрузкой, управление транзистором нарушится. Используйте отдельный стабилизатор напряжения для цепи управления.</p>
+
+<h2 id="диагностика-и-настройка">Диагностика и настройка</h2>
+<p>Первый запуск следует проводить с максимальным ограничением тока. Подключите вместо реальной нагрузки мощный резистор или лампочку, чтобы проверить базовое функционирование. Убедитесь, что при повороте ручки регулятора ток меняется плавно, без скачков.</p>
+<p>Калибровка осуществляется подстроечным резистором в цепи обратной связи или изменением коэффициента усиления усилителя ошибки. Используйте мультиметр для сверки показаний. Если ток не регулируется или уходит в "отсечку", проверьте полярность подключения и исправность компонентов.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед началом активных испытаний прогрейте нагрузку до рабочей температуры и проверьте стабильность тока в течение 15-20 минут.</p></div>
+<p>В процессе эксплуатации следите за температурой радиатора. Если теплоотвод недостаточен, транзистор войдет в тепловой пробой. Некоторые схемы имеют термозащиту, отключающую нагрузку при перегреве, но полагаться только на нее не стоит.</p>
+
+<div class="poll-widget" id="poll-df6abbd3"><div class="poll-widget-question">📊 Какой максимальный ток планируете использовать?</div><div class="poll-widget-option" data-poll="df6abbd3" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">До 5 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="df6abbd3" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">5-10 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="df6abbd3" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">10-20 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="df6abbd3" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Выше 20 А</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="безопасность-и-эксплуатация">Безопасность и эксплуатация</h2>
+<p>Работа с мощными электронными устройствами сопряжена с риском ожогов и поражения током. Никогда не прикасайтесь к силовым элементам во время работы. Используйте изолированные инструменты и защитные очки при пайке мощных компонентов.</p>
+<p>Следите за состоянием проводов питания. Тонкие провода могут перегреться и расплавиться при высоких токах. Используйте провода сечением не менее 2.5 мм² для токов до 10 А и соответствующие клеммные колодки. Надежность контактов так же важна, как и надежность схемы.</p>
+
+<h2 id="вопросы-и-ответы-faq">Вопросы и ответы (FAQ)</h2>
+<details>
+<summary>Можно ли использовать биполярные транзисторы вместо MOSFET?</summary>
+<p>Теоретически можно, но биполярные транзисторы требуют большего тока управления и имеют меньшую SOA в линейном режиме. MOSFET предпочтительнее из-за простоты управления напряжением затвора и лучшими характеристиками рассеивания.</p>
+</details>
+<details>
+<summary>Зачем нужен специальный датчик тока?</summary>
+<p>Обычные резисторы меняют сопротивление при нагреве, что приводит к нестабильности тока. Специальные шунты из манганина или константана имеют минимальный температурный коэффициент, обеспечивая точность измерений.</p>
+</details>
+<details>
+<summary>Нужна ли защита от КЗ на выходе нагрузки?</summary>
+<p>Электронная нагрузка сама по себе является "коротким замыканием" при нулевом регулировании, но защита от перенапряжения и перегрева обязательна. Если тестируемый источник питания имеет высокое напряжение, оно может пробить транзистор.</p>
+</details>
+<details>
+<summary>Как уменьшить пульсации тока?</summary>
+<p>Увеличьте емкость фильтрующих конденсаторов в цепи питания операционного усилителя и используйте компоненты с низким уровнем шума. Правильная разводка земли также играет ключевую роль в устранении помех.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-мир-электронных-нагрузок">Введение в мир электронных нагрузок</a></li><li><a href="#принцип-работы-и-выбор-топологии">Принцип работы и выбор топологии</a></li><li><a href="#силовая-часть-и-тепловые-режимы">Силовая часть и тепловые режимы</a></li><li><a href="#схема-управления-и-датчики">Схема управления и датчики</a></li><li><a href="#сборка-и-компоновка-узлов">Сборка и компоновка узлов</a></li><li><a href="#технические-характеристики-и-расчеты">Технические характеристики и расчеты</a></li><li><a href="#диагностика-и-настройка">Диагностика и настройка</a></li><li><a href="#безопасность-и-эксплуатация">Безопасность и эксплуатация</a></li><li><a href="#вопросы-и-ответы-faq">Вопросы и ответы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/l/lu/luchshaya-byudzhetnaya-ekshen-kamera.html" class="related-card">Лучшая бюджетная экшн-камера: обзор топовых моделей 2026</a></li><li><a href="/articles/k/ka/kak-proverit-amortizator-stiralnoj-mashiny-samsung.html" class="related-card">Проверка амортизаторов стиральной машины Samsung: пошаговая инструкция</a></li><li><a href="/articles/o/oc/ochki-polyarizatsionnye-dlya-rybalki-polaroid.html" class="related-card">Поляризационные очки для рыбалки: выбор и обзор Polaroid</a></li><li><a href="/articles/m/mi/mikroskhemy-stabilizatory-napryazheniya-12-volt.html" class="related-card">Микросхемы стабилизаторы 12В: выбор, маркировка и замена</a></li><li><a href="/articles/c/ch/chasto-shchelkaet-stabilizator-napryazheniya.html" class="related-card">Почему часто щелкает стабилизатор напряжения: причины и ремонт</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/l/lu/luchshaya-byudzhetnaya-ekshen-kamera.html" class="related-bottom-card"><span class="related-bottom-title">Лучшая бюджетная экшн-камера: обзор топовых моделей 2026</span><span class="related-bottom-desc">Ищете лучшую бюджетную экшн-камеру? Подробный обзор моделей, сравнение характеристик, советы по выбо</span></a><a href="/articles/k/ka/kak-proverit-amortizator-stiralnoj-mashiny-samsung.html" class="related-bottom-card"><span class="related-bottom-title">Проверка амортизаторов стиральной машины Samsung: пошаговая инструкция</span><span class="related-bottom-desc">Как самостоятельно диагностировать неисправность амортизаторов Samsung. Признаки поломки, методы про</span></a><a href="/articles/o/oc/ochki-polyarizatsionnye-dlya-rybalki-polaroid.html" class="related-bottom-card"><span class="related-bottom-title">Поляризационные очки для рыбалки: выбор и обзор Polaroid</span><span class="related-bottom-desc">Как выбрать качественные поляризационные очки для рыбалки брендов Polaroid. Обзор линз, советы по мо</span></a><a href="/articles/m/mi/mikroskhemy-stabilizatory-napryazheniya-12-volt.html" class="related-bottom-card"><span class="related-bottom-title">Микросхемы стабилизаторы 12В: выбор, маркировка и замена</span><span class="related-bottom-desc">Полный обзор микросхем стабилизаторов напряжения 12 вольт. Линейные и импульсные типы, расшифровка м</span></a><a href="/articles/c/ch/chasto-shchelkaet-stabilizator-napryazheniya.html" class="related-bottom-card"><span class="related-bottom-title">Почему часто щелкает стабилизатор напряжения: причины и ремонт</span><span class="related-bottom-desc">Разбор частых срабатываний реле стабилизатора. Диагностика износа, плохого контакта и скачков сети. </span></a><a href="/articles/i/is/istochnik-toka-na-lm317.html" class="related-bottom-card"><span class="related-bottom-title">Схема и расчет источника тока на микросхеме LM317: руководство</span><span class="related-bottom-desc">Подробное руководство по созданию регулируемого источника тока на базе LM317. Расчет резистора, схем</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

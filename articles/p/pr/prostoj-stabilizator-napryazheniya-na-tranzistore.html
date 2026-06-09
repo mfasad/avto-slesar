@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Как сделать простой стабилизатор напряжения на транзисторе своими руками — АвтоСлесарь</title>
+    <meta name="description" content="Подробная инструкция по сборке простого стабилизатора напряжения на биполярном транзисторе. Схема, расчет элементов и советы по пайке для начинающих радиолюбителей.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/p/pr/prostoj-stabilizator-napryazheniya-na-tranzistore.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как сделать простой стабилизатор напряжения на транзисторе своими руками">
+    <meta property="og:description" content="Подробная инструкция по сборке простого стабилизатора напряжения на биполярном транзисторе. Схема, расчет элементов и советы по пайке для начинающих радиолюбителей.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как сделать простой стабилизатор напряжения на транзисторе своими руками</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Простой стабилизатор напряжения на транзисторе: сборка и настройка</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#основы-работы-линейных-стабилизаторов">Основы работы линейных стабилизаторов</a></li><li><a href="#схема-и-принцип-действия-устройства">Схема и принцип действия устройства</a></li><li><a href="#расчет-номиналов-компонентов">Расчет номиналов компонентов</a></li><li><a href="#процесс-сборки-и-монтажа">Процесс сборки и монтажа</a></li><li><a href="#настройка-и-проверка-работоспособности">Настройка и проверка работоспособности</a></li><li><a href="#ограничения-и-область-применения">Ограничения и область применения</a></li><li><a href="#частые-ошибки-при-сборке">Частые ошибки при сборке</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="основы-работы-линейных-стабилизаторов">Основы работы линейных стабилизаторов</h2>
+<p>В мире радиоэлектроники часто возникает необходимость преобразовать нестабильное напряжение батареи или сетевого адаптера в строго фиксированный уровень для питания чувствительной нагрузки. Самым доступным и понятным решением для новичка является <strong>линейный стабилизатор</strong> на биполярном транзисторе. Такое устройство работает по принципу резистивного делителя, где активный элемент регулирует падение напряжения.</p>
+<p>В отличие от импульсных преобразователей, <strong>линейный стабилизатор</strong> не создает высокочастотных помех, что делает его идеальным для аудиоаппаратуры и радиоприемников. Однако у этого решения есть и обратная сторона: эффективность напрямую зависит от разницы между входным и выходным напряжением.</p>
+<p>Главный недостаток схемы — выделение тепла. Весь излишек энергии рассеивается в виде тепла на силовом элементе. Поэтому при больших токах нагрузки обязательно потребуется <strong>радиатор охлаждения</strong>. Если пренебречь этим требованием, транзистор может выйти из строя за считанные секунды.</p>
+<p>Для начала работы вам понадобится минимальный набор компонентов, который легко найти в любом магазине радиодеталей. Основой схемы служит <em>биполярный транзистор</em> средней мощности, например, серии КТ814 или аналогичный импортный BD140. Дополнительно потребуется стабилитрон, задающий опорное напряжение, и несколько резисторов.</p>
+
+<h2 id="схема-и-принцип-действия-устройства">Схема и принцип действия устройства</h2>
+<p>Классическая схема состоит из двух основных контуров: цепь опорного напряжения и цепь управления. <strong>Стабилитрон</strong> подключается через ограничивающий резистор к входу питания и создает на своем катоде постоянное напряжение, не зависящее от колебаний на входе. Это напряжение подается на базу транзистора через делитель.</p>
+<p>Транзистор в такой схеме работает в режиме эмиттерного повторителя. Это означает, что напряжение на выходе будет меньше напряжения на базе примерно на 0,6–0,7 В (падение на переходе база-эмиттер). Изменяя сопротивление в цепи базы или заменяя стабилитрон, вы можете регулировать выходной параметр.</p>
+<p>Важно понимать, что транзистор не "съедает" лишнее напряжение бесследно, а пропускает его через себя, превращая в тепло. Чем больше ток потребляет нагрузка, тем сильнее нагревается <em>корпус транзистора</em>. При расчете схемы необходимо учитывать максимальный допустимый ток коллектора для выбранной модели.</p>
+<p>Если вы используете германиевый транзистор, падение напряжения будет меньше, около 0,2–0,3 В, но такие компоненты сейчас встречаются редко. Современная практика рекомендует использовать кремниевые модели с низким уровнем шума и стабильными характеристиками при нагреве.</p>
+
+<h2 id="расчет-номиналов-компонентов">Расчет номиналов компонентов</h2>
+<p>Чтобы схема работала корректно, необходимо правильно подобрать резисторы. Основным условием является ток, протекающий через <strong>стабилитрон</strong>. Он должен быть достаточным для выхода прибора на рабочий участок вольт-амперной характеристики, но не превышающим его максимальную мощность.</p>
+<p>Обычно ток через стабилитрон выбирают в диапазоне от 5 до 10 мА. Если входное напряжение составляет 12 В, а напряжение стабилизации — 5 В, то сопротивление ограничительного резистора рассчитывается по закону Ома. Не забудьте, что этот ток суммируется с током базы транзистора, хотя последним можно пренебречь при малых токах нагрузки.</p>
+<p>Для определения выходного тока нужно знать коэффициент усиления транзистора по току (h21э). Если ваш <em>транзистор</em> имеет коэффициент 50, а нагрузка требует 500 мА, то через базу должно протекать 10 мА. Это значение должно быть учтено при выборе резистора в цепи базы, если вы используете делитель.</p>
+<p>Ниже приведена таблица примерных значений для типовой схемы на 5 В с входным напряжением 12 В:</p>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Назначение</th>
+<th>Рекомендуемый номинал</th>
+<th>Мощность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1 (Ограничительный)</td>
+<td>Питание стабилитрона</td>
+<td>470 Ом</td>
+<td>0,25 Вт</td>
+</tr>
+<tr>
+<td>ZD1 (Стабилитрон)</td>
+<td>Опорное напряжение</td>
+<td>5,1 В (1N4733)</td>
+<td>0,5 Вт</td>
+</tr>
+<tr>
+<td>Q1 (Транзистор)</td>
+<td>Регулирующий элемент</td>
+<td>КТ814А или BD140</td>
+<td>1,25 Вт</td>
+</tr>
+<tr>
+<td>C1 (Конденсатор)</td>
+<td>Фильтр входного напряжения</td>
+<td>1000 мкФ</td>
+<td>16 В</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Не устанавливайте транзистор без радиатора, если планируемая нагрузка превышает 100 мА. Перегрев кристалла приведет к необратимому разрушению полупроводникового перехода.</p>
+</blockquote>
+
+<h2 id="процесс-сборки-и-монтажа">Процесс сборки и монтажа</h2>
+<p>Сборку устройства лучше всего производить на монтажной плате или макетной плате с отверстиями. Такой подход позволяет легко менять номиналы компонентов и исправлять ошибки без серьезного вмешательства в схему. Пайку следует вести аккуратно, чтобы не перегреть выводы <strong>транзистора</strong> и не повредить внутреннюю структуру.</p>
+<div class="checklist-block"><h4>☑️ Подготовка к сборке</h4><label class="check-item"><input type="checkbox"><span>Подобрать корпус транзистора</span></label><label class="check-item"><input type="checkbox"><span>Припаять выводы стабилитрона</span></label><label class="check-item"><input type="checkbox"><span>Подготовить радиатор</span></label><label class="check-item"><input type="checkbox"><span>Проверить мультиметром номиналы резисторов</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+<p>Первым шагом закрепите транзистор на радиаторе. Используйте теплопроводящую пасту для улучшения контакта между корпусом прибора и металлом. Затем припаяйте провода к выводам коллектора, базы и эмиттера. Следите за цветовой маркировкой или распиновкой, так как у разных производителей она может отличаться.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед включением собранной схемы обязательно проверьте отсутствие коротких замыканий между выводами транзистора и корпусом радиатора. Используйте мультиметр в режиме прозвонки.</p></div>
+<p>Установите стабилитрон и резисторы в соответствии со схемой. Убедитесь, что катоды стабилитронов (обычно обозначаются полоской) направлены в сторону положительного полюса питания. Ошибочная полярность может привести к выходу элемента из строя моментально после подачи напряжения.</p>
+<p>После монтажа всех компонентов проверьте целостность дорожек и качество пайки. Любая холодная пайка или перемычка между соседними контактами может нарушить работу устройства. Особое внимание уделите месту подключения нагрузки.</p>
+
+<h2 id="настройка-и-проверка-работоспособности">Настройка и проверка работоспособности</h2>
+<p>Первый запуск должен проводиться с ограничением тока. Подключите к выходу стабилизатора лампу накаливания небольшой мощности или резистор мощностью 5-10 Вт. Это защитит схему в случае ошибки в расчетах или монтаже. Постепенно подавайте напряжение на вход и следите за показаниями мультиметра.</p>
+<p>Если напряжение на выходе соответствует расчетному (например, 5 В), значит, схема работает исправно. Проверьте также стабильность напряжения при изменении входного напряжения в допустимых пределах. Хороший <strong>стабилизатор</strong> должен держать уровень с точностью до 50-100 мВ.</p>
+<p>В процессе работы следите за нагревом транзистора. Если радиатор становится слишком горячим (более 60-70°C), возможно, вы превысили допустимую мощность рассеивания или выбрана слишком большая разница между входным и выходным напряжением.</p>
+<details class="faq-item"><summary>Что делать, если напряжение "плавает"?</summary><div class="faq-answer"><p>Если напряжение на выходе нестабильно, проверьте качество пайки конденсаторов. Часто причина кроется в плохом контакте входного фильтра. Также проверьте, не перегревается ли стабилитрон.</p></div></details>
+<p>Для окончательной проверки нагрузите устройство реальным потребителем, например, светодиодной лентой или модулем питания радиоприемника. Измерьте падение напряжения на элементах и убедитесь, что ток не превышает максимальные значения для выбранных деталей.</p>
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Если вы используете мощный трансформатор в качестве источника питания, убедитесь, что его выходные характеристики соответствуют требованиям схемы. Слишком высокое напряжение на входе может пробить транзистор мгновенно.</p>
+</blockquote>
+<div class="poll-widget" id="poll-07a14a6c"><div class="poll-widget-question">📊 Какой метод охлаждения вы предпочитаете?</div><div class="poll-widget-option" data-poll="07a14a6c" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Пассивный радиатор</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="07a14a6c" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Активное охлаждение (кулер)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="07a14a6c" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Теплоотвод через корпус</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="07a14a6c" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Не использую охлаждение</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильный подбор теплоотвода — залог долгой и надежной работы линейного стабилизатора, так как основной враг схемы — перегрев.</p></div>
+
+<h2 id="ограничения-и-область-применения">Ограничения и область применения</h2>
+<p>Простой стабилизатор на одном транзисторе имеет ряд ограничений, которые необходимо учитывать при проектировании. Главный из них — низкий КПД. Вся разница между входным и выходным напряжением, умноженная на ток нагрузки, превращается в тепло. Это делает схему неэффективной для мощных устройств.</p>
+<p>Второй недостаток — отсутствие защиты от короткого замыкания. При замыкании выхода на землю весь ток, который может выдать источник питания, потечет через транзистор, что почти гарантированно приведет к его сгоранию. Для защиты добавляется предохранитель в цепь питания.</p>
+<p>Тем не менее, такие схемы широко применяются в маломощных устройствах, где важна простота и отсутствие помех. Они отлично подходят для питания микроконтроллеров, датчиков и маломощных усилителей. В таких случаях <em>линейный стабилизатор</em> выигрывает у импульсных аналогов по цене и надежности.</p>
+<p>Если вам требуется более высокая стабильность и защита, рассмотрите возможность использования интегральных стабилизаторов серий КРЕН или LM78xx. Они содержат все необходимые элементы защиты и регулировки в одном корпусе, упрощая конструкцию устройства.</p>
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> При работе с высокими токами (более 1 А) использование дискретных транзисторов становится нецелесообразным из-за сложности подбора пары и необходимости больших теплоотводов. В таких случаях лучше использовать готовые микросхемы.</p>
+</blockquote>
+
+<h2 id="частые-ошибки-при-сборке">Частые ошибки при сборке</h2>
+<p>Начинающие радиолюбители часто допускают ошибку при выборе типа транзистора. Для схем с положительным напряжением питания необходим <strong>p-n-p транзистор</strong> в конфигурации эмиттерного повторителя. Использование n-p-n структуры потребует инверсии схемы и изменения полярности всех компонентов.</p>
+<p>Другая распространенная проблема — игнорирование теплового расширения. При нагреве параметры полупроводников меняются. Если вы не предусмотрели запас по мощности, устройство может начать работать нестабильно при повышении температуры окружающей среды.</p>
+<p>Также стоит обратить внимание на качество проводов. Тонкие провода могут создавать дополнительное сопротивление, которое будет искажать измерения и вызывать падения напряжения в самом устройстве. Используйте многожильные провода достаточного сечения.</p>
+<p>Не забывайте о конденсаторах фильтрации. Без входного конденсатора схема может генерировать паразитные колебания, особенно если источник питания находится на большом расстоянии от стабилизатора. Выходной конденсатор также желателен для сглаживания пульсаций.</p>
+
+<details>
+<summary>Как рассчитать мощность рассеиваемую на транзисторе?</summary>
+<p>Мощность рассчитывается по формуле: P = (Uвх - Uвых) * Iнагр. Например, при входе 12 В, выходе 5 В и токе 0,5 А, мощность составит (12-5)*0,5 = 3,5 Вт. Это значение должно быть меньше максимально допустимой мощности транзистора с учетом коэффициента запаса.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать этот стабилизатор для питания двигателя?</summary>
+<p>Технически можно, но не рекомендуется для мощных двигателей. Двигатели создают сильные импульсы при работе, которые могут повредить транзистор. Лучше использовать специальные драйверы или импульсные стабилизаторы с защитой от ЭДС самоиндукции.</p>
+</details>
+
+<details>
+<summary>Что делать, если стабилитрон перегревается?</summary>
+<p>Перегрев стабилитрона указывает на слишком большой ток через него. Увеличьте сопротивление ограничивающего резистора. Однако следите, чтобы ток не упал ниже минимального значения, необходимого для работы стабилитрона в режиме стабилизации.</p>
+</details>
+
+<details>
+<summary>Какой максимальный ток может выдать такая схема?</summary>
+<p>Ток ограничен максимальным током коллектора транзистора и теплоотводом. Для транзистора КТ814А предел составляет около 1,5 А, но на практике без массивного радиатора лучше ограничиться 0,5–0,8 А. Для больших токов используйте составные транзисторы или микросхемы.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#основы-работы-линейных-стабилизаторов">Основы работы линейных стабилизаторов</a></li><li><a href="#схема-и-принцип-действия-устройства">Схема и принцип действия устройства</a></li><li><a href="#расчет-номиналов-компонентов">Расчет номиналов компонентов</a></li><li><a href="#процесс-сборки-и-монтажа">Процесс сборки и монтажа</a></li><li><a href="#настройка-и-проверка-работоспособности">Настройка и проверка работоспособности</a></li><li><a href="#ограничения-и-область-применения">Ограничения и область применения</a></li><li><a href="#частые-ошибки-при-сборке">Частые ошибки при сборке</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/c/ch/chasy-dlya-rybalki-kasio.html" class="related-card">Часы Casio для рыбалки: обзор моделей с критериями выбора</a></li><li><a href="/articles/k/kr/kranovye-puti-dlya-kran-balki.html" class="related-card">Крановые пути для кран-балки: выбор, монтаж и эксплуатация</a></li><li><a href="/articles/v/vk/vklyuchi-svet-na-balkone.html" class="related-card">Как включить свет на балконе: монтаж, проводка и выбор выключателя</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-dlya-nasosa.html" class="related-card">Стабилизатор напряжения для насоса: выбор и защита от скачков</a></li><li><a href="/articles/v/ve/verit-v-nashe-vremya-nelzya-nikomu-dazhe-sebe-mne-mozhno.html" class="related-card">Кризис доверия в авто: почему механикам и себе нельзя верить</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/c/ch/chasy-dlya-rybalki-kasio.html" class="related-bottom-card"><span class="related-bottom-title">Часы Casio для рыбалки: обзор моделей с критериями выбора</span><span class="related-bottom-desc">Как выбрать часы Casio для рыбалки? Полный разбор функций Tide Graph, Solars, Shock Resistant и обзо</span></a><a href="/articles/k/kr/kranovye-puti-dlya-kran-balki.html" class="related-bottom-card"><span class="related-bottom-title">Крановые пути для кран-балки: выбор, монтаж и эксплуатация</span><span class="related-bottom-desc">Полный гид по крановым путям для кран-балок. Разбор типов рельсов, расчет нагрузок, правила монтажа </span></a><a href="/articles/v/vk/vklyuchi-svet-na-balkone.html" class="related-bottom-card"><span class="related-bottom-title">Как включить свет на балконе: монтаж, проводка и выбор выключателя</span><span class="related-bottom-desc">Пошаговая инструкция по организации освещения на балконе. Выбор кабеля, схемы подключения, установка</span></a><a href="/articles/s/st/stabilizator-napryazheniya-dlya-nasosa.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения для насоса: выбор и защита от скачков</span><span class="related-bottom-desc">Как выбрать стабилизатор для насоса? Обзор типов, расчет мощности и защита от перегрузок. Полное рук</span></a><a href="/articles/v/ve/verit-v-nashe-vremya-nelzya-nikomu-dazhe-sebe-mne-mozhno.html" class="related-bottom-card"><span class="related-bottom-title">Кризис доверия в авто: почему механикам и себе нельзя верить</span><span class="related-bottom-desc">Почему нельзя верить никому при ремонте авто? Разбор психологии доверия, типичных ошибок автовладель</span></a><a href="/articles/s/st/stabilizator-napryazheniya-chto-takoe-bajpas.html" class="related-bottom-card"><span class="related-bottom-title">Байпас в стабилизаторе напряжения: назначение и принцип работы</span><span class="related-bottom-desc">Разбираем функцию байпас в стабилизаторах. Когда переключать режимы, как работает обход и почему это</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

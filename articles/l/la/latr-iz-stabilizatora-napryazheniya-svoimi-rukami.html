@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Самодельный ЛАТР из стабилизатора: пошаговая инструкция сборки — АвтоСлесарь</title>
+    <meta name="description" content="Узнайте, как переделать релейный стабилизатор в лабораторный трансформатор. Пошаговый разбор, схема подключения и меры безопасности при работе с 220В.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/l/la/latr-iz-stabilizatora-napryazheniya-svoimi-rukami.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Самодельный ЛАТР из стабилизатора: пошаговая инструкция сборки">
+    <meta property="og:description" content="Узнайте, как переделать релейный стабилизатор в лабораторный трансформатор. Пошаговый разбор, схема подключения и меры безопасности при работе с 220В.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Самодельный ЛАТР из стабилизатора: пошаговая инструкция сборки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как сделать ЛАТР из стабилизатора напряжения своими руками</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-и-разборка-старого-стабилизатора">Принцип работы и разборка старого стабилизатора</a></li><li><a href="#модификация-обмоток-и-создание-скользящего-контакта">Модификация обмоток и создание скользящего контакта</a></li><li><a href="#механическая-сборка-узла-регулировки">Механическая сборка узла регулировки</a></li><li><a href="#электронная-обвязка-и-защита-устройства">Электронная обвязка и защита устройства</a></li><li><a href="#сравнение-характеристик-и-тестирование">Сравнение характеристик и тестирование</a></li><li><a href="#меры-предосторожности-и-эксплуатация">Меры предосторожности и эксплуатация</a></li><li><a href="#заключение-и-альтернативные-решения">Заключение и альтернативные решения</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Многие радиолюбители и мастера сталкиваются с необходимостью плавной регулировки напряжения при намотке трансформаторов, тестировании электроприборов или зарядке аккумуляторов. Купить готовый лабораторный автотрансформатор (ЛАТР) можно, но его цена часто неоправданно высока для разовых задач, а доступность в регионах ограничена. В то же время, в гараже или на чердаке у многих может пылиться старый стабилизатор напряжения, который уже не справляется с современными нагрузками или имеет битые реле.</p>
+
+<p>Именно этот аппарат может стать идеальной основой для создания собственного <strong>ЛАТРа</strong>. Преобразование релейного стабилизатора в ручной регулятор напряжения требует понимания принципов работы автотрансформатора и наличия минимального набора инструментов. Главное преимущество такой переделки — использование готового мощного <strong>силового трансформатора</strong>, который уже рассчитан на работу с сетью 220В, а также наличие готового корпуса и системы охлаждения.</p>
+
+<p>Важно сразу отметить, что речь идет не о простой «перепайке» схемы, а о физической перестройке подключения обмоток. Вам придется изменить способ снятия напряжения с вторичной обмотки, убрав электронику управления и заменив её на механический контактный узел. Это позволит получить плавную регулировку выходного напряжения в диапазоне от 0 до 250–280 Вольт, что невозможно сделать обычным релейным стабилизатором из-за его ступенчатой природы.</p>
+
+<h2 id="принцип-работы-и-разборка-старого-стабилизатора">Принцип работы и разборка старого стабилизатора</h2>
+
+<p>Любой стабилизатор напряжения релейного типа по своей сути является автотрансформатором с отводами, которые коммутируются через блок реле. Внутри корпуса находится медный тороид или стержневая обмотка, на которой намотана вторичная катушка с множеством выводов. Электронная плата анализирует входное напряжение и замыкает нужные реле, чтобы компенсировать перепады. Для создания ЛАТРа нам нужно отключить эту «мозговую» часть и оставить только силовую трансформаторную часть.</p>
+
+<p>Первым шагом становится полная <strong>демонтажная подготовка</strong>. Отключите устройство от сети, разрядите конденсаторы и аккуратно вскройте корпус. Вам нужно удалить всю плату управления, блок реле и датчики напряжения. Не выбрасывайте их сразу, некоторые детали, такие как предохранители или клеммные колодки, могут пригодиться. Освободив место, вы увидите основную силовую часть — это и есть сердце будущего ЛАТРа.</p>
+
+<p>Наиболее ценным элементом здесь является сам трансформатор с его обмотками. В релейных моделях вторичная обмотка имеет множество отводов, которые идут на плату. Для плавной регулировки эти отводы не подходят, так как дают скачки напряжения. Необходимо найти место, где намотка идет непрерывно, или организовать возможность скользящего контакта по виткам. Именно этот принцип позволяет называть устройство <em>ЛАТРом</em> — лабораторным автотрансформатором.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание</strong>: Работы внутри корпуса стабилизатора проводите только при полностью отключенном питании. Даже если вы отключили вилку из розетки, конденсаторы могут хранить опасный заряд. Разрядите их через лампу накаливания или мощный резистор перед касанием любых контактов внутри.</p>
+</blockquote>
+
+<h2 id="модификация-обмоток-и-создание-скользящего-контакта">Модификация обмоток и создание скользящего контакта</h2>
+
+<p>Самая сложная и ответственная часть работы — это подготовка поверхности обмотки для создания скользящего контакта. В заводских ЛАТРах используется угольная щетка, которая скользит по зачищенному витку. В случае с переделкой из стабилизатора, вам нужно демонтировать изоляцию с одного витка вторичной обмотки. Делать это нужно крайне аккуратно, чтобы не повредить саму медную жилу.</p>
+
+<p>Для этого снимите верхний слой лаковой изоляции на небольшой сектор обмотки. Проще всего использовать мелкую наждачную бумагу, постепенно зачищая виток до блеска меди. Длина зачищенного участка должна быть достаточной для перемещения щетки в диапазоне желаемого регулирования напряжения. Если у вас трансформатор тороидального типа, зачистка производится на внешней стороне «бублика», где легко обеспечить механический доступ.</p>
+
+<p>После зачистки необходимо установить контактную щетку. В качестве подвижного контакта отлично подходит графитовая щетка от коллекторного электродвигателя (например, от старой стиральной машины или электроинструмента). Она должна иметь достаточное давление на обмотку, чтобы не терять контакт, но и не стереться слишком быстро. Крепить её нужно на прочном изолированном рычаге, который будет поворачиваться ручкой.</p>
+
+<p>Схема подключения должна быть следующей: входное напряжение 220В подается на первичную обмотку (или на общие выводы стабилизатора), а выходное напряжение снимается между общим нулевым проводом и подвижной щеткой. Важно обеспечить надежное крепление проводов, так как вибрация от движения щетки может привести к окислению контактов. Используйте обжимные наконечники и качественную изоляцию.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для улучшения проводимости и снижения искрения в месте контакта щетки с обмоткой, можно нанести на зачищенный виток тонкий слой токопроводящей пасты, но не переборщите, чтобы она не попала на изолированные участки.</p></div>
+
+<h2 id="механическая-сборка-узла-регулировки">Механическая сборка узла регулировки</h2>
+
+<p>Механическая часть ЛАТРа требует жесткой фиксации трансформатора и плавности хода ручки. Возьмите деревянную или пластиковую пластину, прикрутите к ней трансформатор так, чтобы зачищенный виток был доступен для щетки. Рычаг с щеткой должен перемещаться по дуге, совпадающей с радиусом трансформатора. Используйте шарнирное соединение с тугой пружиной, которая будет прижимать щетку к обмотке.</p>
+
+<p>Ручка управления должна быть удобной и желательно с указателем, чтобы вы могли визуально контролировать положение щетки. На корпус можно нанести шкалу напряжения, предварительно протестировав устройство валивным вольтметром. Разметка поможет вам быстро находить нужное напряжение для ваших экспериментов без постоянного контроля измерительными приборами. Это особенно важно при работе с чувствительной электроникой.</p>
+
+<p>Не забудьте предусмотреть фиксацию ручки в крайних положениях — «ноль» и «максимум». Это предотвратит случайное срабатывание на полное сетевое напряжение при включении прибора. Также важно защитить подвижные части от пыли и влаги, так как угольная пыль от щеток является проводником и может вызвать короткое замыкание, если попадет на соседние токоведущие части.</p>
+
+<div class="checklist-block"><h4>☑️ Сборка узла регулировки</h4><label class="check-item"><input type="checkbox"><span>Прикрутить трансформатор к основанию</span></label><label class="check-item"><input type="checkbox"><span>Установить рычаг с шарниром</span></label><label class="check-item"><input type="checkbox"><span>Закрепить графитовую щетку</span></label><label class="check-item"><input type="checkbox"><span>Проверить плавность хода</span></label><label class="check-item"><input type="checkbox"><span>Нанести шкалу напряжений</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="электронная-обвязка-и-защита-устройства">Электронная обвязка и защита устройства</h2>
+
+<p>После того как механическая часть готова, необходимо заняться электрической обвязкой. Обязательно установите мощный автоматический выключатель на входе, рассчитанный на ток, который способен выдержать ваш трансформатор. Это защитит устройство от перегрузок и коротких замыканий в нагрузке. Также желательно установить предохранитель, который сработает быстрее автомата при критических авариях.</p>
+
+<p>Для контроля выходного напряжения лучше всего предусмотреть встроенный вольтметр. Можно использовать дешевый модуль с ЖК-дисплеем, который питается от выходной цепи. Это позволит видеть точное значение напряжения без необходимости подключать внешний мультиметр. Если вы планируете работать с высокими токами, добавьте амперметр для контроля потребляемой мощности.</p>
+
+<p>Клеммная колодка на выходе должна быть качественной и надежно зафиксированной. Используйте винтовые зажимы с шайбами, чтобы провод не вылетел при случайном рывке. Все открытые токоведущие части внутри корпуса должны быть закрыты изоляционными колпачками или решетками. Помните, что ЛАТР не имеет гальванической развязки от сети, поэтому на выходе может присутствовать фазное напряжение даже при низком уровне регулировки.</p>
+
+<details class="faq-item"><summary>Особенности работы с гальванической развязкой</summary><div class="faq-answer"><p>В отличие от трансформаторов с раздельными обмотками, автотрансформатор (ЛАТР) не имеет гальванической развязки. Это значит, что «ноль» на выходе может быть под потенциалом фазы, если щетка сдвинута. Будьте предельно осторожны при касании любых проводов на выходе устройства.</p></div></details>
+
+<blockquote>
+<p>⚠️ <strong>Внимание</strong>: Не подключайте к выходу ЛАТРа устройства, требующие гальванической развязки (например, импульсные блоки питания компьютеров или зарядные устройства), если не уверены в заземлении. При выходе из строя щетки на выходе может возникнуть полное сетевое напряжение с неправильной полярностью.</p>
+</blockquote>
+
+<h2 id="сравнение-характеристик-и-тестирование">Сравнение характеристик и тестирование</h2>
+
+<p>После сборки устройство необходимо протестировать. Подключите к выходу лампу накаливания небольшой мощности (например, 40 Вт) и плавно вращайте ручку. Лампа должна менять яркость плавно, без скачков. Если вы видите, что свет гаснет и вспыхивает рывками, значит, контакт щетки нестабилен или на обмотке остались участки с плохой очисткой. Доработайте контакт.</p>
+
+<p>Затем проведите замер напряжения во всем диапазоне. Сравните показания встроенного вольтметра (если есть) и внешнего мультиметра. Запишите данные, чтобы понять погрешность вашего самодельного устройства. Обычно погрешность самодельного ЛАТРа составляет 5–10%, что вполне приемлемо для бытовых и ремонтных задач, но может быть недостаточно для точных лабораторных измерений.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Релейный стабилизатор</th>
+<th>Самодельный ЛАТР</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Регулировка напряжения</td>
+<td>Ступенчатая (каждые 5-10В)</td>
+<td>Плавная (любое значение)</td>
+</tr>
+<tr>
+<td>Скорость отклика</td>
+<td>Мгновенная (реле)</td>
+<td>Ручная (зависит от вас)</td>
+</tr>
+<tr>
+<td>Гальваническая развязка</td>
+<td>Отсутствует (автотрансформатор)</td>
+<td>Отсутствует (автотрансформатор)</td>
+</tr>
+<tr>
+<td>Надежность контакта</td>
+<td>Высокая (электроника)</td>
+<td>Средняя (износ щетки)</td>
+</tr>
+<tr>
+<td>Стоимость реализации</td>
+<td>Высокая (покупка)</td>
+<td>Низкая (из хлама)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Особенностью самодельного ЛАТРа является то, что он не стабилизирует напряжение автоматически. Если в сети 220В упадет до 180В, на выходе вашего устройства напряжение тоже упадет, но сохранит ту же пропорцию, которую вы выставили ручкой. Это критически важно учитывать при работе с приборами, чувствительными к просадкам сети.</p>
+
+<h2 id="меры-предосторожности-и-эксплуатация">Меры предосторожности и эксплуатация</h2>
+
+<p>Эксплуатация самодельного ЛАТРа требует строгого соблюдения правил техники безопасности. Никогда не оставляйте устройство включенным без присмотра, особенно если к нему подключена нагрузка, способная перегреться. Из-за отсутствия автоматики перегрев может произойти незаметно, если вы забыли выключить прибор. Регулярно проверяйте температуру трансформатора и щетки.</p>
+
+<p>Перед каждым включением убеждайтесь, что ручка находится в положении минимального напряжения (ноль). Это предотвратит мощный бросок тока при подаче питания, который может сжечь нагрузку или вызвать искрение в щеточном узле. Также рекомендуется включать ЛАТР через шнур с выключателем, чтобы можно было быстро обесточить систему в аварийной ситуации.</p>
+
+<p>Чистку и обслуживание проводите только при полном обесточивании. Сдувайте угольную пыль с обмотки и контактов сжатым воздухом или мягкой кистью. Проверяйте затяжку всех винтовых соединений, так как вибрация и тепловое расширение могут привести к их ослаблению. Ослабленный контакт — это гарантия перегрева и возгорания.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главное правило эксплуатации: всегда начинайте регулировку напряжения с минимального значения и плавно повышайте его до требуемого уровня, чтобы избежать бросков тока.</p></div>
+
+<h2 id="заключение-и-альтернативные-решения">Заключение и альтернативные решения</h2>
+
+<p>Создание ЛАТРа из старого стабилизатора напряжения — это отличный способ дать вторую жизнь ненужному оборудованию и получить в свое распоряжение мощный инструмент для электротехнических работ. Такой подход позволяет сэкономить значительные средства и получить устройство, адаптированное под конкретные нужды мастера. Вы сами выбираете мощность, диапазон регулировки и тип корпуса.</p>
+
+<p>Однако, если вам необходима высокая точность или работа с очень высокими токами, стоит рассмотреть покупку промышленного ЛАТРа. Заводские модели имеют более качественные материалы щеток, точную калибровку и дополнительные системы защиты, которые сложно воспроизвести в домашних условиях. Но для большинства бытовых задач, таких как проверка ламп, плавный пуск двигателей или зарядка аккумуляторов, самодельный вариант полностью оправдан.</p>
+
+<p>Помните, что любая работа с сетевым напряжением 220В несет в себе риск поражения электрическим током. Если вы не уверены в своих силах или не имеете достаточных знаний в электротехнике, лучше доверить эту работу профессионалу или не делать её вовсе. Безопасность всегда должна быть на первом месте, независимо от того, сколько вы планируете сэкономить.</p>
+
+<details>
+<summary>Нужна ли дополнительная защита от перегрузки?</summary>
+<p>Да, обязательно. Самодельный ЛАТР не имеет встроенной защиты от перегрузки. Рекомендуется установить автоматический выключатель на входной цепи, подобранный по мощности трансформатора, и использовать предохранители на выходе. Это предотвратит возгорание при коротком замыкании в нагрузке.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать этот ЛАТР для подключения компьютера?</summary>
+<p>Технически можно, но крайне не рекомендуется. Компьютеры и другая сложная электроника чувствительны к форме сигнала и качеству напряжения. Угольная щетка может создавать помехи, а отсутствие гальванической развязки повышает риск повреждения оборудования при скачках в сети. Для ПК лучше использовать ИБП или стабильную сеть.</p>
+</details>
+
+<details>
+<summary>Как часто нужно менять щетку?</summary>
+<p>Частота замены зависит от интенсивности использования и качества материала щетки. При активной работе (несколько часов в день) графитовая щетка может стереться за 1–2 месяца. При редком использовании она прослужит годами. Регулярно осматривайте длину щетки и при необходимости меняйте её, чтобы избежать потери контакта.</p>
+</details>
+
+<details>
+<summary>Какой диапазон напряжения можно получить?</summary>
+<p>Диапазон зависит от конструкции трансформатора. Обычно можно получить от 0 до 250–280 Вольт. Если обмотка имеет запас, возможно получение напряжения выше 220В, что полезно для проверки приборов на предельные нагрузки. Однако не превышайте паспортную мощность трансформатора, чтобы не вывести его из строя.</p>
+</details>
+
+<div class="poll-widget" id="poll-48b6dcbf"><div class="poll-widget-question">📊 Какой тип трансформатора у вас есть?</div><div class="poll-widget-option" data-poll="48b6dcbf" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Тороидальный</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="48b6dcbf" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Стержневой</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="48b6dcbf" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Броневой</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="48b6dcbf" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Не знаю, нужно разобрать</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-и-разборка-старого-стабилизатора">Принцип работы и разборка старого стабилизатора</a></li><li><a href="#модификация-обмоток-и-создание-скользящего-контакта">Модификация обмоток и создание скользящего контакта</a></li><li><a href="#механическая-сборка-узла-регулировки">Механическая сборка узла регулировки</a></li><li><a href="#электронная-обвязка-и-защита-устройства">Электронная обвязка и защита устройства</a></li><li><a href="#сравнение-характеристик-и-тестирование">Сравнение характеристик и тестирование</a></li><li><a href="#меры-предосторожности-и-эксплуатация">Меры предосторожности и эксплуатация</a></li><li><a href="#заключение-и-альтернативные-решения">Заключение и альтернативные решения</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/so/sovetskie-rozetki-s-pruzhinoj.html" class="related-card">Советские розетки с пружиной: устройство, монтаж и замена</a></li><li><a href="/articles/r/re/relejnyj-ili-invertornyj-stabilizator.html" class="related-card">Релейный или инверторный стабилизатор: что выбрать для дома?</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-dlya-kompressora.html" class="related-card">Выбор стабилизатора напряжения для компрессора: расчет мощности и защита</a></li><li><a href="/articles/s/sk/skhema-podklyucheniya-stabilizatora-napryazheniya-v-chastnom-dome-220-volt.html" class="related-card">Схема подключения стабилизатора напряжения 220В в частном доме</a></li><li><a href="/articles/b/ba/bajpas-dlya-rele-napryazheniya-skhema-podklyucheniya.html" class="related-card">Байпас для реле напряжения: схема подключения и нюансы монтажа</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/so/sovetskie-rozetki-s-pruzhinoj.html" class="related-bottom-card"><span class="related-bottom-title">Советские розетки с пружиной: устройство, монтаж и замена</span><span class="related-bottom-desc">Полный гид по советским розеткам с пружинным механизмом (СР-01, СР-03). Разбор конструкции, отличия </span></a><a href="/articles/r/re/relejnyj-ili-invertornyj-stabilizator.html" class="related-bottom-card"><span class="related-bottom-title">Релейный или инверторный стабилизатор: что выбрать для дома?</span><span class="related-bottom-desc">Сравнение релейных и инверторных стабилизаторов напряжения. Разбор плюсов, минусов, точности и скоро</span></a><a href="/articles/s/st/stabilizator-napryazheniya-dlya-kompressora.html" class="related-bottom-card"><span class="related-bottom-title">Выбор стабилизатора напряжения для компрессора: расчет мощности и защита</span><span class="related-bottom-desc">Как подобрать стабилизатор для электродвигателя компрессора? Расчет пусковых токов, типы устройств, </span></a><a href="/articles/s/sk/skhema-podklyucheniya-stabilizatora-napryazheniya-v-chastnom-dome-220-volt.html" class="related-bottom-card"><span class="related-bottom-title">Схема подключения стабилизатора напряжения 220В в частном доме</span><span class="related-bottom-desc">Пошаговая инструкция: как правильно подключить стабилизатор на вводе или на отдельную группу. Обзор </span></a><a href="/articles/b/ba/bajpas-dlya-rele-napryazheniya-skhema-podklyucheniya.html" class="related-bottom-card"><span class="related-bottom-title">Байпас для реле напряжения: схема подключения и нюансы монтажа</span><span class="related-bottom-desc">Подробная схема подключения байпасного реле напряжения. Инструкция, выбор автоматики, таблица параме</span></a><a href="/articles/p/po/poplavok-s-kameroj-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Поплавок с камерой для рыбалки: обзор технологий и выбор</span><span class="related-bottom-desc">Как выбрать поплавок с камерой для рыбалки? Полный гид по технологиям, видам передатчиков, настройке</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

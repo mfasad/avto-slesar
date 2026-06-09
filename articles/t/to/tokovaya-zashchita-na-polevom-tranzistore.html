@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Токовая защита на полевом транзисторе: схемы, расчет и реализация — АвтоСлесарь</title>
+    <meta name="description" content="Полный гайд по организации токовой защиты на полевых транзисторах. Разбор схем MOSFET, расчет шунта, выбор драйверов и типовых ошибок при проектировании.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/t/to/tokovaya-zashchita-na-polevom-tranzistore.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Токовая защита на полевом транзисторе: схемы, расчет и реализация">
+    <meta property="og:description" content="Полный гайд по организации токовой защиты на полевых транзисторах. Разбор схем MOSFET, расчет шунта, выбор драйверов и типовых ошибок при проектировании.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Токовая защита на полевом транзисторе: схемы, расчет и реализация</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Токовая защита на полевом транзисторе: от теории до практики</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-задачи-токовой-защиты-mosfet">Введение в задачи токовой защиты MOSFET</a></li><li><a href="#физика-процесса-пробоя-и-температурная-деградация">Физика процесса пробоя и температурная деградация</a></li><li><a href="#анализ-методов-реализации-защиты">Анализ методов реализации защиты</a></li><li><a href="#расчет-и-выбор-шунтирующего-резистора">Расчет и выбор шунтирующего резистора</a></li><li><a href="#схемные-решения-и-топология-подключения">Схемные решения и топология подключения</a></li><li><a href="#быстродействие-и-время-реакции-системы">Быстродействие и время реакции системы</a></li><li><a href="#типовые-ошибки-при-проектировании">Типовые ошибки при проектировании</a></li><li><a href="#заключение-и-перспективы-развития">Заключение и перспективы развития</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-задачи-токовой-защиты-mosfet">Введение в задачи токовой защиты MOSFET</h2>
+<p>В современной силовой электронике надежная работа ключевого элемента часто зависит не столько от самого <strong>полевом транзисторе</strong>, сколько от качества окружающих его цепей управления. <em>Токовая защита</em> выступает критическим барьером, предотвращающим катастрофический отказ компонента при коротком замыкании или перегрузке по нагрузке.</p>
+<p>Вы наверняка сталкивались с ситуацией, когда мощный <em>MOSFET</em> выходил из строя за миллисекунды при сбое в схеме. Это происходит потому, что время теплового пробоя намного меньше времени срабатывания стандартных предохранителей. Вам необходимо внедрить электронные методы ограничения тока, чтобы система реагировала мгновенно.</p>
+<p>Современные требования к <strong>силовым ключам</strong> диктуют жесткие параметры по времени отклика. Если вы проектируете блок питания или двигательный драйвер, игнорирование защиты приведет к гарантированному пробою <em>исток-сток</em> при первом же нештатном событии.</p>
+
+<h2 id="физика-процесса-пробоя-и-температурная-деградация">Физика процесса пробоя и температурная деградация</h2>
+<p>Понимание механизма отказа начинается с анализа вольт-амперной характеристики <strong>полевых транзисторов</strong>. При превышении допустимого тока плотность тока в канале резко возрастает, вызывая локальный перегрев кристалла.</p>
+<p>В отличие от биполярных структур, <em>MOSFET</em> обладает положительным температурным коэффициентом сопротивления в области насыщения, что теоретически способствует равномерному распределению тока. Однако при экстремальных токах этот эффект не успевает сработать, и возникает тепловая лавина.</p>
+<p>Важно отметить, что время до разрушения при коротком замыкании может составлять менее 10 микросекунд. <mark>Время срабатывания защиты должно быть кратнее 1 микросекунды для гарантированного спасения компонента в критических режимах.</mark></p>
+<blockquote>
+<p>⚠️ Внимание: Даже кратковременный перегрев выше предельно допустимой температуры перехода (Tj) необратимо меняет параметры транзистора, снижая его ресурс и надежность, даже если внешне корпус не имеет повреждений.</p>
+</blockquote>
+
+<h2 id="анализ-методов-реализации-защиты">Анализ методов реализации защиты</h2>
+<p>Существует несколько подходов к реализации <strong>токовой защиты</strong> на базе полевых транзисторов. Выбор метода зависит от требуемой точности, быстродействия и стоимости конечного устройства.</p>
+<p>Самым простым вариантом является использование встроенных функций драйверов. Многие современные <em>драйверы MOSFET</em> имеют встроенный мониторинг тока и функцию "Soft-Start". Это позволяет ограничивать пусковые токи без сложной внешней схемы.</p>
+<p>Более точный метод предполагает использование внешнего <strong>измерительного резистора</strong> (шунта). Сигнал с него подается на компаратор или специализированный микросхемный контроллер, который мгновенно закрывает затвор транзистора при превышении порога.</p>
+<p>Альтернативой является использование датчиков Холла. Они изолируют цепь измерения от силовой части, что критично для высоковольтных систем. Но здесь стоит помнить о более медленном времени отклика по сравнению с резистивными шунтами.</p>
+<blockquote>
+<p>⚠️ Внимание: При использовании шунтирующих резисторов необходимо учитывать их собственную индуктивность, которая может вызвать ложные срабатывания защиты при резких изменениях тока (di/dt).</p>
+</blockquote>
+
+<div class="poll-widget" id="poll-4afdc672"><div class="poll-widget-question">📊 Какой метод защиты вы используете чаще всего?</div><div class="poll-widget-option" data-poll="4afdc672" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Встроенная в драйвер</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="4afdc672" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Внешний шунт + компаратор</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="4afdc672" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Датчик Холла</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="4afdc672" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Специализированный контроллер</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="расчет-и-выбор-шунтирующего-резистора">Расчет и выбор шунтирующего резистора</h2>
+<p>Правильный расчет <strong>шунтирующего резистора</strong> — это баланс между чувствительностью и потерями мощности. Если сопротивление слишком велико, вы потеряете много энергии в виде тепла на самом резисторе.</p>
+<p>С другой стороны, слишком малое сопротивление потребует от измерительной схемы высокой точности и усиления микровольтных сигналов. Для большинства применений падение напряжения на шунте при номинальном токе не должно превышать <code>50 мВ</code>.</p>
+<p>При выборе корпуса резистора учтите, что стандартные чип-резисторы могут не выдержать импульсные перегрузки. Вам потребуются специальные токовые резисторы с низким ТКС и высокой импульсной мощностью.</p>
+<p>Формула расчета номинала сопротивления выглядит следующим образом: <code>R = U_threshold / I_max</code>, где <code>U_threshold</code> — порог срабатывания защиты, а <code>I_max</code> — максимальный допустимый ток нагрузки.</p>
+<div class="checklist-block"><h4>☑️ Проверка параметров шунта</h4><label class="check-item"><input type="checkbox"><span>Номинальная мощность рассеяния</span></label><label class="check-item"><input type="checkbox"><span>Импульсная мощность</span></label><label class="check-item"><input type="checkbox"><span>Коэффициент температурного дрейфа</span></label><label class="check-item"><input type="checkbox"><span>Наличие индуктивности в конструкции</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="схемные-решения-и-топология-подключения">Схемные решения и топология подключения</h2>
+<p>Распространенным решением является схема с использованием операционного усилителя в качестве компаратора. Сигнал с <strong>исток-сток</strong> пути усиливается и сравнивается с опорным напряжением.</p>
+<p>В высоковольтных схемах часто применяется схема "Low-Side", где шунт включен между истоком транзистора и землей. Это упрощает задачу измерения, так как общий провод находится на потенциале земли.</p>
+<p>Для схем "High-Side", где транзистор включается в разрыв плюсового провода, потребуются специализированные <em>High-Side драйверы</em> или усилители тока с высоким синфазным напряжением. Ошибка в выборе топологии здесь фатальна.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип схемы</th>
+<th>Преимущества</th>
+<th>Недостатки</th>
+<th>Область применения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low-Side</td>
+<td>Простота измерения, дешевизна</td>
+<td>Разрыв земли, помехи</td>
+<td>Двигатели постоянного тока</td>
+</tr>
+<tr>
+<td>High-Side</td>
+<td>Безопасная земля, точность</td>
+<td>Сложность схемы, дорогие ИМС</td>
+<td>Блоки питания, automotive</td>
+</tr>
+<tr>
+<td>Встроенный датчик</td>
+<td>Минимум внешних деталей</td>
+<td>Ограниченная точность</td>
+<td>Компактные модули</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При разводке печатной платы обязательно используйте схему Кельвина (4-проводное подключение) для шунта, чтобы исключить влияние сопротивления дорожек на точность измерения тока.</p></div>
+
+<h2 id="быстродействие-и-время-реакции-системы">Быстродействие и время реакции системы</h2>
+<p>Ключевым параметром защиты является задержка срабатывания. Даже если вы выбрали идеальный <strong>компаратор</strong>, задержка может быть вызвана индуктивностью цепи и емкостью затвора.</p>
+<p>Для минимизации задержки необходимо использовать быстрые логические элементы и минимизировать длину дорожек между <em>исток-сток</em> контроллера и затвором транзистора. Любая паразитная индуктивность будет сглаживать фронт сигнала.</p>
+<p>В некоторых случаях применяется пассивная RC-защита, которая не требует внешнего питания. Однако такие схемы имеют фиксированное время срабатывания и не могут быть адаптированы под разные условия работы.</p>
+<p>Если вы проектируете систему для импульсных нагрузок, учтите, что пиковые токи могут быть в разы выше номинальных. Защита должна иметь настройку на "импульсный пропуск" или использовать интегральное усреднение тока.</p>
+<details class="faq-item"><summary>Что такое эффект Само-смещения?</summary><div class="faq-answer"><p>В некоторых схемах с высоким импедансом затвора напряжение на истоке может самопроизвольно смещаться, вызывая ложное срабатывание защиты при отсутствии реальной перегрузки.</p></div></details>
+
+<h2 id="типовые-ошибки-при-проектировании">Типовые ошибки при проектировании</h2>
+<p>Одной из самых частых ошибок является неправильный выбор <strong>порога срабатывания</strong>. Если установить его слишком близко к номинальному току, система будет ложно отключаться при пусковых токах двигателя или зарядке конденсаторов.</p>
+<p>Другая проблема — отсутствие гистерезиса в схеме компаратора. Без гистерезиса при токе, близком к порогу, система начнет "дребезжать" — быстро включать и выключать транзистор, что приведет к его перегреву и выходу из строя.</p>
+<p>Игнорирование тепловых режимов также губительно. Даже если электронная защита сработает, транзистор может получить тепловой удар до момента размыкания цепи, если время реакции слишком велико.</p>
+<p>Не забывайте о защите самого затвора. Перенапряжение на затворе может пробить оксидный слой, даже если ток стока находится в норме. Используйте стабилитроны или ограничительные резисторы.</p>
+<blockquote>
+<p>⚠️ Внимание: При тестировании защиты никогда не используйте штатную нагрузку для имитации короткого замыкания — используйте специальный разрядник или регулируемый электронный нагрузочный стенд.</p>
+</blockquote>
+
+<h2 id="заключение-и-перспективы-развития">Заключение и перспективы развития</h2>
+<p>Современные технологии позволяют интегрировать функцию <strong>токовой защиты</strong> непосредственно в корпус силового транзистора. Такие Smart Power Switches упрощают схему и повышают надежность системы до уровня, недоступного для дискретных решений.</p>
+<p>Однако для высоковольтных и специализированных применений внешние схемы защиты остаются актуальными. Понимание физики процессов и правильная настройка параметров позволяют создать надежную систему.</p>
+<p>Всегда перепроверяйте спецификации компонентов на предмет актуальных изменений. Производители часто обновляют параметры <em>MOSFET</em> и драйверов, что может потребовать пересчета номиналов защиты.</p>
+<blockquote>
+<p>⚠️ Внимание: Технические характеристики компонентов могут меняться производителем без предварительного уведомления. Всегда сверяйтесь с последней версией даташита перед финальным запуском устройства в серийное производство.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы">Часто задаваемые вопросы</h2>
+<details>
+<summary>Как выбрать порог срабатывания защиты?</summary>
+<p>Порог должен быть установлен на 10-15% выше максимального рабочего тока нагрузки, но ниже предельного импульсного тока транзистора (Idm). Учитывайте пусковые токи двигателей и токи зарядки конденсаторов.</p>
+</details>
+<details>
+<summary>Можно ли использовать обычный резистор вместо шунта?</summary>
+<p>Не рекомендуется. Обычные резисторы имеют большую паразитную индуктивность и нестабильный ТКС. Для точной защиты используйте специальные токоизмерительные резисторы с низким сопротивлением и четырехвыводной конструкцией.</p>
+</details>
+<details>
+<summary>Что делать, если защита срабатывает ложно?</summary>
+<p>Проверьте наличие гистерезиса в схеме компаратора. Убедитесь, что длина дорожек минимальна, а заземление выполнено по схеме "звезда". Возможно, требуется немного увеличить порог срабатывания или добавить RC-фильтр на вход компаратора.</p>
+</details>
+<details>
+<summary>Нужен ли радиатор при наличии электронной защиты?</summary>
+<p>Да, электронная защита спасает от мгновенного пробоя, но не заменяет теплоотвод. В рабочем режиме транзистор все равно нагревается, и без радиатора он может выйти из строя из-за перегрева.</p>
+</details>
+<details>
+<summary>В чем разница между защитой по току и защиты по температуре?</summary>
+<p>Защита по току реагирует на превышение силы тока в цепи (электрический параметр), а защита по температуре — на нагрев корпуса или кристалла (тепловой параметр). Они дополняют друг друга: первая спасает от КЗ, вторая — от длительной перегрузки.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-задачи-токовой-защиты-mosfet">Введение в задачи токовой защиты MOSFET</a></li><li><a href="#физика-процесса-пробоя-и-температурная-деградация">Физика процесса пробоя и температурная деградация</a></li><li><a href="#анализ-методов-реализации-защиты">Анализ методов реализации защиты</a></li><li><a href="#расчет-и-выбор-шунтирующего-резистора">Расчет и выбор шунтирующего резистора</a></li><li><a href="#схемные-решения-и-топология-подключения">Схемные решения и топология подключения</a></li><li><a href="#быстродействие-и-время-реакции-системы">Быстродействие и время реакции системы</a></li><li><a href="#типовые-ошибки-при-проектировании">Типовые ошибки при проектировании</a></li><li><a href="#заключение-и-перспективы-развития">Заключение и перспективы развития</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/st/stabilizator-syaomi-dlya-telefona.html" class="related-card">Стабилизаторы Xiaomi для телефона: обзор моделей и настройка съемки</a></li><li><a href="/articles/s/st/stabilizator-dlya-led-lamp-v-avto.html" class="related-card">Стабилизатор напряжения для LED ламп в авто: зачем нужен и как выбрать</a></li><li><a href="/articles/r/ro/rozetka-s-pruzhinnymi-klemmami.html" class="related-card">Розетка с пружинными клеммами: принцип работы, монтаж и разбор мифов</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-resanta-5000.html" class="related-card">Стабилизатор напряжения Ресарта 5000: обзор, подключение и выбор модели</a></li><li><a href="/articles/a/as/asn-12000-1-em.html" class="related-card">АСН 1200-01 ЭМ: Назначение, характеристики и особенности монтажа</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/st/stabilizator-syaomi-dlya-telefona.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизаторы Xiaomi для телефона: обзор моделей и настройка съемки</span><span class="related-bottom-desc">Полный гид по стабилизаторам Xiaomi. Сравнение моделей DJI Osmo Mobile, выбор, настройка и советы по</span></a><a href="/articles/s/st/stabilizator-dlya-led-lamp-v-avto.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения для LED ламп в авто: зачем нужен и как выбрать</span><span class="related-bottom-desc">Почему свет мигает и сгорает? Подробный гид по стабилизаторам тока для светодиодов. Особенности подк</span></a><a href="/articles/r/ro/rozetka-s-pruzhinnymi-klemmami.html" class="related-bottom-card"><span class="related-bottom-title">Розетка с пружинными клеммами: принцип работы, монтаж и разбор мифов</span><span class="related-bottom-desc">Полный разбор розеток с пружинными зажимами. Преимущества перед винтовыми, инструкция по монтажу, ср</span></a><a href="/articles/s/st/stabilizator-napryazheniya-resanta-5000.html" class="related-bottom-card"><span class="related-bottom-title">Стабилизатор напряжения Ресарта 5000: обзор, подключение и выбор модели</span><span class="related-bottom-desc">Полный гид по стабилизаторам Ресанта 5000. Разбор характеристик релейных и инверторных моделей, схем</span></a><a href="/articles/a/as/asn-12000-1-em.html" class="related-bottom-card"><span class="related-bottom-title">АСН 1200-01 ЭМ: Назначение, характеристики и особенности монтажа</span><span class="related-bottom-desc">Полный разбор упругого соединения АСН 1200-01 ЭМ. Технические параметры, схема установки, требования</span></a><a href="/articles/v/ve/vertul-instrument-otzyvy-proizvoditel.html" class="related-bottom-card"><span class="related-bottom-title">Инструмент Vertul: Отзывы о производителе, качество и характеристики</span><span class="related-bottom-desc">Разбор инструмента Vertul: отзывы пользователей, обзор моделей, реальный производитель и сравнение к</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

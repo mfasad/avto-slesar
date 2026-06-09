@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>LM317 стабилизатор тока: схема, расчет и примеры включения — АвтоСлесарь</title>
+    <meta name="description" content="Практическое руководство по сборке стабилизатора тока на базе LM317. Расчет резистора, схемы подключения для светодиодов и аккумуляторов, нюансы охлаждения и защиты.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/l/lm/lm317-stabilizator-toka-skhema.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LM317 стабилизатор тока: схема, расчет и примеры включения">
+    <meta property="og:description" content="Практическое руководство по сборке стабилизатора тока на базе LM317. Расчет резистора, схемы подключения для светодиодов и аккумуляторов, нюансы охлаждения и защиты.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">LM317 стабилизатор тока: схема, расчет и примеры включения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Схемы и расчет стабилизатора тока на микросхеме LM317</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-возможности-микросхемы-lm317">Введение в возможности микросхемы LM317</a></li><li><a href="#принцип-работы-и-базовая-топология-схемы">Принцип работы и базовая топология схемы</a></li><li><a href="#расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</a></li><li><a href="#схемы-подключения-для-светодиодов-и-аккумуляторов">Схемы подключения для светодиодов и аккумуляторов</a></li><li><a href="#тепловой-режим-и-требования-к-охлаждению">Тепловой режим и требования к охлаждению</a></li><li><a href="#ограничения-и-защита-схемы">Ограничения и защита схемы</a></li><li><a href="#нюансы-намотки-и-монтажа-токозадающего-резистора">Нюансы намотки и монтажа токозадающего резистора</a></li><li><a href="#частые-вопросы-faq">Частые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-возможности-микросхемы-lm317">Введение в возможности микросхемы LM317</h2>
+<p>Многие радиолюбители воспринимают <strong>LM317</strong> исключительно как классический линейный стабилизатор напряжения, игнорируя её колоссальный потенциал для управления током. На самом деле, этот универсальный элемент способен работать в режиме источника тока с высокой точностью, что делает его незаменимым при питании мощных светодиодов, зарядке аккумуляторов или тестировании электронных компонентов. В отличие от специализированных драйверов, <em>LM317</em> доступна, дешева и не требует сложной обвязки для базовых задач.</p>
+<p>Секрет кроется в внутренней схеме микросхемы, которая поддерживает фиксированную разность потенциалов в 1,25 вольта между выходным выводом и выводом регулировки (ADJ). Именно это свойство позволяет превратить обычный регулятор напряжения в прецизионный стабилизатор тока, где значение электрического потока определяется исключительно сопротивлением одного-единственного резистора. Вам не нужны сложные микроконтроллеры или программирование, чтобы создать надежную схему.</p>
+
+<h2 id="принцип-работы-и-базовая-топология-схемы">Принцип работы и базовая топология схемы</h2>
+<p>Работа схемы стабилизатора тока базируется на законе Ома. Поскольку напряжение на резисторе, подключенном к выводу ADJ, всегда стремится к значению <strong>1,25 В</strong>, ток, протекающий через этот резистор, остается постоянным независимо от колебаний входного напряжения или сопротивления нагрузки (в пределах допустимых пределов микросхемы). Формула расчета предельно проста: <code>I = 1.25 / R</code>, где I — desired ток в амперах, а R — сопротивление резистора в омах.</p>
+<p>В такой конфигурации микросхема автоматически подстраивает выходное напряжение так, чтобы на нагрузке протекал заданный ток. Если сопротивление нагрузки увеличивается, <em>LM317</em> повышает выходное напряжение до предела, пока не достигнет максимального значения. Если сопротивление падает, микросхема снижает напряжение, сохраняя ток неизменным. Это делает устройство идеальным для защиты чувствительных светодиодов от перегрузки.</p>
+<p>Важно отметить, что входное напряжение должно превышать сумму падения напряжения на нагрузке и минимального напряжения стабилизации (dropout voltage) микросхемы, которое обычно составляет около 3 вольт. Если этот запас будет недостаточным, стабилизатор перейдет в режим насыщения и перестанет контролировать ток. Вам необходимо всегда рассчитывать баланс мощностей при проектировании схемы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При работе с высокими токами микросхема <em>LM317</em> может сильно нагреваться, поскольку она рассеивает избыточную энергию в виде тепла. Обязательно используйте радиатор, соответствующий расчетной мощности рассеивания, чтобы избежать теплового отключения или разрушения корпуса.</p>
+</blockquote>
+
+<div class="poll-widget" id="poll-85e7ff2e"><div class="poll-widget-question">📊 Какой тип нагрузки вы планируете запитывать?</div><div class="poll-widget-option" data-poll="85e7ff2e" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Мощные светодиоды</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="85e7ff2e" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Аккумуляторы (Ni-Cd, Li-Ion)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="85e7ff2e" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Тестирование резисторов</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="85e7ff2e" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Прочее оборудование</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</h2>
+<p>Ключевым элементом схемы является резистор, номинал которого определяет выходной ток. Для получения точного значения необходимо воспользоваться базовой формулой, где напряжение опорного источника делится на сопротивление. Например, если вам нужен ток в 350 мА (0,35 А) для питания Cree LED, расчет будет выглядеть так: <code>R = 1.25 / 0.35 ≈ 3.57 Ом</code>. В стандартном ряду номиналов ближайшим значением является 3,6 Ом.</p>
+<p>Однако расчет не заканчивается выбором номинала. Критически важно определить необходимую <strong>мощность рассеивания</strong> резистора. Поскольку на нем постоянно падает 1,25 В, мощность будет равна <code>P = 1.25 * I</code>. Для тока 0,35 А мощность составит около 0,44 Вт. Использовать резистор на 0,25 Вт в данном случае категорически нельзя, он перегреется и сгорит. Рекомендуется брать запас по мощности не менее двух раз, то есть использовать деталь на 1 Вт.</p>
+<p>Для получения более точных значений тока, если стандартные номиналы не подходят, можно использовать проволочные резисторы или параллельное соединение нескольких деталей. Это позволит снизить тепловую нагрузку на каждый отдельный элемент и повысить надежность всей системы. Не пренебрегайте точностью расчета, так как даже небольшое отклонение в сопротивлении может привести к изменению яркости светодиода или сокращению срока его службы.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка параметров схемы перед включением</h4><label class="check-item"><input type="checkbox"><span>Вычислить номинал резистора по току</span></label><label class="check-item"><input type="checkbox"><span>Подобрать резистор с запасом по мощности</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии радиатора</span></label><label class="check-item"><input type="checkbox"><span>Проверить полярность подключения микросхемы</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="схемы-подключения-для-светодиодов-и-аккумуляторов">Схемы подключения для светодиодов и аккумуляторов</h2>
+<p>Наиболее популярное применение стабилизатора тока — питание мощных светодиодов. В этой схеме светодиод подключается последовательно с микросхемой и резистором. <em>LM317</em> гарантирует, что даже при скачках напряжения в бортовой сети автомобиля или при разрядке аккумулятора, ток через кристалл не превысит заданного значения. Это предотвращает деградацию люминофора и перегрев чипа.</p>
+<p>Вторая сфера применения — зарядка никель-кадмиевых (Ni-Cd) и никель-металл-гидридных (Ni-MH) аккумуляторов. Здесь схема работает в режиме постоянного тока до момента достижения напряжения заряда. </p>
+<p>Для повышения стабильности работы можно добавить конденсаторы на вход и выход микросхемы. Входной конденсатор сглаживает пульсации от источника питания, а выходной предотвращает самовозбуждение схемы на высоких частотах. Обычно используют электролитические конденсаторы емкостью от 10 до 100 мкФ, параллельно с которыми ставят керамические конденсаторы на 0,1 мкФ для фильтрации высокочастотных помех.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При использовании схемы для зарядки аккумуляторов обязательно отслеживайте напряжение на клеммах. Микросхема не имеет встроенной защиты от перенапряжения на выходе, поэтому вы можете перезарядить аккумулятор, если не отключите источник питания вручную или не добавите внешний контроллер.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Можно ли подключить несколько светодиодов параллельно?</summary><div class="faq-answer"><p>При подключении нескольких светодиодов параллельно через один стабилизатор тока возникает проблема неравномерного распределения тока из-за разброса параметров p-n переходов. Лучшим решением является использование отдельного стабилизатора или балластного резистора для каждой ветки.</p></div></details>
+
+<h2 id="тепловой-режим-и-требования-к-охлаждению">Тепловой режим и требования к охлаждению</h2>
+<p>Поскольку <strong>LM317</strong> является линейным стабилизатором, вся разница между входным и выходным напряжением, умноженная на ток, превращается в тепло. Формула расчета мощности потерь выглядит так: <code>P = (Vin - Vout) * I</code>. Если вы используете источник 12 В для питания светодиода с падением 3 В при токе 1 А, на микросхеме будет выделяться 9 Вт тепла. Без радиатора микросхема выйдет из строя за считанные секунды.</p>
+<p>Выбор радиатора зависит от теплового сопротивления корпуса и требуемого перепада температур. Для мощных режимов работы (более 0,5 Вт рассеивания) необходимо использовать алюминиевые радиаторы с ребрами. Паста между корпусом микросхемы и радиатором должна быть качественной и наноситься тонким слоем для эффективного теплоотвода. Иногда даже при наличии радиатора требуется принудительное охлаждение вентилятором.</p>
+<p>Микросхема обладает встроенной защитой от перегрева, которая отключает устройство при достижении критической температуры (обычно около 125-150°C). Однако постоянная работа на грани отключения сокращает срок службы элемента и может привести к нестабильной работе схемы. Вам следует проектировать систему охлаждения с запасом, чтобы температура корпуса не превышала 60-70 градусов Цельсия при длительной эксплуатации.</p>
+
+<table>
+ <thead>
+  <tr>
+   <th>Ток (А)</th>
+   <th>Сопротивление (Ом)</th>
+   <th>Мощность резистора (Вт)</th>
+   <th>Рекомендуемый корпус</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>0,1 A (100 мА)</td>
+   <td>12,5 Ом</td>
+   <td>0,125 Вт</td>
+   <td>0,25 Вт / 0,5 Вт</td>
+  </tr>
+  <tr>
+   <td>0,35 A (350 мА)</td>
+   <td>3,6 Ом</td>
+   <td>0,44 Вт</td>
+   <td>1 Вт</td>
+  </tr>
+  <tr>
+   <td>0,7 A (700 мА)</td>
+   <td>1,8 Ом</td>
+   <td>0,875 Вт</td>
+   <td>2 Вт</td>
+  </tr>
+  <tr>
+   <td>1,5 A (1500 мА)</td>
+   <td>0,82 Ом</td>
+   <td>1,87 Вт</td>
+   <td>3 Вт и более</td>
+  </tr>
+ </tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для получения точного сопротивления при высоких токах используйте резисторы с допуском 1% или 0,5%, так как стандартные резисторы с допуском 5% могут дать значительное отклонение в выходном токе.</p></div>
+
+<h2 id="ограничения-и-защита-схемы">Ограничения и защита схемы</h2>
+<p>Несмотря на простоту и надежность, у схемы на <em>LM317</em> есть ограничения. Максимальный ток, который может выдержать стандартный корпус TO-220, составляет 1,5 А, а максимальное входное напряжение — 40 В. Превышение этих значений требует использования более мощных аналогов или каскадного включения. Также важно учитывать падение напряжения на диоде, если он включается в цепь для защиты от переполюсовки.</p>
+<p>Для защиты от короткого замыкания на выходе микросхема также имеет встроенную защиту, но она рассчитана на кратковременные воздействия. Длительное короткое замыкание может привести к перегреву даже при наличии радиатора, так как всё входное напряжение будет падать на кристалле. Рекомендуется устанавливать предохранитель в цепь питания или использовать плавкий резистор в качестве токоограничителя на входе.</p>
+<p>Существуют также варианты микросхем с индексом "L" (<em>LM317L</em>), которые рассчитаны на меньшие токи (до 100 мА) и имеют другой корпус. Не путайте их с мощной версией, так как попытка пропустить через них высокий ток приведет к мгновенному выходу из строя. Всегда проверяйте маркировку и даташит перед сборкой устройства.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При работе с высоковольтными источниками питания (ближе к 40 В) соблюдайте правила электробезопасности. Даже при отключенном питании конденсаторы могут долго хранить заряд, который способен нанести травму. Разряжайте цепи через резистор перед касанием контактов.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главная задача при проектировании схемы на LM317 — обеспечение эффективного теплоотвода, так как микросхема работает в режиме рассеивания избыточной энергии в виде тепла.</p></div>
+
+<h2 id="нюансы-намотки-и-монтажа-токозадающего-резистора">Нюансы намотки и монтажа токозадающего резистора</h2>
+<p>При больших токах (более 0,5 А) обычные угольные или металлопленочные резисторы могут вести себя непредсказуемо из-за изменения сопротивления при нагреве. Для таких режимов лучше использовать проволочные резисторы или специальные токоизмерительные шунты. Они имеют низкий ТКС (температурный коэффициент сопротивления) и сохраняют свои характеристики при значительном нагреве.</p>
+<p>Монтаж резистора должен обеспечивать хороший теплоотвод. Если используется проволочный резистор в керамическом корпусе, его можно закрепить непосредственно на радиаторе микросхемы или на отдельном радиаторе. Это снизит общую температуру в корпусе устройства и повысит стабильность выходного тока. Избегайте плотной намотки проводов вокруг резистора, чтобы не создавать зону локального перегрева.</p>
+<p>Для точной настройки тока можно использовать комбинацию постоянного и подстроечного резистора. Однако помните, что подстроечные резисторы часто имеют низкую надежность и могут "плыть" со временем под воздействием вибрации и температуры. После настройки лучше зафиксировать подвижный контакт лаком или заменить подстроечник на постоянный резистор нужного номинала.</p>
+
+<details class="faq-item"><summary>Что будет если использовать резистор с большим допуском?</summary><div class="faq-answer"><p>Если использовать резистор с допуском 5% вместо 1%, фактический ток может отличаться от расчетного на 5-10%. Для обычных осветительных светодиодов это не критично, но для лазерных диодов или точных измерительных приборов это недопустимо.</p></div></details>
+
+<h2 id="частые-вопросы-faq">Частые вопросы (FAQ)</h2>
+<details>
+ <summary>Можно ли использовать LM317 для зарядки литий-ионных аккумуляторов?</summary>
+ <p>LM317 может использоваться для предварительного заряда (режим постоянного тока), но она не обеспечивает фазу стабилизации напряжения (CV), которая критически важна для полной и безопасной зарядки Li-Ion. Без контроля верхнего порога напряжения (обычно 4,2 В на элемент) существует риск перезаряда и возгорания. Рекомендуется использовать специализированные контроллеры зарядки.</p>
+</details>
+<details>
+ <summary>Как уменьшить падение напряжения на микросхеме?</summary>
+ <p>Падение напряжения (dropout) невозможно снизить ниже паспортного значения (около 3 В для обычных LM317). Однако вы можете уменьшить общее тепловыделение, максимально приблизив входное напряжение к требуемому напряжению на нагрузке. Используйте блоки питания с регулируемым выходом, устанавливая напряжение всего на 3-4 вольта выше, чем нужно нагрузке.</p>
+</details>
+<details>
+ <summary>Какой резистор лучше использовать: SMD или выводной?</summary>
+ <p>Для токов до 100 мА можно использовать мощные SMD-резисторы (корпус 2512 или 3928). Для токов выше 0,5 А выводные резисторы в керамическом или проволочном исполнении предпочтительнее, так как они лучше рассеивают тепло и имеют более низкий паразитный индуктивный компонент, что важно для стабильности.</p>
+</details>
+<details>
+ <summary>Нужен ли конденсатор на выходе для стабилизации тока?</summary>
+ <p>Конденсатор на выходе не влияет на значение постоянного тока, но он необходим для предотвращения самовозбуждения микросхемы и улучшения переходных характеристик при изменении нагрузки. Обычно используют керамический конденсатор 0,1 мкФ параллельно с электролитическим 10-100 мкФ, чтобы обеспечить стабильность работы на всех частотах.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-возможности-микросхемы-lm317">Введение в возможности микросхемы LM317</a></li><li><a href="#принцип-работы-и-базовая-топология-схемы">Принцип работы и базовая топология схемы</a></li><li><a href="#расчет-номинала-токозадающего-резистора">Расчет номинала токозадающего резистора</a></li><li><a href="#схемы-подключения-для-светодиодов-и-аккумуляторов">Схемы подключения для светодиодов и аккумуляторов</a></li><li><a href="#тепловой-режим-и-требования-к-охлаждению">Тепловой режим и требования к охлаждению</a></li><li><a href="#ограничения-и-защита-схемы">Ограничения и защита схемы</a></li><li><a href="#нюансы-намотки-и-монтажа-токозадающего-резистора">Нюансы намотки и монтажа токозадающего резистора</a></li><li><a href="#частые-вопросы-faq">Частые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/ry/rybalka-s-ekholotom-s-berega-letom-video.html" class="related-card">Рыбалка с берега летом: видео-гайд по выбору и использованию эхолота</a></li><li><a href="/articles/p/po/ponizhayushchij-transformator-s-12-na-6-volt.html" class="related-card">Понижающий трансформатор 12 на 6 вольт: выбор, подключение и применение</a></li><li><a href="/articles/s/st/stabilizator-napryazheniya-na-polevom-tranzistore-skhema.html" class="related-card">Схема стабилизатора напряжения на полевом транзисторе: расчет и сборка</a></li><li><a href="/articles/e/el/elektricheskij-bur-dlya-rybalki.html" class="related-card">Электрический бур для рыбалки: выбор, использование и рейтинг моделей</a></li><li><a href="/articles/r/re/regulyator-toka-na-lm317-skhema.html" class="related-card">Регулятор тока на LM317: схемы, расчеты и практика сборки</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/ry/rybalka-s-ekholotom-s-berega-letom-video.html" class="related-bottom-card"><span class="related-bottom-title">Рыбалка с берега летом: видео-гайд по выбору и использованию эхолота</span><span class="related-bottom-desc">Полный видео-гид по рыбалке с эхолотом с берега в летний сезон. Советы по выбору модели, настройке ч</span></a><a href="/articles/p/po/ponizhayushchij-transformator-s-12-na-6-volt.html" class="related-bottom-card"><span class="related-bottom-title">Понижающий трансформатор 12 на 6 вольт: выбор, подключение и применение</span><span class="related-bottom-desc">Подробный гид по выбору и подключению понижающего трансформатора с 12 на 6 вольт. Характеристики, ра</span></a><a href="/articles/s/st/stabilizator-napryazheniya-na-polevom-tranzistore-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Схема стабилизатора напряжения на полевом транзисторе: расчет и сборка</span><span class="related-bottom-desc">Подробное руководство по проектированию линейного стабилизатора на МОП-транзисторе. Расчеты, выбор к</span></a><a href="/articles/e/el/elektricheskij-bur-dlya-rybalki.html" class="related-bottom-card"><span class="related-bottom-title">Электрический бур для рыбалки: выбор, использование и рейтинг моделей</span><span class="related-bottom-desc">Полный гайд по выбору электрического бура для зимней ловли. Сравнение моделей, обзор аккумуляторов, </span></a><a href="/articles/r/re/regulyator-toka-na-lm317-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Регулятор тока на LM317: схемы, расчеты и практика сборки</span><span class="related-bottom-desc">Полное руководство по созданию стабилизатора тока на микросхеме LM317. Расчеты резисторов, схемы под</span></a><a href="/articles/k/ka/kak-svyazat-rybolovnuyu-kosynku.html" class="related-bottom-card"><span class="related-bottom-title">Как связать рыболовную косынку: схема, материалы и пошаговая инструкция</span><span class="related-bottom-desc">Полный гайд по вязанию рыболовных косынок для зимней ловли. Разбор схем, подбор пряжи и креплений дл</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

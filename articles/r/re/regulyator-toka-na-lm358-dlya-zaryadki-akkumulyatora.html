@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Регулятор тока на LM358: схема зарядного устройства для аккумулятора — АвтоСлесарь</title>
+    <meta name="description" content="Пошаговая инструкция по сборке регулятора тока на базе микросхемы LM358. Расчет резисторов, настройка ограничения тока и защита АКБ от перезаряда своими руками.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/r/re/regulyator-toka-na-lm358-dlya-zaryadki-akkumulyatora.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Регулятор тока на LM358: схема зарядного устройства для аккумулятора">
+    <meta property="og:description" content="Пошаговая инструкция по сборке регулятора тока на базе микросхемы LM358. Расчет резисторов, настройка ограничения тока и защита АКБ от перезаряда своими руками.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Регулятор тока на LM358: схема зарядного устройства для аккумулятора</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Создание регулятора тока на базе LM358 для безопасной зарядки аккумулятора</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-принципы-стабилизации-зарядного-тока">Введение в принципы стабилизации зарядного тока</a></li><li><a href="#принцип-работы-схемы-и-выбор-компонентов">Принцип работы схемы и выбор компонентов</a></li><li><a href="#расчет-токового-шунта-и-настройка-ограничения">Расчет токового шунта и настройка ограничения</a></li><li><a href="#монтаж-и-функциональные-особенности-схемы">Монтаж и функциональные особенности схемы</a></li><li><a href="#безопасность-и-защита-аккумулятора">Безопасность и защита аккумулятора</a></li><li><a href="#сравнительная-таблица-параметров-и-рекомендации">Сравнительная таблица параметров и рекомендации</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><h2 id="введение-в-принципы-стабилизации-зарядного-тока">Введение в принципы стабилизации зарядного тока</h2>
+<p>Зарядка автомобильных или свинцово-кислотных аккумуляторов требует строгого контроля двух параметров: напряжения и силы тока. Если напряжение обеспечивает процесс восполнения энергии, то именно <strong>сила тока</strong> определяет скорость и безопасность этого процесса. Простое подключение батареи к блоку питания без ограничения тока может привести к перегреву, выкипанию электролита и даже взрыву, особенно если АКБ в глубоком разряде.</p>
+<p>Для решения этой проблемы радиолюбители давно используют специализированные микросхемы, среди которых выделяется <em>LM358</em>. Этот сдвоенный операционный усилитель отличается высокой доступностью, низкой стоимостью и отличными характеристиками для работы в цепях питания. <strong>Регулятор тока на LM358</strong> позволяет создать надежное устройство, которое автоматически поддерживает заданный уровень силы тока, независимо от того, насколько разряжена батарея в данный момент.</p>
+<p>В отличие от простых схем с использованием биполярных транзисторов, схема на операционном усилителе обеспечивает более точное ограничение и плавную регулировку. Вам не придется постоянно следить за стрелкой амперметра; устройство само подстроит выходной ток, пока напряжение на аккумуляторе не достигнет порогового значения, после чего режим работы изменится. Это особенно актуально для тех, кто занимается обслуживанием техники и хочет автоматизировать процесс восстановления аккумуляторов.</p>
+
+<h2 id="принцип-работы-схемы-и-выбор-компонентов">Принцип работы схемы и выбор компонентов</h2>
+<p>Основой схемы является работа <em>LM358</em> в режиме компаратора или усилителя ошибки. Суть метода заключается в том, что ток заряда протекает через мощный <strong>шунтирующий резистор</strong> с низким сопротивлением. На этом резисторе падает напряжение, которое прямо пропорционально силе тока. Операционный усилитель сравнивает это падение напряжения с эталонным значением, заданным переменным резистором. Если ток превышает установленный порог, усилитель снижает напряжение на базе или затворе ключевого элемента, ограничивая ток.</p>
+<p>Для сборки такого устройства вам понадобятся не только сама микросхема, но и правильно подобранные силовые элементы. В качестве силового ключа часто используют мощные полевые транзисторы, такие как <em>IRFZ44N</em> или биполярные транзисторы серии КТ819. Без должного отвода тепла транзистор может выйти из строя за считанные минуты при работе с сильно разряженным аккумулятором.</p>
+<p>Кроме того, в схеме используется цепь обратной связи по напряжению. Когда аккумулятор почти заряжен и его напряжение приближается к 14.4–14.8 В, схема должна переключиться из режима ограничения тока в режим стабилизации напряжения. В некоторых реализациях на базе LM358 это достигается за счет второго операционного усилителя внутри корпуса микросхемы, что делает конструкцию максимально компактной.</p>
+<blockquote>⚠️ Внимание: Перед началом монтажа обязательно проверьте полярность подключения микросхемы <em>LM358</em>. Перепутав выводы питания (VCC и GND), вы мгновенно выведете компонент из строя, и он не подлежит восстановлению.</blockquote>
+
+<div class="poll-widget" id="poll-52a64063"><div class="poll-widget-question">📊 Какой тип аккумулятора вы планируете заряжать?</div><div class="poll-widget-option" data-poll="52a64063" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">Свинцово-кислотный (автомобильный)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="52a64063" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">Гелевый (AGM)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="52a64063" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Литий-ионный (Li-Ion)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="52a64063" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Щелочной (Ni-Cd)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="расчет-токового-шунта-и-настройка-ограничения">Расчет токового шунта и настройка ограничения</h2>
+<p>Самый критичный элемент схемы — это <strong>шунтирующий резистор</strong>. Он определяет точность измерения тока. Для автомобильных аккумуляторов, где токи заряда могут достигать 5–10 ампер, сопротивление шунта обычно выбирают в диапазоне от 0.1 до 0.5 Ом. Мощность этого резистора должна быть рассчитана с запасом, так как он постоянно рассеивает тепло. Формула расчета мощности проста: <code>P = I² × R</code>, где I — максимальный ток заряда, а R — сопротивление шунта.</p>
+<p>Для точной настройки порога срабатывания используется прецизионный <strong>переменный резистор</strong>, который задает опорное напряжение для входа усилителя. Если вы хотите заряжать аккумулятор током 2 Ампера, напряжение на шунте должно быть строго определено. Например, при сопротивлении шунта 0.1 Ом и токе 2 А, падение напряжения составит всего 0.2 В. Операционный усилитель будет стремиться уравнять это напряжение с опорным.</p>
+<p>Важно учитывать, что не все резисторы подходят для таких целей. Обычные углеродные резисторы могут менять свое сопротивление при нагреве, что приведет к нестабильности работы устройства. Используйте проволочные или металлопленочные резисторы, которые обладают низким ТКС (температурным коэффициентом сопротивления). Это обеспечит стабильность <strong>тока заряда</strong> даже при длительной работе схемы.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка компонентов перед пайкой</h4><label class="check-item"><input type="checkbox"><span>Проверить сопротивление шунта мультиметром</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в исправности LM358</span></label><label class="check-item"><input type="checkbox"><span>Подобрать радиатор для силового транзистора</span></label><label class="check-item"><input type="checkbox"><span>Проверить номиналы варикапов и конденсаторов</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="монтаж-и-функциональные-особенности-схемы">Монтаж и функциональные особенности схемы</h2>
+<p>Сборка схемы требует аккуратности, так как на плате присутствуют как слаботочные сигнальные цепи операционного усилителя, так и мощные силовые линии. Рекомендуется использовать односторонний стеклотекстолит или макетную плату с широкими дорожками для силовых цепей. Ширина дорожек должна быть достаточной для прохождения тока без перегрева; для токов до 10 А лучше использовать перемычки из многожильного провода, если дорожки слишком узкие.</p>
+<p>Особое внимание уделите цепи обратной связи. В идеале схема должна иметь два режима работы: постоянный ток (CC) и постоянное напряжение (CV). В режиме CC схема ограничивает ток, поддерживая его на заданном уровне, пока напряжение на аккумуляторе растет. Как только напряжение достигает установленного максимума, схема переключается в режим CV, ограничивая рост напряжения, а ток при этом плавно падает до нуля.</p>
+<p>Для удобства эксплуатации на лицевую панель устройства выводят амперметр и вольтметр. Это позволяет визуально контролировать процесс. Некоторые разработчики добавляют светодиодную индикацию: один светодиод горит при режиме ограничения тока, второй загорается, когда зарядка завершена и ток упал до минимума. Такой подход значительно упрощает <strong>эксплуатацию зарядного устройства</strong>.</p>
+<blockquote>⚠️ Внимание: При пайке мощных транзисторов используйте теплоотвод. Перегрев паяльника может повредить кристалл транзистора, даже если он не включен. Работайте быстро и используйте паяльную пасту для улучшения теплопередачи.</blockquote>
+
+<details class="faq-item"><summary>Почему не стоит использовать дешевые китайские модули?</summary><div class="faq-answer"><p>Дешевые модули часто имеют заниженные номиналы компонентов. Шунты могут иметь реальное сопротивление в 2-3 раза выше заявленного, что приведет к перегреву и нестабильности. Кроме того, отсутствие качественной разводки печатной платы создает паразитные помехи, влияющие на работу операционного усилителя.</p></div></details>
+
+<h2 id="безопасность-и-защита-аккумулятора">Безопасность и защита аккумулятора</h2>
+<p>Главная задача регулятора тока — не просто зарядить батарею, а сделать это безопасно. Свинцово-кислотные аккумуляторы крайне чувствительны к перезаряду. Если ток не будет снижен по мере роста напряжения, электролит начнет кипеть, выделяя водород. Это не только вредит батарее, но и создает риск взрыва в закрытом помещении. Схема на <em>LM358</em> эффективно предотвращает это явление, автоматически снижая ток.</p>
+<p>Кроме того, важно защитить устройство от короткого замыкания. Если вы случайно перепутаете полярность подключения аккумулятора, схема должна сработать и не сгореть. Для этого часто добавляют предохранитель на входе питания и диод защиты от обратного подключения. Также полезной функцией является защита от перегрева силового транзистора, которая может отключать зарядку при достижении критической температуры.</p>
+<p>Не забывайте, что даже самая совершенная схема нуждается в периодическом контроле. При эксплуатации в условиях повышенной влажности или запыленности контакты могут окисляться, что приведет к ложным срабатываниям или нестабильной работе. <strong>Регулярная проверка</strong> соединений и чистка радиаторов продлят жизнь вашему устройству.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для улучшения теплоотвода от шунтирующего резистора прикрепите его к корпусу устройства через изолирующую прокладку. Это предотвратит перегрев других компонентов и повысит стабильность измерений.</p></div>
+
+<h2 id="сравнительная-таблица-параметров-и-рекомендации">Сравнительная таблица параметров и рекомендации</h2>
+<p>Для наглядности рассмотрим основные параметры, которые влияют на выбор компонентов для схемы регулятора. Правильный подбор элементов гарантирует, что устройство будет работать надежно и долго. Ниже приведена таблица с рекомендуемыми значениями для зарядки автомобильных аккумуляторов.</p>
+
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Рекомендуемое значение</th>
+<th>Минимальная мощность</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Шунтирующий резистор</td>
+<td>0.1 Ом</td>
+<td>5 Вт</td>
+<td>Проволочный, для точных измерений</td>
+</tr>
+<tr>
+<td>Переменный резистор</td>
+<td>10 кОм (линейный)</td>
+<td>0.25 Вт</td>
+<td>Для плавной настройки тока</td>
+</tr>
+<tr>
+<td>Силовой транзистор</td>
+<td>IRFZ44N</td>
+<td>49 Вт (при 25°C)</td>
+<td>Обязателен радиатор</td>
+</tr>
+<tr>
+<td>Операционный усилитель</td>
+<td>LM358</td>
+<td>Микросхема</td>
+<td>Работает от 3 до 32 В</td>
+</tr>
+<tr>
+<td>Стабилизатор питания</td>
+<td>78L05</td>
+<td>0.1 Вт</td>
+<td>Для питания mикросхемы 5В</td>
+</tr>
+</tbody>
+</table>
+
+<p>Использование качественных компонентов напрямую влияет на точность работы устройства. Дешевые аналоги могут иметь разброс параметров, что приведет к тому, что реальный ток будет отличаться от выставленного. Особенно это критично при зарядке малых аккумуляторов, где ошибка в 0.5 А может быть фатальной.</p>
+<blockquote>⚠️ Внимание: Внимательно проверяйте маркировку резисторов перед установкой. Визуальное сходство цветовых колец может ввести в заблуждение, поэтому всегда измеряйте сопротивление мультиметром перед пайкой.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Точность работы регулятора тока зависит от стабильности напряжения питания микросхемы LM358 и качества шунтирующего резистора. Используйте стабилизатор напряжения для питания операционного усилителя.</p></div>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+<details>
+<summary>Можно ли заряжать литиевые аккумуляторы этой схемой?</summary>
+<p>Нет, данная схема оптимизирована для свинцово-кислотных аккумуляторов. Для литиевых батарей (Li-Ion, Li-Po) требуется сложная схема балансировки и точное соблюдение профиля заряда CC/CV с другими пороговыми значениями напряжения. Использование неправильной схемы может привести к возгоранию литиевого элемента.</p>
+</details>
+<details>
+<summary>Как увеличить максимальный ток заряда до 15 А?</summary>
+<p>Для токов выше 10 А одного силового транзистора может быть недостаточно. Рекомендуется использовать несколько параллельно включенных транзисторов или заменить их на мощный IGBT-модуль. Также необходимо увеличить мощность шунтирующего резистора и улучшить систему охлаждения радиаторов.</p>
+</details>
+<details>
+<summary>Что делать, если схема не ограничивает ток?</summary>
+<p>Проверьте правильность подключения шунта и переменного резистора. Убедитесь, что операционный усилитель получает питание и не перегревается. Часто проблема кроется в плохом контакте на плате или в неисправности силового транзистора, который мог выйти из строя при первой же попытке подключения разряженной батареи.</p>
+</details>
+<details>
+<summary>Нужен ли отдельный источник питания для схемы?</summary>
+<p>Да, схема требует стабильного напряжения питания для работы операционного усилителя. Обычно используют стабилизатор 78L05, который питается от общего входа, но лучше, если это будет отдельный источник, чтобы помехи от силового ключа не влияли на работу логики управления.</p>
+</details>
+<details>
+<summary>Можно ли использовать LM324 вместо LM358?</summary>
+<p>Да, микросхема <em>LM324</em> содержит четыре операционных усилителя и полностью совместима по электрическим характеристикам с LM358. Вы можете использовать её, если вам нужно реализовать более сложную схему с дополнительными функциями, например, индикацией или таймером.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-принципы-стабилизации-зарядного-тока">Введение в принципы стабилизации зарядного тока</a></li><li><a href="#принцип-работы-схемы-и-выбор-компонентов">Принцип работы схемы и выбор компонентов</a></li><li><a href="#расчет-токового-шунта-и-настройка-ограничения">Расчет токового шунта и настройка ограничения</a></li><li><a href="#монтаж-и-функциональные-особенности-схемы">Монтаж и функциональные особенности схемы</a></li><li><a href="#безопасность-и-защита-аккумулятора">Безопасность и защита аккумулятора</a></li><li><a href="#сравнительная-таблица-параметров-и-рекомендации">Сравнительная таблица параметров и рекомендации</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/m/mo/moshchnaya-elektronnaya-nagruzka-svoimi-rukami.html" class="related-card">Мощная электронная нагрузка своими руками: полная инструкция</a></li><li><a href="/articles/s/sk/skipnul-chto-eto-znachit.html" class="related-card">Скипнул что это значит: сленг в ремонте, авто и интернете</a></li><li><a href="/articles/o/ot/ot-sebya-ne-ubezhish-eto.html" class="related-card">Психология самопринятия: почему от себя не убежишь в автомобиле и жизни</a></li><li><a href="/articles/u/us/ustanovka-pruzhin-valvetronika-ep6.html" class="related-card">Установка пружин вальветроника EP6: Цена, сроки и нюансы замены</a></li><li><a href="/articles/p/pr/prostoj-stabilizator-napryazheniya-skhema.html" class="related-card">Простой стабилизатор напряжения: схема и сборка своими руками</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/m/mo/moshchnaya-elektronnaya-nagruzka-svoimi-rukami.html" class="related-bottom-card"><span class="related-bottom-title">Мощная электронная нагрузка своими руками: полная инструкция</span><span class="related-bottom-desc">Как собрать programmable electronic load для тестирования блоков питания. Схема, выбор компонентов, </span></a><a href="/articles/s/sk/skipnul-chto-eto-znachit.html" class="related-bottom-card"><span class="related-bottom-title">Скипнул что это значит: сленг в ремонте, авто и интернете</span><span class="related-bottom-desc">Разбираем значение слова «скипнул» в разных контекстах: от пропуска шагов в инструкции до автомобиль</span></a><a href="/articles/o/ot/ot-sebya-ne-ubezhish-eto.html" class="related-bottom-card"><span class="related-bottom-title">Психология самопринятия: почему от себя не убежишь в автомобиле и жизни</span><span class="related-bottom-desc">Разбираем фразу «от себя не убежишь это». Как внутреннее состояние влияет на вождение, выбор автозап</span></a><a href="/articles/u/us/ustanovka-pruzhin-valvetronika-ep6.html" class="related-bottom-card"><span class="related-bottom-title">Установка пружин вальветроника EP6: Цена, сроки и нюансы замены</span><span class="related-bottom-desc">Полное руководство по замене пружин в системе Valvetronic на двигателях EP6. Разбор симптомов износа</span></a><a href="/articles/p/pr/prostoj-stabilizator-napryazheniya-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Простой стабилизатор напряжения: схема и сборка своими руками</span><span class="related-bottom-desc">Как собрать простой стабилизатор напряжения своими руками. Подробные схемы, выбор трансформатора, на</span></a><a href="/articles/r/re/regulirovka-zazhiganiya-zil-130.html" class="related-bottom-card"><span class="related-bottom-title">Регулировка зажигания ЗИЛ 130: пошаговая инструкция и нюансы</span><span class="related-bottom-desc">Полное руководство по установке опережения зажигания на моторе ЗИЛ 130. Как настроить трамблер, пров</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

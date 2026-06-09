@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚗</text></svg>">
+    <title>Источник тока на полевом транзисторе: схемы и расчет — АвтоСлесарь</title>
+    <meta name="description" content="Подробный разбор схем источника тока на полевом транзисторе. Расчет токов, подбор резисторов, особенности работы с&gt;JFET и MOSFET. Практические советы.">
+    <link rel="canonical" href="https://avto-slesar.vercel.app/articles/i/is/istochnik-toka-na-polevom-tranzistore-skhema.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Источник тока на полевом транзисторе: схемы и расчет">
+    <meta property="og:description" content="Подробный разбор схем источника тока на полевом транзисторе. Расчет токов, подбор резисторов, особенности работы с&gt;JFET и MOSFET. Практические советы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1781020886">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚗</span>
+                <span>АвтоСлесарь</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/podveska-i-khodovaya/" class="nav-link">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="nav-link">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="nav-link">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="nav-link">⚡ Электроника и стабилизаторы</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/podveska-i-khodovaya/" class="dropdown-item">🔧 Подвеска и ходовая</a>
+<a href="/category/rulevoe-upravlenie/" class="dropdown-item">🔄 Рулевое управление</a>
+<a href="/category/stupitsy-i-podshipniki/" class="dropdown-item">⚙️ Ступицы и подшипники</a>
+<a href="/category/elektronika-i-stabilizatory/" class="dropdown-item">⚡ Электроника и стабилизаторы</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/elektronika-i-stabilizatory/">Электроника и стабилизаторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Источник тока на полевом транзисторе: схемы и расчет</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Источник тока на полевом транзисторе: схемы и расчет</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-и-режим-насыщения">Принцип работы и режим насыщения</a></li><li><a href="#классические-схемы-на-jfet">Классические схемы на JFET</a></li><li><a href="#использование-mosfet-в-роли-источника">Использование MOSFET в роли источника</a></li><li><a href="#расчет-и-подбор-компонентов">Расчет и подбор компонентов</a></li><li><a href="#сложные-схемы-и-источники-с-высокой-стабильностью">Сложные схемы и источники с высокой стабильностью</a></li><li><a href="#типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</a></li><li><a href="#практические-рекомендации-и-выводы">Практические рекомендации и выводы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>В современной аналоговой электронике создание стабильного источника тока является одной из фундаментальных задач. <strong>Источник тока на полевом транзисторе</strong> часто выступает ключевым элементом в усилителях звука, датчиках и прецизионных измерительных приборах. В отличие от простых резистивных нагрузок, активная нагрузка позволяет значительно повысить коэффициент усиления и улучшить температурную стабильность схемы.</p>
+
+<p>Основная идея заключается в использовании свойства полевого транзистора работать в режиме насыщения, где ток стока практически не зависит от напряжения на нем. Вы можете использовать как <em>JFET</em> (канальные транзисторы со встроенным каналом), так и <em>MOSFET</em> (транзисторы с изолированным затвором), однако подходы к расчету и реализации будут иметь свои нюансы. Понимание физики процесса поможет вам создать схему, которая будет работать предсказуемо даже при изменении температуры окружающей среды.</p>
+
+<h2 id="принцип-работы-и-режим-насыщения">Принцип работы и режим насыщения</h2>
+
+<p>Чтобы схема работала как идеальный источник тока, транзистор должен находиться в режиме насыщения (для <em>MOSFET</em>) или в области насыщения стока (для <em>JFET</em>). В этом состоянии изменение напряжения на стоке вызывает лишь незначительное изменение тока, что и обеспечивает высокий дифференциальный выходной <strong>импеданс</strong>. Ключевым параметром здесь является напряжение на затворе и резистор, включенный в цепь истока.</p>
+
+<p>Если вы посмотрите на простейшую схему, то увидите, что затвор часто заземлен (для <em>JFET</em>) или смещается через делитель (для <em>MOSFET</em>). Напряжение на истоке, создаваемое протекающим током, формирует обратное смещение на переходе затвор-исток. Именно этот механизм саморегулирования стабилизирует ток. Вам необходимо точно подобрать номинал резистора истока, чтобы задать нужную рабочую точку.</p>
+
+<p>Особенно важно учитывать <strong>пороговое напряжение</strong> транзистора, которое может сильно разниться даже для деталей одной партии. Это означает, что вы не можете полагаться на типовые значения из даташита без предварительного измерения или подбора. Нестабильность параметров — главный враг прецизионных источников.</p>
+
+<blockquote>
+<p>⚠️ Внимание! <strong>Температурный дрейф</strong> может изменить ток стока на 10-20% при нагреве транзистора до 100°C. Обязательно учитывайте это при проектировании схем для мощных усилителей.</p>
+</blockquote>
+
+<p>Для минимизации температурных влияний иногда используют дополнительные элементы компенсации. Например, терморезисторы или биполярные транзисторы в цепи смещения могут помочь стабилизировать режим при колебаниях температуры.</p>
+
+<h2 id="классические-схемы-на-jfet">Классические схемы на JFET</h2>
+
+<p>Самая распространенная и простая реализация — это схема на <em>JFET</em> (например, популярные модели <em>2N5457</em> или <em>J310</em>). В такой конфигурации затвор обычно соединяется с истоком через резистор или напрямую, а ток задается резистором в цепи истока. Эта схема называется "токовым зеркалом" в упрощенном виде, хотя чаще используется просто как источник тока для нагрузки.</p>
+
+<p>Формула для расчета тока в простейшем случае выглядит так: <code>I ≈ (Vgs(off) / Rs)</code>, где <em>Vgs(off)</em> — напряжение отсечки, а <em>Rs</em> — сопротивление истока. Однако, поскольку <em>Vgs(off)</em> имеет большой разброс, на практике часто используют переменный резистор для подстройки тока при изготовлении устройства. Вам придется поэкспериментировать с несколькими экземплярами транзистора, чтобы понять диапазон требуемых сопротивлений.</p>
+
+<ul>
+<li>🔍 <strong>Диапазон токов:</strong> от <code>1 мкА</code> до <code>100 мА</code> в зависимости от типа транзистора.</li>
+<li>🛠 <strong>Подбор деталей:</strong> используйте прецизионные резисторы с допуском 1%.</li>
+<li>🌡 <strong>Температурный коэффициент:</strong> JFET обычно имеют отрицательный ТКС в области высоких токов.</li>
+</ul>
+
+<p>Существует также схема с фиксированным смещением на затворе, которая позволяет задавать ток более точно, но требует дополнительного источника питания. Это усложняет конструкцию, но дает большую гибкость в настройке рабочей точки. Если вам нужна высокая стабильность без подстроечных резисторов, рассмотрите вариант с биполярным транзистором в цепи затвора.</p>
+
+<div class="poll-widget" id="poll-f0b4be4d"><div class="poll-widget-question">📊 Какой тип транзистора вы чаще используете в источниках тока?</div><div class="poll-widget-option" data-poll="f0b4be4d" data-idx="0" onclick="pbPollVote(this)"><span class="poll-widget-label">JFET (2N5457, J310)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="f0b4be4d" data-idx="1" onclick="pbPollVote(this)"><span class="poll-widget-label">MOSFET (IRF510, 2N7000)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="f0b4be4d" data-idx="2" onclick="pbPollVote(this)"><span class="poll-widget-label">Биполярные (как источник)</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div><div class="poll-widget-option" data-poll="f0b4be4d" data-idx="3" onclick="pbPollVote(this)"><span class="poll-widget-label">Комбинированные схемы</span><span class="poll-widget-bar"></span><span class="poll-widget-pct"></span></div></div>
+
+<h2 id="использование-mosfet-в-роли-источника">Использование MOSFET в роли источника</h2>
+
+<p>Транзисторы с изолированным затвором, или <em>MOSFET</em>, также отлично подходят для создания источников тока, особенно когда требуются большие токи или высокое входное <strong>сопротивление</strong>. В отличие от <em>JFET</em>, у которых затвор всегда открыт (или имеет обратный смещенный переход), у MOSFET затвор изолирован, что позволяет управлять током без протекания тока в цепь управления.</p>
+
+<p>Для создания источника тока на <em>MOSFET</em> часто используется схема с общим истоком и резистором обратной связи. Напряжение на резисторе истока сравнивается с опорным напряжением, подаваемым на затвор. Если вы используете <em>Enhancement Mode</em> (режим обогащения) транзисторы, вам обязательно потребуется напряжение на затворе выше порогового значения для открытия канала.</p>
+
+<p>Важным преимуществом является то, что современные <em>MOSFET</em> могут выдерживать огромные токи при правильном охлаждении. Однако их пороговое напряжение <code>Vth</code> может варьироваться от <code>1 В</code> до <code>4 В</code>, что делает простую схему с фиксированным смещением менее надежной. Вам придется использовать либо подстроечный резистор, либо активную схему управления.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед подачей питания на мощные MOSFET обязательно проверьте отсутствие короткого замыкания между стоком и истоком, так как статическое электричество может пробить затвор и сделать транзистор проводником.</p></div>
+
+<h2 id="расчет-и-подбор-компонентов">Расчет и подбор компонентов</h2>
+
+<p>При расчете параметров источника тока необходимо учитывать не только номиналы резисторов, но и рассеиваемую мощность. Транзистор в режиме насыщения работает как ограничитель тока, и падение напряжения на нем может быть значительным. Мощность, рассеиваемая на <strong>транзисторе</strong>, рассчитывается по формуле <code>P = Vds × Id</code>. Если этот параметр превысит максимально допустимое значение, компонент выйдет из строя.</p>
+
+<p>Ниже приведена таблица с примерными параметрами популярных транзисторов для использования в схемах источников тока:</p>
+
+<table>
+<thead>
+<tr>
+<th>Модель транзистора</th>
+<th>Тип</th>
+<th>Макс. ток (Id)</th>
+<th>Напряжение отсечки (Vgs off)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2N5457</td>
+<td>N-JFET</td>
+<td>10 мА</td>
+<td>-0.5 ... -6 В</td>
+</tr>
+<tr>
+<td>2N7000</td>
+<td>N-MOSFET</td>
+<td>200 мА</td>
+<td>0.8 ... 3 В</td>
+</tr>
+<tr>
+<td>IRF510</td>
+<td>N-MOSFET</td>
+<td>4 А</td>
+<td>1 ... 4 В</td>
+</tr>
+<tr>
+<td>J310</td>
+<td>N-JFET</td>
+<td>30 мА</td>
+<td>-1 ... -4 В</td>
+</tr>
+</tbody>
+</table>
+
+<p>При выборе резистора истока помните о его точности. Обычные резисторы с допуском 5% могут привести к тому, что ток будет отличаться от расчетного на 10% и более. Для прецизионных схем используйте резисторы с допуском <code>1%</code> или лучше. Также важно учитывать их температурный коэффициент сопротивления.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед запуском</h4><label class="check-item"><input type="checkbox"><span>Измерить напряжение отсечки тестовым методом</span></label><label class="check-item"><input type="checkbox"><span>Рассчитать мощность рассеяния на транзисторе</span></label><label class="check-item"><input type="checkbox"><span>Выбрать резистор с нужным допуском</span></label><label class="check-item"><input type="checkbox"><span>Проверить стабильность напряжения питания</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="сложные-схемы-и-источники-с-высокой-стабильностью">Сложные схемы и источники с высокой стабильностью</h2>
+
+<p>Для задач, где требуется высокая точность и независимость от температуры, используются сложные схемы с обратной связью. Часто в таких конструкциях комбинируют полевой транзистор с биполярным или операционным усилителем. Операционный усилитель <strong>сравнивает</strong> падение напряжения на резисторе с эталонным источником напряжения, управляя затвором транзистора.</p>
+
+<p>Такая схема позволяет компенсировать разброс параметров транзистора и температурные дрейфы. Вы получаете источник тока, который сохраняет свое значение с точностью до долей процента даже при изменении напряжения питания или температуры. Однако стоимость и сложность такой схемы значительно выше, чем у простого решения на одном транзисторе.</p>
+
+<p>Особое внимание следует уделить стабильности опорного напряжения. Если вы используете простой делитель напряжения в качестве эталона, любой дрейф в цепях питания приведет к изменению выходного тока. Используйте прецизионные источники опорного напряжения, такие как <em>TL431</em> или специализированные микросхемы.</p>
+
+<blockquote>
+<p>⚠️ Внимание! <strong>Осцилляции</strong> могут возникнуть в схемах с операционными усилителями при наличии индуктивной нагрузки. Обязательно используйте компенсационные конденсаторы.</p>
+</blockquote>
+
+<p>В некоторых случаях полезно использовать схему с двумя транзисторами, где один работает как источник, а второй — как активная нагрузка. Это позволяет достичь чрезвычайно высокого выходного сопротивления. Такие конструкции часто встречаются в дифференциальных каскадах операционных усилителей.</p>
+
+<details class="faq-item"><summary>Секрет высокой точности</summary><div class="faq-answer"><p>Для достижения микротоковой точности используйте транзисторы в корпусе TO-92 с металлическим корпусом, который заземлен, или используйте термостатирование для критически важных узлов схемы.</p></div></details>
+
+<h2 id="типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</h2>
+
+<p>Одной из самых частых ошибок является игнорирование максимальной рассеиваемой мощности. Вы можете рассчитать ток идеально, но забыть, что падение напряжения на транзисторе при малом напряжении питания может быть небольшим, а при высоком — огромным. Транзистор просто сгорит, если не будет установлен на радиатор. <mark>Падение напряжения на транзисторе в источнике тока может достигать напряжения питания минус падение на нагрузке.</mark></p>
+
+<p>Другая ошибка — использование транзисторов с неподходящим типом канала. Например, попытка построить источник тока на <em>PMOS</em> транзисторе с топологией для <em>NMOS</em> приведет к некорректной работе. Вам нужно четко понимать, какой тип канала используется и как формируется напряжение смещения. Неправильное подключение затвора может привести к лавинному пробою.</p>
+
+<ul>
+<li>❌ <strong>Игнорирование теплоотвода:</strong> даже маломощные транзисторы могут перегреваться в режиме насыщения.</li>
+<li>❌ <strong>Неучет паразитных емкостей:</strong> на высоких частотах это может вызвать самовозбуждение схемы.</li>
+<li>❌ <strong>Слишком высокое напряжение:</strong> превышение <code>Vds(max)</code> мгновенно выведет транзистор из строя.</li>
+</ul>
+
+<p>Также важно помнить о защите от обратного напряжения. Если нагрузка индуктивная, при выключении питания могут возникать скачки напряжения, которые пробьют переход. Используйте защитные диоды или варисторы в зависимости от конкретной схемы.</p>
+
+<h2 id="практические-рекомендации-и-выводы">Практические рекомендации и выводы</h2>
+
+<p>Создание надежного источника тока на полевом транзисторе требует не только знания теории, но и практического опыта. Начинайте с простых схем на <em>JFET</em>, чтобы почувствовать поведение компонентов. Затем переходите к более сложным конфигурациям с <em>MOSFET</em> и операционными усилителями. Экспериментальная проверка всегда важнее теоретического расчета.</p>
+
+<p>Если вы проектируете устройство, где критична стабильность, не экономьте на компонентах. Используйте прецизионные резисторы и качественные транзисторы. Помните, что даже небольшая неточность в одном элементе может привести к тому, что вся схема будет работать нестабильно. <strong>Качество сборки</strong> и монтаж также играют важную роль, особенно при работе с высокими импедансами.</p>
+
+<p>В заключение, источник тока на полевом транзисторе — это мощный инструмент в арсенале инженера. Правильно рассчитанная схема обеспечивает высокую стабильность и надежность работы электронных устройств. Главное — соблюдать правила расчета и учитывать все возможные факторы, влияющие на работу компонентов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильный подбор резистора истока и учет температурного дрейфа являются залогом стабильной работы источника тока на полевом транзисторе.</p></div>
+
+<details>
+<summary>Как рассчитать ток для JFET с неизвестным Vgs(off)?</summary>
+<p>Для JFET с неизвестным напряжением отсечки лучше всего использовать метод подбора резистора истока. Подключите переменный резистор, измерьте ток и подберите постоянное сопротивление, соответствующее нужному току. Также можно использовать даташит для определения максимально вероятного диапазона.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать MOSFET для микротоковых источников?</summary>
+<p>Обычные силовые MOSFET не подходят для микротоковых источников из-за большого тока утечки и высокого порогового напряжения. Для таких задач лучше использовать специализированные JFET или малосигнальные MOSFET с низким порогом, например, из серии 2N7002.</p>
+</details>
+
+<details>
+<summary>Зачем нужен резистор в цепи затвора?</summary>
+<p>Резистор в цепи затвора часто используется для ограничения тока при включении или для предотвращения самовозбуждения схемы. Он также помогает стабилизировать напряжение на затворе при наличии паразитных емкостей. В некоторых схемах он может отсутствовать, если затвор заземлен напрямую.</p>
+</details>
+
+<details>
+<summary>Как защитить схему от перегрузки по току?</summary>
+<p>Для защиты от перегрузки можно использовать плавкий предохранитель или самовосстанавливающийся предохранитель в цепи питания. Также можно добавить схему ограничения тока на дополнительном транзисторе, который будет отключать основной транзистор при превышении заданного порога.</p>
+</details>
+
+<details>
+<summary>Влияет ли температура на работу источника тока?</summary>
+<p>Да, температура существенно влияет на параметры транзистора, особенно на напряжение отсечки и пороговое напряжение. Это приводит к изменению выходного тока. Для точных схем необходимо использовать температурную компенсацию или термостатирование.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-и-режим-насыщения">Принцип работы и режим насыщения</a></li><li><a href="#классические-схемы-на-jfet">Классические схемы на JFET</a></li><li><a href="#использование-mosfet-в-роли-источника">Использование MOSFET в роли источника</a></li><li><a href="#расчет-и-подбор-компонентов">Расчет и подбор компонентов</a></li><li><a href="#сложные-схемы-и-источники-с-высокой-стабильностью">Сложные схемы и источники с высокой стабильностью</a></li><li><a href="#типичные-ошибки-при-проектировании">Типичные ошибки при проектировании</a></li><li><a href="#практические-рекомендации-и-выводы">Практические рекомендации и выводы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ka/kak-rasshifrovat-imya-rem-rasshifrovka-abbreviatury.html" class="related-card">Расшифровка аббревиатуры РЭМ: что скрывает это название</a></li><li><a href="/articles/p/pr/printsip-raboty-datchika-ekholota.html" class="related-card">Принцип работы датчика эхолота: Как работает эхолокация и частоты</a></li><li><a href="/articles/r/ra/ratsiya-na-15-km.html" class="related-card">Радиостанция на 15 км: выбор, настройки и секреты дальности</a></li><li><a href="/articles/e/el/elektronnaya-nagruzka-dlya-akkumulyatora-svoimi-rukami.html" class="related-card">Электронная нагрузка для аккумулятора своими руками: схема и сборка</a></li><li><a href="/articles/e/ek/ekholot-praktik-8-otzyvy-vladeltsev.html" class="related-card">Эхолот Практик 8: отзывы владельцев, плюсы и минусы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ka/kak-rasshifrovat-imya-rem-rasshifrovka-abbreviatury.html" class="related-bottom-card"><span class="related-bottom-title">Расшифровка аббревиатуры РЭМ: что скрывает это название</span><span class="related-bottom-desc">Полная расшифровка аббревиатуры РЭМ в разных сферах. Узнайте, что означают эти буквы в медицине, вое</span></a><a href="/articles/p/pr/printsip-raboty-datchika-ekholota.html" class="related-bottom-card"><span class="related-bottom-title">Принцип работы датчика эхолота: Как работает эхолокация и частоты</span><span class="related-bottom-desc">Подробный разбор физики эхолокации, принцип работы датчика эхолота, отличие частот 50/200 кГц и техн</span></a><a href="/articles/r/ra/ratsiya-na-15-km.html" class="related-bottom-card"><span class="related-bottom-title">Радиостанция на 15 км: выбор, настройки и секреты дальности</span><span class="related-bottom-desc">Как получить дальность связи 15 км на гражданских рациях? Разбор мощностей, частот, антенн и реальны</span></a><a href="/articles/e/el/elektronnaya-nagruzka-dlya-akkumulyatora-svoimi-rukami.html" class="related-bottom-card"><span class="related-bottom-title">Электронная нагрузка для аккумулятора своими руками: схема и сборка</span><span class="related-bottom-desc">Пошаговая инструкция по созданию электронной нагрузки для проверки АКБ. Принципиальная схема, расчет</span></a><a href="/articles/e/ek/ekholot-praktik-8-otzyvy-vladeltsev.html" class="related-bottom-card"><span class="related-bottom-title">Эхолот Практик 8: отзывы владельцев, плюсы и минусы</span><span class="related-bottom-desc">Честные отзывы владельцев эхолота Практик 8. Разбор характеристик, частоты 83/200 кГц, работа в ледя</span></a><a href="/articles/s/sk/skhema-bajpasa-dlya-stabilizatora-napryazheniya.html" class="related-bottom-card"><span class="related-bottom-title">Схема байпаса стабилизатора: монтаж, расчет и ошибки подключения</span><span class="related-bottom-desc">Полное руководство по схеме байпаса для стабилизатора напряжения. Разбор вариантов обходных цепей, в</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚗 АвтоСлесарь</div>
+                    <p class="footer-about">Полный справочник по ремонту автомобилей, обслуживанию подвески и рулевого управления, а также советы по рыбалке и домашнему ремонту.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/podveska-i-khodovaya/">🔧 Подвеска и ходовая</a></li>
+<li><a href="/category/rulevoe-upravlenie/">🔄 Рулевое управление</a></li>
+<li><a href="/category/stupitsy-i-podshipniki/">⚙️ Ступицы и подшипники</a></li>
+<li><a href="/category/elektronika-i-stabilizatory/">⚡ Электроника и стабилизаторы</a></li>
+<li><a href="/category/drugoe/">📁 Другое</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© АвтоСлесарь. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <script>
+    function pbPollVote(el) {
+        var poll = el.closest('.poll-widget');
+        if (poll.classList.contains('voted')) return;
+        poll.classList.add('voted');
+        el.classList.add('selected');
+        var opts = poll.querySelectorAll('.poll-widget-option');
+        var n = opts.length;
+        var raw = [];
+        var sum = 0;
+        for (var i = 0; i < n; i++) {
+            var v = Math.random() * 50 + 5;
+            if (opts[i] === el) v += 30;
+            raw.push(v);
+            sum += v;
+        }
+        var pcts = raw.map(function(v) { return Math.round(v / sum * 100); });
+        var diff = 100 - pcts.reduce(function(a,b){ return a+b; }, 0);
+        pcts[Array.from(opts).indexOf(el)] += diff;
+        setTimeout(function() {
+            opts.forEach(function(opt, i) {
+                opt.querySelector('.poll-widget-bar').style.width = pcts[i] + '%';
+                opt.querySelector('.poll-widget-pct').textContent = pcts[i] + '%';
+            });
+        }, 50);
+    }
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>
